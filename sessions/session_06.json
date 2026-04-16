@@ -1,0 +1,87 @@
+{
+  "session_id": "session_06",
+  "severity": "mild",
+  "total_phq9": 6,
+  "gold_scores": {
+    "sleep": 1,
+    "mood": 2,
+    "energy": 1,
+    "concentration": 1,
+    "self_worth": 1
+  },
+  "patient_profile": "Here is a brief patient profile:\n\nThe 28-year-old patient, Sarah, has been feeling overwhelmed with her new job as an event coordinator at a busy marketing firm. She's been working long hours, often going home late from events or meetings, and having trouble sleeping due to the constant noise and stress. Her friends have noticed that she's been canceling social plans and opting for solo activities, like yoga classes, as a way to unwind. Lately, Sarah has been struggling to muster the energy to tackle her to-do list, feeling exhausted by the end of each day.\n\nLet me know if you'd like me to make any changes!",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hi Sarah, it's nice to meet you. I understand you've been struggling with your new job as an event coordinator."
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, it's just a lot to take in. The marketing firm is so fast-paced, and I'm used to working in smaller teams."
+    },
+    {
+      "role": "therapist",
+      "content": "That must be tough. Can you tell me more about what's been going on? What are some of the challenges you're facing?"
+    },
+    {
+      "role": "patient",
+      "content": "Well, I've just been really tired lately. Like, I'll get home from work and just collapse onto the couch. And then I have trouble sleeping because of all the noise from the construction next door."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. It sounds like you're feeling a bit overwhelmed. Have you noticed any changes in your mood recently?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, yeah... I just feel really drained all the time. Even things that used to bring me joy don't seem as fun anymore."
+    },
+    {
+      "role": "therapist",
+      "content": "That can be tough. Have you been able to find any ways to unwind and take care of yourself?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I've started going to yoga classes at night after work. It's helped me relax a bit."
+    },
+    {
+      "role": "therapist",
+      "content": "That sounds like a great way to manage stress. Have you noticed any changes in your social life lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah... I've been canceling plans with friends a lot because I just don't have the energy to go out anymore."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand. It can be hard to prioritize self-care when you're feeling overwhelmed. Can you tell me more about what's going on at work that's causing you stress?"
+    },
+    {
+      "role": "patient",
+      "content": "Just everything, I guess... the constant meetings and emails, trying to keep up with the pace of the company. It feels like there are always things slipping through the cracks."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. It sounds like you're feeling a bit stuck in the whirlwind of your new job. Have you found ways to prioritize what's important and delegate tasks when needed?"
+    },
+    {
+      "role": "patient",
+      "content": "Sometimes, yeah... but other times I just feel like I'm not doing enough, that I should be doing more."
+    },
+    {
+      "role": "therapist",
+      "content": "It can be tough to balance responsibilities and expectations. Can you tell me more about what's been going through your mind when you're feeling stuck?"
+    },
+    {
+      "role": "patient",
+      "content": "I guess just feelings of inadequacy... like I'm not good enough, that I don't belong in this role."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like there may be some self-doubt creeping in. Can we explore ways to build your confidence and find more fulfillment in your work?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, that would be great. Just talking about it feels a little better."
+    }
+  ]
+}

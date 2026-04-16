@@ -1,0 +1,87 @@
+{
+  "session_id": "session_02",
+  "severity": "minimal",
+  "total_phq9": 1,
+  "gold_scores": {
+    "sleep": 0,
+    "mood": 0,
+    "energy": 0,
+    "concentration": 0,
+    "self_worth": 1
+  },
+  "patient_profile": "This 25-year-old software engineer has been feeling overwhelmed with work responsibilities, having recently taken on additional project management tasks to help her team meet tight deadlines. She's been sacrificing her personal time to ensure everything runs smoothly, often staying late at the office or working from home on weekends. Despite her best efforts, she's started to feel like she's losing her sense of identity outside of work, and struggles to muster the motivation to pursue hobbies or social activities that used to bring her joy.",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hi, thank you for coming in today. How have you been feeling lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I've just been really busy with work. We're working on some big projects and I took on a few extra responsibilities to help the team meet our deadlines."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand that feeling. Can you tell me more about what's been going on at work?"
+    },
+    {
+      "role": "patient",
+      "content": "Well, like I said, we're working on some big projects and the stakes are high if we don't meet our deadlines. I've been staying late at the office or working from home on weekends to make sure everything runs smoothly."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. It sounds like you're putting in a lot of extra effort to get things done. Are you feeling any sense of accomplishment or fulfillment when you do get something done?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, no. I feel like I'm just trying to keep my head above water most of the time. And even though we're meeting our deadlines, it's not really feeling like a win to me."
+    },
+    {
+      "role": "therapist",
+      "content": "That can be frustrating. Have you had any hobbies or activities that used to bring you joy and fulfillment?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I used to really enjoy hiking on the weekends and trying out new restaurants with friends. But lately, even those things feel like too much effort. I just want to collapse after work."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand that feeling of exhaustion. Do you feel like you're losing your sense of identity outside of work?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I guess so. It feels like everything I do is related to work somehow. Even my free time feels like it's being consumed by work."
+    },
+    {
+      "role": "therapist",
+      "content": "That can be really isolating. Have you noticed any changes in your relationships with friends or family?"
+    },
+    {
+      "role": "patient",
+      "content": "I've been canceling plans with friends and not making an effort to reach out to them like I used to. And my family is getting frustrated because I'm just not myself anymore."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're feeling pretty disconnected from your personal life right now. How are you sleeping?"
+    },
+    {
+      "role": "patient",
+      "content": "To be honest, it's been a struggle to sleep at night. Even when I do get some rest, it feels like my mind is still racing."
+    },
+    {
+      "role": "therapist",
+      "content": "I'm so sorry to hear that. How about your energy levels? Do you feel like you have the motivation and enthusiasm you used to?"
+    },
+    {
+      "role": "patient",
+      "content": "No, definitely not. Even small tasks feel overwhelming sometimes."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're really struggling to find joy or fulfillment in your daily life right now. Is that something you'd like to work on?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I think so. I just feel like I'm losing myself and I don't know how to get back."
+    }
+  ]
+}

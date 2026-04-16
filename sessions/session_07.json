@@ -1,0 +1,83 @@
+{
+  "session_id": "session_07",
+  "severity": "moderate",
+  "total_phq9": 9,
+  "gold_scores": {
+    "sleep": 3,
+    "mood": 1,
+    "energy": 1,
+    "concentration": 2,
+    "self_worth": 2
+  },
+  "patient_profile": "Here is a brief patient profile:\n\nPatient Profile:\n\nName: Emily\n\nEmily, a 28-year-old marketing specialist, has been struggling to find motivation at work since her promotion to team lead six months ago. She used to enjoy her job, but lately, she's been finding it increasingly difficult to wake up early and muster the energy to tackle even the smallest tasks. At home, Emily is feeling overwhelmed by her increasing workload and the constant pressure to meet tight deadlines. Despite her best efforts, she can't seem to get ahead of things, leaving her feeling exhausted and demoralized at the end of each day.\n\nNote: I've intentionally avoided mentioning depression or any specific diagnosis to reflect Emily's indirect expressions of distress in daily life.",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hi Emily, thank you for coming in today. How are you feeling lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I've just been feeling really drained and unmotivated at work. Like, I used to love my job, but now it's just a chore."
+    },
+    {
+      "role": "therapist",
+      "content": "That sounds tough. What specifically is causing you to feel that way?"
+    },
+    {
+      "role": "patient",
+      "content": "I think it's the new responsibilities since I got promoted. It's like, my workload doubled, but my energy and motivation didn't exactly keep up."
+    },
+    {
+      "role": "therapist",
+      "content": "So, it sounds like you're feeling overwhelmed. How are you sleeping lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly? Not great. I've been having trouble falling asleep or staying asleep most nights. And when I do wake up, I just feel groggy and unmotivated."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. So your sleep is suffering a bit too. How's your mood been?"
+    },
+    {
+      "role": "patient",
+      "content": "It's...off. Like, I'm not really feeling the usual highs or lows that used to come with certain situations or events."
+    },
+    {
+      "role": "therapist",
+      "content": "That can be tough. It sounds like you're struggling to find your footing at work and home. How about your energy levels?"
+    },
+    {
+      "role": "patient",
+      "content": "Ugh, it's like I'm running on fumes most days. Even small tasks feel like they're taking a lot out of me."
+    },
+    {
+      "role": "therapist",
+      "content": "That sounds really challenging. Are you finding that you can focus or concentrate when you need to?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, it's been tough. My mind starts wandering and I get distracted easily."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're having trouble with your concentration too. How about your self-worth? Do you feel like you're doing okay?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, it's been tough to keep my head up lately. I feel like I'm just barely keeping everything together."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. So it sounds like your self-worth is taking a bit of a hit too. What do you think would help you start feeling more positive and motivated again?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I'm not sure. Maybe just getting back to the basics, you know? Doing things that bring me joy and fulfillment."
+    },
+    {
+      "role": "therapist",
+      "content": "That sounds like a great starting point. And remember, this is just between us \u2013 your secrets are safe here."
+    }
+  ]
+}

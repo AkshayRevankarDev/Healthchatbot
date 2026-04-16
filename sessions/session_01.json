@@ -1,0 +1,87 @@
+{
+  "session_id": "session_01",
+  "severity": "minimal",
+  "total_phq9": 4,
+  "gold_scores": {
+    "sleep": 0,
+    "mood": 1,
+    "energy": 1,
+    "concentration": 1,
+    "self_worth": 1
+  },
+  "patient_profile": "Here is a brief patient profile:\n\nSarah, a 28-year-old freelance writer, has been struggling to keep up with her workload lately. She's been juggling multiple projects simultaneously, which has left her feeling overwhelmed and exhausted by the end of each day. Despite her best efforts, she's found herself procrastinating more frequently, worrying that she won't be able to deliver quality work on time. With a looming deadline for an important client, Sarah is feeling increasingly stressed and anxious about meeting their expectations.\n\nNote: The patient profile focuses on Sarah's daily life situation, job/student status, and recent circumstances without making any direct references to depression or mental health issues.",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hi Sarah, thanks for coming in today. How are you feeling about your workload lately?"
+    },
+    {
+      "role": "patient",
+      "content": "To be honest, it's been a struggle. I feel like I'm drowning in all these projects and deadlines. Sometimes I just want to crawl back into bed and pretend none of this is happening."
+    },
+    {
+      "role": "therapist",
+      "content": "I can imagine that would be overwhelming. Can you tell me more about what's been going on with your work?"
+    },
+    {
+      "role": "patient",
+      "content": "Well, I've had a lot of clients coming to me with new projects, and I'm trying to keep up with all the requests. It feels like every day is a mad scramble to get everything done. And if I don't deliver quality work on time, I worry about losing their business."
+    },
+    {
+      "role": "therapist",
+      "content": "That sounds like a lot of pressure. Have you been sleeping well lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly? Not really. Sometimes I don't even make it to bed until midnight or later because my brain is always racing with things I need to do tomorrow. When I do get some sleep, it's usually pretty fitful."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. And how about your mood? Has that been affected by the stress of work?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah... sometimes I just feel so frustrated and stuck. Like, why am I always struggling to get everything done on time? It feels like no matter what I do, it's never enough."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're putting a lot of pressure on yourself to perform. Can you tell me more about what's been going through your mind during those times?"
+    },
+    {
+      "role": "patient",
+      "content": "I guess I just feel like if I don't do everything perfectly, it'll all fall apart. Like, one little mistake and my whole reputation will be ruined."
+    },
+    {
+      "role": "therapist",
+      "content": "That sounds like a lot of responsibility to carry around. Are you finding it hard to focus or get things done when you're feeling that way?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, definitely. Sometimes I'll be working on something and my mind will just start to wander off into all these worst-case scenarios... 'What if this doesn't turn out right? What if I mess up?'"
+    },
+    {
+      "role": "therapist",
+      "content": "I can see how that would make it hard to concentrate. And finally, have you been feeling good about yourself lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly? Not really. I feel like I'm just barely scraping by and making things up as I go along. Like, what's the point of even trying if it's all just going to fall apart anyway?"
+    },
+    {
+      "role": "therapist",
+      "content": "Sarah, can you tell me more about what you mean when you say 'making things up as you go along'?"
+    },
+    {
+      "role": "patient",
+      "content": "I guess I just feel like I'm winging it most of the time. Like, I don't really know how to prioritize or plan ahead... it's all just this big messy jumble in my head."
+    },
+    {
+      "role": "therapist",
+      "content": "Sarah, thank you for being so open with me today. Before we wrap up, is there anything that's been on your mind that you'd like to talk about?"
+    },
+    {
+      "role": "patient",
+      "content": "I don't know... I just feel really stuck and overwhelmed right now. Like, I wish things could just go back to the way they were before all this started."
+    }
+  ]
+}

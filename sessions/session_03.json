@@ -1,0 +1,87 @@
+{
+  "session_id": "session_03",
+  "severity": "minimal",
+  "total_phq9": 1,
+  "gold_scores": {
+    "sleep": 0,
+    "mood": 0,
+    "energy": 1,
+    "concentration": 0,
+    "self_worth": 0
+  },
+  "patient_profile": "Here is a brief patient profile:\n\nMeet Jane, a 28-year-old marketing specialist who has been working long hours for the past few months to meet her team's deadlines. She has been trying to balance her job with her social life, but lately, she's been canceling plans with friends and family due to exhaustion. Despite her best efforts to stay organized, Jane has been struggling to get everything done on time, leaving her feeling frazzled and unsure of how to prioritize her tasks.\n\n(Note: I've tried to capture the essence of a person who is experiencing mild symptoms, but not necessarily articulating them as depression. Instead, they are struggling with daily life and might be more focused on functional issues like sleep, energy, or concentration.)",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hi Jane, thank you for coming in today. Can you tell me a little bit about what brings you here?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I've just been feeling really overwhelmed lately. Work has been crazy and I feel like I'm constantly playing catch-up."
+    },
+    {
+      "role": "therapist",
+      "content": "Can you walk me through a typical day for you right now?"
+    },
+    {
+      "role": "patient",
+      "content": "Well, I usually wake up around 6:30 am, grab a quick breakfast, and then head to the office. I try to get some emails answered before our team meeting at 8:30."
+    },
+    {
+      "role": "therapist",
+      "content": "And how do you feel during those meetings?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, they're a real struggle for me. I just want to tune out and not think about anything for a while. Sometimes I find myself zoning out during the meeting."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. So it sounds like you might be feeling a bit drained after those meetings?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I guess so. And then there are times when I just can't seem to focus on anything for more than a few minutes. Like, I'll start reading an article or watching a video and then my brain will just wander off."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand what you mean about your brain wandering off. Can you tell me how often that happens?"
+    },
+    {
+      "role": "patient",
+      "content": "Hmm, probably several times a day. It's like my mind is trying to shut down or something."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like sleep might be an issue for you too. How many hours are you typically getting each night?"
+    },
+    {
+      "role": "patient",
+      "content": "I'd say I'm averaging around 5-6 hours a night, tops. Sometimes it's as little as 4."
+    },
+    {
+      "role": "therapist",
+      "content": "And how do you feel about your social life right now? Are you doing things with friends and family like you used to?"
+    },
+    {
+      "role": "patient",
+      "content": "To be honest, I've been canceling plans left and right. It's just too hard for me to muster up the energy to go out when all I want to do is sleep."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand why you might feel that way. Can you tell me what you think would need to happen in order for things to get better for you?"
+    },
+    {
+      "role": "patient",
+      "content": "I guess if I could just catch up on my work, or find a way to stay focused longer than a few minutes... and maybe get some more sleep. That would be a huge help."
+    },
+    {
+      "role": "therapist",
+      "content": "Those sound like very achievable goals for you, Jane. Let's make a plan to help you start making progress on those things."
+    },
+    {
+      "role": "patient",
+      "content": "That sounds good. I just feel so stuck right now."
+    }
+  ]
+}

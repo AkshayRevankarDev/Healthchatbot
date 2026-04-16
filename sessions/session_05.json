@@ -1,0 +1,79 @@
+{
+  "session_id": "session_05",
+  "severity": "mild",
+  "total_phq9": 6,
+  "gold_scores": {
+    "sleep": 0,
+    "mood": 2,
+    "energy": 1,
+    "concentration": 2,
+    "self_worth": 1
+  },
+  "patient_profile": "This 28-year-old patient is a full-time graduate student working part-time as a teaching assistant. They've been struggling to keep up with coursework and responsibilities since the sudden loss of a close family member six months ago. Lately, they've been having trouble sleeping due to racing thoughts about their thesis and feeling overwhelmed by the demands of school and work.\n\nDespite their best efforts, they've been putting off tasks and deadlines, which has led to feelings of guilt and self-doubt. Their social life has also suffered, as they've become hesitant to commit to plans or participate in group projects due to concerns about not being able to keep up.",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hi, thanks for taking the time to talk with me today. How have you been doing lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I've just been feeling really overwhelmed. School and work have been piling up, and it feels like there's not enough hours in the day."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand that can be tough. Can you tell me more about what's been going on with school and work? What specifically is feeling overwhelming?"
+    },
+    {
+      "role": "patient",
+      "content": "Well, I've got a lot of coursework and projects to keep up with, and my part-time job as a TA has been adding extra hours to my plate. It feels like I'm constantly juggling too many things."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. And how have you been sleeping lately? Have you noticed any changes in your ability to wind down or fall asleep?"
+    },
+    {
+      "role": "patient",
+      "content": "Sleep has actually been pretty tough for me recently. My mind just won't shut off, and I find myself lying awake thinking about my thesis and all the things I still need to do."
+    },
+    {
+      "role": "therapist",
+      "content": "That sounds really challenging. Have you noticed any changes in your mood lately? Are there certain emotions that have been sticking out?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I'd say my mood has just been kind of... flat. Nothing seems to give me the same joy it used to. Sometimes I feel guilty for not being able to muster up the energy to do things."
+    },
+    {
+      "role": "therapist",
+      "content": "I'm hearing that you've got a lot on your plate and it's impacting your mood and sleep. How about your social life? Have you noticed any changes in how you're interacting with friends or colleagues?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I've just been pulling away from people lately. It feels like too much effort to keep up appearances or make plans when everything else is already so overwhelming."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're feeling really burnt out. Can you tell me more about what's going on with your thesis? What's been causing those racing thoughts?"
+    },
+    {
+      "role": "patient",
+      "content": "I guess I just feel like it's not coming together the way I want it to, and that's causing a lot of stress. It feels like everything depends on this project being perfect."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like there's a lot riding on your thesis for you. Have you considered taking any breaks or prioritizing self-care in all of this?"
+    },
+    {
+      "role": "patient",
+      "content": "I mean, I've tried to make time for things that used to bring me joy, but it feels like even those things are tainted by my stress and anxiety."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're feeling really stuck right now. What do you think would be the most helpful thing for us to work on in our sessions?"
+    },
+    {
+      "role": "patient",
+      "content": "I guess just finding a way to manage all of this stress and anxiety would be a huge help. I feel like if I could just get my footing, everything else might start falling into place."
+    }
+  ]
+}

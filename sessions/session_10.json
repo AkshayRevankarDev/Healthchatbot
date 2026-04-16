@@ -1,0 +1,87 @@
+{
+  "session_id": "session_10",
+  "severity": "severe",
+  "total_phq9": 13,
+  "gold_scores": {
+    "sleep": 3,
+    "mood": 3,
+    "energy": 2,
+    "concentration": 2,
+    "self_worth": 3
+  },
+  "patient_profile": "Here is a brief patient profile for a mental health screening session:\n\nPatient Profile:\n\nName: Emily\n\nAge: 28\n\nLife Situation: Emily is a marketing specialist working full-time, with a demanding workload and tight deadlines to meet. She's been struggling to balance her professional and personal life lately.\n\nRecent Life Circumstances: In the past few months, Emily has experienced a series of stressful events - her company underwent restructuring, leading to uncertainty about her job security. Additionally, she recently went through a breakup with her long-term partner, leaving her feeling isolated and disconnected from her social network. To make matters worse, her parents have been going through their own marital issues, which has left Emily feeling emotionally drained.\n\nPHQ-9 Domain Scores: Severity level is severe (3/3) in domains of sleep, mood, self-worth; moderate to severe (2/3) in domains of energy and concentration.",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hello Emily, thank you for coming in today. How have you been feeling lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly? I've just been really exhausted all the time. Like, I can barely get out of bed in the morning."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. It sounds like you're not getting much sleep. Can you tell me more about what's going on at work that might be contributing to your fatigue?"
+    },
+    {
+      "role": "patient",
+      "content": "Well, we've been going through some changes at the office. New management and all that jazz. It's been a real challenge to keep up with everything."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand how stressful that can be. How has your social life been affected by these changes?"
+    },
+    {
+      "role": "patient",
+      "content": "To be honest, I've just been kind of withdrawing from my friends and family. It feels like no one understands what's going on with me right now."
+    },
+    {
+      "role": "therapist",
+      "content": "It can feel really isolating when we're going through tough times. Have you noticed any changes in your appetite or interest in activities that you used to enjoy?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I've just lost my taste for food altogether. And even though I love reading, it's just not the same as it used to be."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're struggling to find pleasure in things that bring you joy. Have you noticed any changes in your mood lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I've just been feeling really down on myself a lot of the time. Like, what's the point of it all? You know?"
+    },
+    {
+      "role": "therapist",
+      "content": "It can feel like there's no purpose or meaning to our struggles. Have you felt like you're carrying this weight alone, or have you talked to anyone about how you're feeling?"
+    },
+    {
+      "role": "patient",
+      "content": "I've tried talking to my parents, but they're going through their own stuff right now. And I don't want to burden my friends with all of this."
+    },
+    {
+      "role": "therapist",
+      "content": "It's understandable that you wouldn't want to add to your family's stress, and it can be tough to find people who truly understand what we're going through. Have you noticed any changes in your physical health?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, I've had some stomach issues lately. And sometimes my hands get all shaky when I'm trying to do things."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're experiencing some physical symptoms that might be related to what's going on emotionally. Have you noticed any changes in your relationships with others?"
+    },
+    {
+      "role": "patient",
+      "content": "I just feel like I'm struggling to connect with anyone right now. Like, even my own family feels like a burden sometimes."
+    },
+    {
+      "role": "therapist",
+      "content": "It can feel overwhelming when we're feeling disconnected from everyone and everything. Let's work together to figure out some ways to get you connected again."
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, that would be amazing. Just knowing someone is here for me feels like a weight has been lifted off my shoulders."
+    }
+  ]
+}

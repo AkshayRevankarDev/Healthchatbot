@@ -1,0 +1,87 @@
+{
+  "session_id": "session_09",
+  "severity": "severe",
+  "total_phq9": 13,
+  "gold_scores": {
+    "sleep": 2,
+    "mood": 3,
+    "energy": 2,
+    "concentration": 3,
+    "self_worth": 3
+  },
+  "patient_profile": "Here is a brief patient profile:\n\nThis 32-year-old woman has been working as a marketing manager for the past five years, juggling a demanding job with taking care of her elderly mother who lives with her. Recently, she's had to take on even more responsibilities at work due to staff shortages, causing her sleep and energy levels to suffer. Her social life has also taken a hit, as she finds herself canceling plans with friends and family more often than not.\n\nPlease note that this profile does not include any diagnosis or direct expression of depression. It simply describes the patient's daily life circumstances and how they may be impacting their mental health.",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Thank you for coming in today! How have things been going lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, it's been tough. Work has been crazy busy and I've had to take on more responsibilities because of some staff shortages. It feels like there just aren't enough hours in the day."
+    },
+    {
+      "role": "therapist",
+      "content": "I can imagine that would be stressful. Can you tell me a little bit about your job as a marketing manager?"
+    },
+    {
+      "role": "patient",
+      "content": "It's been good, I guess. I like the creative aspect of it, but lately, it feels like I'm just trying to keep my head above water. I don't know how much more I can take."
+    },
+    {
+      "role": "therapist",
+      "content": "I understand that feeling. Can you tell me about your mom? How's she doing?"
+    },
+    {
+      "role": "patient",
+      "content": "She's...she's not great, to be honest. She's been having some health issues and I've had to take on more care for her. It's just been a lot."
+    },
+    {
+      "role": "therapist",
+      "content": "That can be really overwhelming. Have you noticed anything else changing in your daily routine?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah...I used to love cooking dinner and trying out new recipes, but lately, I just don't have the energy for it anymore. And when I do cook, it's like I'm just going through the motions."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're not getting as much enjoyment out of things that used to bring you pleasure. Are there any other activities or hobbies you miss doing?"
+    },
+    {
+      "role": "patient",
+      "content": "I used to love hiking on the weekends, but now it feels like too much effort. And socializing with friends and family...that's just fallen by the wayside."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're feeling pretty isolated right now. Can you tell me about your sleep lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I've been having trouble sleeping. When I do get some rest, it's not very good quality. And when I wake up, I just feel...drained."
+    },
+    {
+      "role": "therapist",
+      "content": "How about your mood? Has that changed at all?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah...I've noticed I'm getting a little snappier with my family and friends. They're starting to tell me I need to 'snap out of it' or something like that."
+    },
+    {
+      "role": "therapist",
+      "content": "That can be really frustrating when people don't understand what you're going through. What about your concentration? Are you finding yourself having trouble focusing?"
+    },
+    {
+      "role": "patient",
+      "content": "Absolutely. I'll be in the middle of a project and suddenly I'll just...zone out. And then I'll have to start all over again."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're feeling pretty overwhelmed right now. Can you tell me how you've been taking care of yourself?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, not very well. I feel like I'm just trying to survive day-to-day and there's no time left over for self-care."
+    }
+  ]
+}

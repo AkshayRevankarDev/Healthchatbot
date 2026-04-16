@@ -1,0 +1,297 @@
+{
+  "sleep": {
+    "item_number": 3,
+    "item_name": "Sleep Disturbance",
+    "description": "Trouble falling or staying asleep, or sleeping too much",
+    "score_0": {
+      "label": "Not at all",
+      "indicators": [
+        "sleeping fine",
+        "no sleep issues",
+        "sleep well",
+        "good sleep",
+        "rested",
+        "no problem sleeping",
+        "sleeping normally"
+      ]
+    },
+    "score_1": {
+      "label": "Several days",
+      "indicators": [
+        "sometimes can't sleep",
+        "occasionally wake up",
+        "a few nights of bad sleep",
+        "sleep a bit more than usual",
+        "restless some nights",
+        "hard to fall asleep sometimes",
+        "waking up a couple times a week"
+      ]
+    },
+    "score_2": {
+      "label": "More than half the days",
+      "indicators": [
+        "often can't sleep",
+        "waking up most nights",
+        "sleeping too much most days",
+        "usually restless",
+        "rarely sleep through the night",
+        "almost always tired in the morning",
+        "sleeping problems most of the week"
+      ]
+    },
+    "score_3": {
+      "label": "Nearly every day",
+      "indicators": [
+        "can't sleep at all",
+        "awake all night",
+        "sleeping all day",
+        "never feel rested",
+        "sleep is completely broken",
+        "exhausted every morning",
+        "lying awake every night for hours"
+      ]
+    },
+    "probe_questions": [
+      "How have your nights been going lately? Are you finding it easy to fall asleep?",
+      "Tell me about your sleep schedule recently — do you feel rested when you wake up?",
+      "Have you noticed any changes in how much or how well you sleep these days?"
+    ],
+    "keywords": ["sleep", "insomnia", "tired", "rest", "wake", "night", "bed", "exhausted", "drowsy", "nap", "oversleep", "fatigue"]
+  },
+  "mood": {
+    "item_number": 1,
+    "item_name": "Depressed Mood / Anhedonia",
+    "description": "Little interest or pleasure in doing things; feeling down, depressed, or hopeless",
+    "score_0": {
+      "label": "Not at all",
+      "indicators": [
+        "enjoying life",
+        "feeling good",
+        "happy",
+        "excited about things",
+        "looking forward to activities",
+        "interested in hobbies",
+        "feeling positive"
+      ]
+    },
+    "score_1": {
+      "label": "Several days",
+      "indicators": [
+        "less interested than usual",
+        "some days feel low",
+        "occasionally feel down",
+        "not as excited as before",
+        "things feel a bit flat sometimes",
+        "some days don't feel like doing much",
+        "a bit less enjoyment"
+      ]
+    },
+    "score_2": {
+      "label": "More than half the days",
+      "indicators": [
+        "mostly feel down",
+        "rarely enjoy things",
+        "things that used to be fun aren't anymore",
+        "feeling hopeless often",
+        "most days feel empty",
+        "hard to feel happy",
+        "lost interest in most things"
+      ]
+    },
+    "score_3": {
+      "label": "Nearly every day",
+      "indicators": [
+        "nothing brings joy",
+        "completely lost interest",
+        "feel hopeless every day",
+        "can't feel anything",
+        "everything feels pointless",
+        "stopped doing everything I used to love",
+        "feel empty all the time"
+      ]
+    },
+    "probe_questions": [
+      "What does a typical day look like for you lately? Are there things you're looking forward to?",
+      "Have you been able to enjoy your hobbies or things you normally like doing?",
+      "How would you describe your general mood over the past couple of weeks?"
+    ],
+    "keywords": ["sad", "happy", "enjoy", "fun", "mood", "hopeless", "empty", "pleasure", "interest", "joy", "down", "depressed", "flat", "numb", "pointless"]
+  },
+  "energy": {
+    "item_number": 4,
+    "item_name": "Fatigue / Loss of Energy",
+    "description": "Feeling tired or having little energy",
+    "score_0": {
+      "label": "Not at all",
+      "indicators": [
+        "feeling energetic",
+        "full of energy",
+        "no fatigue",
+        "active",
+        "getting things done easily",
+        "not tired",
+        "feeling strong"
+      ]
+    },
+    "score_1": {
+      "label": "Several days",
+      "indicators": [
+        "sometimes feel drained",
+        "a bit tired some days",
+        "energy is lower than usual",
+        "occasionally run out of steam",
+        "a few days where I felt worn out",
+        "some days are harder than others",
+        "not always motivated"
+      ]
+    },
+    "score_2": {
+      "label": "More than half the days",
+      "indicators": [
+        "often feel exhausted",
+        "hard to get through the day",
+        "rarely have energy",
+        "most tasks feel like a chore",
+        "dragging myself through the day",
+        "frequently too tired to do things",
+        "low energy most days"
+      ]
+    },
+    "score_3": {
+      "label": "Nearly every day",
+      "indicators": [
+        "no energy at all",
+        "can't get out of bed",
+        "completely drained every day",
+        "too exhausted to function",
+        "even small tasks are overwhelming",
+        "feel like a heavy weight all the time",
+        "too tired to do anything"
+      ]
+    },
+    "probe_questions": [
+      "How is your energy been lately? Do you find yourself getting through the day okay?",
+      "Have you been able to keep up with your usual activities — work, chores, things like that?",
+      "Do you ever feel so tired that even simple things feel like too much effort?"
+    ],
+    "keywords": ["energy", "tired", "exhausted", "fatigue", "drained", "lazy", "sluggish", "weak", "worn out", "lethargic", "motivation", "effort"]
+  },
+  "concentration": {
+    "item_number": 7,
+    "item_name": "Concentration Difficulty",
+    "description": "Trouble concentrating on things, such as reading the newspaper or watching television",
+    "score_0": {
+      "label": "Not at all",
+      "indicators": [
+        "focusing fine",
+        "no trouble concentrating",
+        "sharp minded",
+        "able to focus easily",
+        "good memory",
+        "no distractions",
+        "thinking clearly"
+      ]
+    },
+    "score_1": {
+      "label": "Several days",
+      "indicators": [
+        "sometimes distracted",
+        "a few times had trouble focusing",
+        "occasionally lost my train of thought",
+        "sometimes have to re-read things",
+        "a bit forgetful lately",
+        "mind wanders sometimes",
+        "not as sharp as usual some days"
+      ]
+    },
+    "score_2": {
+      "label": "More than half the days",
+      "indicators": [
+        "often can't focus",
+        "hard to finish tasks",
+        "frequently forget things",
+        "reading is hard to follow",
+        "mind constantly wanders",
+        "losing track of conversations often",
+        "most days struggle to concentrate"
+      ]
+    },
+    "score_3": {
+      "label": "Nearly every day",
+      "indicators": [
+        "can't concentrate at all",
+        "completely scattered",
+        "can't remember anything",
+        "unable to follow simple things",
+        "mind is completely blank",
+        "can't hold a thought",
+        "failing at work because I can't focus"
+      ]
+    },
+    "probe_questions": [
+      "Have you been able to focus on things like work or reading lately?",
+      "Do you find your mind wandering a lot, or have you been more forgetful than usual?",
+      "How has your ability to concentrate on tasks been over the past couple of weeks?"
+    ],
+    "keywords": ["focus", "concentrate", "distracted", "forget", "memory", "attention", "scattered", "confused", "mind", "wander", "remember", "think"]
+  },
+  "self_worth": {
+    "item_number": 6,
+    "item_name": "Feelings of Worthlessness / Guilt",
+    "description": "Feeling bad about yourself — or that you are a failure or have let yourself or your family down",
+    "score_0": {
+      "label": "Not at all",
+      "indicators": [
+        "feeling good about myself",
+        "confident",
+        "no guilt",
+        "proud of myself",
+        "feel worthy",
+        "no self-blame",
+        "positive self-image"
+      ]
+    },
+    "score_1": {
+      "label": "Several days",
+      "indicators": [
+        "sometimes feel like a burden",
+        "a few times felt guilty",
+        "occasionally doubt myself",
+        "some days feel like I'm not doing enough",
+        "a bit hard on myself",
+        "felt like I let someone down once or twice",
+        "self-critical sometimes"
+      ]
+    },
+    "score_2": {
+      "label": "More than half the days",
+      "indicators": [
+        "often feel worthless",
+        "frequently blame myself",
+        "feel like a failure most days",
+        "often feel like a burden to others",
+        "usually feel guilty",
+        "rarely feel good about myself",
+        "often feel I'm disappointing everyone"
+      ]
+    },
+    "score_3": {
+      "label": "Nearly every day",
+      "indicators": [
+        "feel completely worthless",
+        "hate myself",
+        "believe I am a total failure",
+        "feel like everyone would be better without me",
+        "constant guilt about everything",
+        "feel like I ruin everything",
+        "no redeeming qualities"
+      ]
+    },
+    "probe_questions": [
+      "How do you feel about yourself lately — like, how are you doing as a person in your own eyes?",
+      "Do you ever find yourself being really hard on yourself or feeling like you're letting people down?",
+      "Have you had any thoughts about feeling like a burden to the people around you?"
+    ],
+    "keywords": ["worthless", "guilty", "failure", "burden", "blame", "shame", "disappoint", "useless", "worthwhile", "self-esteem", "confidence", "regret", "fault"]
+  }
+}

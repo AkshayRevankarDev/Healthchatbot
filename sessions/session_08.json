@@ -1,0 +1,83 @@
+{
+  "session_id": "session_08",
+  "severity": "moderate",
+  "total_phq9": 8,
+  "gold_scores": {
+    "sleep": 1,
+    "mood": 1,
+    "energy": 2,
+    "concentration": 2,
+    "self_worth": 2
+  },
+  "patient_profile": "Here is a brief patient profile:\n\nPatient Profile:\n\nName: Emily\n\nAge: 28\n\nLife Situation: Emily is a working professional, living in a small apartment with her partner. She works as an administrative assistant at a busy marketing firm, typically putting in 8-hour days.\n\nRecent Life Circumstances: Over the past few months, Emily has been struggling to get a good night's sleep due to work-related stress and anxiety about meeting deadlines. Her energy levels have decreased significantly, making it harder for her to find motivation for her favorite hobbies. She's also noticed that she's having trouble concentrating on tasks at work, often feeling like she's in a haze.\n\nIn the evenings, Emily has been spending more time scrolling through social media, comparing her life to others and feeling inadequate about her accomplishments. Her relationships with friends have suffered as a result, and she finds herself withdrawing from social gatherings. Despite her best efforts, Emily feels stuck in a rut and unsure of how to shake off this funk.\n\nNote: As per your request, I did not include any direct mention of depression or diagnosis in the patient profile. Instead, I highlighted the patient's daily struggles and challenges that might be indicative of underlying mental health concerns.",
+  "conversation": [
+    {
+      "role": "therapist",
+      "content": "Hi Emily, thank you for coming in today. I'm glad we could schedule this appointment to catch up on how things have been going lately."
+    },
+    {
+      "role": "patient",
+      "content": "Yeah, it's been... tough. Work has just been so overwhelming. I feel like I'm constantly playing catch-up."
+    },
+    {
+      "role": "therapist",
+      "content": "I sense that there might be some stress related to your job. Can you tell me a bit more about what specifically is causing you distress?"
+    },
+    {
+      "role": "patient",
+      "content": "Just the pressure to meet deadlines and keep up with the workload. And it's not just that \u2013 I feel like everyone around me seems to have their life together, while mine feels like it's falling apart."
+    },
+    {
+      "role": "therapist",
+      "content": "I get what you mean. It sounds like there might be some feelings of inadequacy or comparison going on. How do you usually wind down after a long day at work?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly, I just end up scrolling through social media for hours. It's just so easy to get sucked in and compare my life to everyone else's highlight reels."
+    },
+    {
+      "role": "therapist",
+      "content": "I see. So, it sounds like you might be using social media as a way to escape or cope with stress. Have you noticed any changes in your relationships with friends lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah... I've been withdrawing from social gatherings and events. It feels like too much effort when everything just feels so draining."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you might be feeling a bit burnt out or disconnected from your friends. How's your sleep been lately?"
+    },
+    {
+      "role": "patient",
+      "content": "To be honest, I've been having trouble sleeping. My mind just won't quiet down, and I find myself lying awake for hours."
+    },
+    {
+      "role": "therapist",
+      "content": "I'm so sorry to hear that. Sleep is such an important part of our overall well-being. Have you noticed any changes in your energy levels or motivation lately?"
+    },
+    {
+      "role": "patient",
+      "content": "Yeah... I just don't have the same spark anymore. Simple tasks feel like they're taking all my energy."
+    },
+    {
+      "role": "therapist",
+      "content": "I sense that there might be some feelings of fatigue or exhaustion going on. Can you tell me a bit more about what's been going through your mind when you're lying awake at night?"
+    },
+    {
+      "role": "patient",
+      "content": "Just... I don't know, it feels like I'm just stuck in this rut and can't seem to get out."
+    },
+    {
+      "role": "therapist",
+      "content": "I hear you. It sounds like there might be some feelings of being stuck or helpless going on. Let's work together to see if we can identify any patterns or areas where we might be able to make some changes."
+    },
+    {
+      "role": "patient",
+      "content": "Yeah... that would be really helpful. I just feel so lost right now."
+    },
+    {
+      "role": "therapist",
+      "content": "I'm here for you, Emily. We'll work together to find a way forward."
+    }
+  ]
+}
