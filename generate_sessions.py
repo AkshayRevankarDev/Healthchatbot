@@ -1,6 +1,6 @@
 """
 Synthetic Patient Session Generator
-Generates 10 realistic patient sessions with gold PHQ-9 scores using Ollama llama3.
+Generates 10 realistic patient sessions with gold PHQ-9 scores using Gemini.
 """
 
 import json

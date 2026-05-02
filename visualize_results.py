@@ -16,15 +16,15 @@ RESULTS_FILE = Path("results.json")
 FIGURES_DIR = Path("figures")
 FIGURES_DIR.mkdir(exist_ok=True)
 
-DOMAINS = ["sleep", "mood", "energy", "concentration", "self_worth"]
-DOMAIN_LABELS = ["Sleep", "Mood", "Energy", "Concentration", "Self-Worth"]
+DOMAINS = ["sleep", "mood", "energy", "appetite", "concentration"]
+DOMAIN_LABELS = ["Sleep", "Mood", "Energy", "Appetite", "Concentration"]
 
 DOMAIN_COLORS = {
     "sleep": "#4e79a7",
     "mood": "#f28e2b",
     "energy": "#59a14f",
+    "appetite": "#b07aa1",
     "concentration": "#e15759",
-    "self_worth": "#b07aa1",
 }
 
 

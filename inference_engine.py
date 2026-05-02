@@ -41,7 +41,7 @@ def score_domain(domain: str, conversation_history: list, kb_entry: dict) -> dic
     ])
 
     system_prompt = """You are a clinical psychologist scoring PHQ-9 items from patient conversations.
-You follow a strict chain-of-thought protocol. Be precise, conservative, and evidence-based.
+You extract evidence from the full conversation and score it accurately against DSM-5-TR severity criteria.
 Always return valid JSON."""
 
     prompt = f"""Score the PHQ-9 domain "{domain.upper()}" ({kb_entry['item_name']}) from this patient conversation.
@@ -51,37 +51,51 @@ DSM-5-TR Definition: {kb_entry['description']}
 Severity Indicators:
 {severity_ref}
 
-CALIBRATION (use as reference — be conservative):
-  Score 0: Patient clearly has NO issue. e.g. "I sleep fine", "my appetite is normal", "I feel good"
-  Score 1: Issue present SEVERAL DAYS only. e.g. "sometimes", "a few times", "occasionally", "a bit"
-  Score 2: Issue present MORE THAN HALF THE DAYS. e.g. "most days", "usually", "often", "frequently"
-  Score 3: Issue present NEARLY EVERY DAY. e.g. "every night", "constantly", "always", "I can't at all"
+SCORING GUIDE:
+  Score 0 — Patient says there is NO problem, or gives zero relevant information about this domain.
+             e.g. "I sleep fine", "appetite is normal", "I feel okay", or topic never mentioned.
+  Score 1 — Problem exists but is mild/occasional (several days in the past 2 weeks).
+             e.g. "sometimes", "a few times", "a bit", "here and there", "occasionally"
+  Score 2 — Problem is frequent (more than half the days).
+             e.g. "most days", "usually", "often", "hard most of the time", "frequently"
+  Score 3 — Problem is constant or nearly every day.
+             e.g. "every day", "all the time", "I can't at all", "never", "0", "completely gone",
+             "all the ime", "absolutely 0", "not anymore at all", "existing is hard"
 
-RULES:
-- When in doubt between two scores, choose the LOWER one
-- Short or vague answers (e.g. "yes", "no", "okay") should score 0 or 1, not higher
-- Score 0 if the patient explicitly says there is no problem in this domain
+INFORMAL LANGUAGE RULES (patients rarely use clinical wording):
+- "0 sleep / 0 energy / 0 appetite" → Score 3 (means none at all)
+- "all the time" / "every time" → Score 3
+- "not anymore" with strong finality → Score 2-3
+- "existing is hard" / "can't imagine looking forward to anything" → Score 3 for mood/anhedonia
+- "can't concentrate at all" / "simply not able to" → Score 3 for concentration
+- Answering "yeah" / "yes" to a direct probe about severity confirms that severity
+- "sometimes" alone without severity context → Score 1
+
+IMPORTANT: Score 0 only if the patient clearly reports NO problem. Do NOT score 0 just because
+the answer is short. If the patient confirms a problem exists, score at least 1.
 
 Conversation:
 {conv_text}
 
 Follow these EXACT 3 steps and return ONLY valid JSON:
 
-Step 1 EXTRACT: Find and quote all patient utterances relevant to {domain}.
-Step 2 REASON: Compare each quote to the severity indicators. Apply the calibration rules.
-Step 3 SCORE: Assign 0, 1, 2, or 3.
+Step 1 EXTRACT: Quote ALL patient utterances across the full conversation relevant to {domain}.
+                Include indirect evidence (e.g. "I just stare at a blank screen" → concentration).
+Step 2 REASON: For each quote, map it to a severity level using the guide above.
+               Consider the pattern across all quotes, not just the last one.
+Step 3 SCORE: Assign the single score (0-3) that best fits the overall pattern.
 
 Return this exact JSON structure:
 {{
   "evidence": ["verbatim patient quote 1", "verbatim patient quote 2"],
-  "reasoning": "Step-by-step comparison to severity indicators",
+  "reasoning": "Step-by-step mapping of each quote to severity level, then overall pattern",
   "score": 0,
-  "justification": "One sentence explaining the score and frequency"
+  "justification": "One sentence citing specific frequency evidence for the chosen score"
 }}
 
 Return ONLY the JSON object, no other text."""
 
-    raw_cot = call_llm(prompt, system_prompt, temperature=0.1, max_tokens=1500, thinking=True)
+    raw_cot = call_llm(prompt, system_prompt, temperature=0.1, max_tokens=2048, thinking=True)
 
     # Parse JSON from response
     result = _parse_cot_response(raw_cot, domain)

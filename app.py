@@ -1,11 +1,14 @@
 """
 Streamlit UI for Mental Health Screening Conversational Agent
 Two-panel interface: chat on left, live confidence bars + scores on right.
+Supports multilingual input/output and Whisper voice-to-text.
 """
 
 import streamlit as st
 import json
-import time
+import os
+import random
+import tempfile
 from pathlib import Path
 
 # Page config must be first
@@ -13,10 +16,11 @@ st.set_page_config(
     page_title="Mental Health Screening Agent",
     page_icon="🧠",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
-# Lazy imports to avoid blocking startup
+# ── Lazy resource loaders ──────────────────────────────────────────────────────
+
 @st.cache_resource
 def load_graph():
     from dialogue_manager import build_dialogue_graph
@@ -27,31 +31,49 @@ def load_kb():
     with open("dsm_kb.json") as f:
         return json.load(f)
 
-from dialogue_manager import create_initial_state, run_interactive_turn, DOMAINS
+@st.cache_resource
+def load_whisper_model():
+    """Load Whisper 'base' model — ~74 MB, cached after first load."""
+    try:
+        from translator import load_whisper_model as _load
+        return _load("base")
+    except Exception as e:
+        return None
+
+from dialogue_manager import create_initial_state, run_interactive_turn, DOMAINS, RAPPORT_TURNS
 from safety_monitor import check_safety
+from translator import (
+    LANGUAGE_OPTIONS, get_language_name,
+    translate_to_english, translate_from_english,
+    detect_language, detect_script, transcribe_audio,
+)
 
 # ─── Session State Init ────────────────────────────────────────────────────────
 
 def init_session():
-    if "dialogue_state" not in st.session_state:
-        st.session_state.dialogue_state = create_initial_state()
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
-    if "quota_error" not in st.session_state:
-        st.session_state.quota_error = False
-    if "graph" not in st.session_state:
-        st.session_state.graph = None
-    if "safety_alert" not in st.session_state:
-        st.session_state.safety_alert = False
-    if "session_started" not in st.session_state:
-        st.session_state.session_started = False
+    defaults = {
+        "dialogue_state":  create_initial_state(),
+        "chat_history":    [],
+        "quota_error":     False,
+        "graph":           None,
+        "safety_alert":    False,
+        "session_started": False,
+        "user_lang":       "en",          # ISO code of user's preferred language
+        "whisper_model":   None,          # lazy Whisper load
+        "voice_transcript": "",           # last Whisper output
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
 
 
 def reset_session():
-    st.session_state.dialogue_state = create_initial_state()
-    st.session_state.chat_history = []
-    st.session_state.safety_alert = False
+    st.session_state.dialogue_state  = create_initial_state()
+    st.session_state.chat_history    = []
+    st.session_state.safety_alert    = False
     st.session_state.session_started = False
+    st.session_state.quota_error     = False
+    st.session_state.voice_transcript = ""
 
 
 # ─── Custom CSS ────────────────────────────────────────────────────────────────
@@ -69,52 +91,193 @@ st.markdown("""
         font-size: 1.1rem;
     }
     .domain-label {
-        font-size: 0.85rem;
-        color: #555;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: inherit;
+        opacity: 0.9;
         margin-bottom: 2px;
     }
     .score-badge {
         display: inline-block;
-        padding: 2px 10px;
+        padding: 3px 12px;
         border-radius: 12px;
         font-weight: bold;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     .score-0 { background: #d4edda; color: #155724; }
-    .score-1 { background: #fff3cd; color: #856404; }
+    .score-1 { background: #fff3cd; color: #7a5c00; }
     .score-2 { background: #ffe5b4; color: #7d4e00; }
     .score-3 { background: #f8d7da; color: #721c24; }
     .current-domain-box {
-        background: #e8f4fd;
+        background: rgba(31, 119, 180, 0.15);
         border-left: 4px solid #1f77b4;
         padding: 8px 12px;
         border-radius: 4px;
         margin: 8px 0;
+        color: inherit;
     }
-    .chat-message {
-        padding: 8px 12px;
-        margin: 6px 0;
+    .lang-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 10px;
+        background: rgba(31, 119, 180, 0.18);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: inherit;
+        margin-left: 6px;
+    }
+    .translation-note {
+        font-size: 0.75rem;
+        opacity: 0.6;
+        font-style: italic;
+        margin-top: 2px;
+    }
+    .voice-section {
+        border: 1px solid rgba(128,128,128,0.25);
         border-radius: 8px;
-    }
-    .user-msg {
-        background: #e3f2fd;
-        margin-left: 20%;
-        text-align: right;
-    }
-    .bot-msg {
-        background: #f5f5f5;
-        margin-right: 20%;
+        padding: 10px 14px;
+        margin-bottom: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
+
+
+# ─── Sidebar: Language & Settings ─────────────────────────────────────────────
+
+def render_sidebar():
+    with st.sidebar:
+        st.header("⚙️ Settings")
+
+        st.subheader("🌐 Language")
+        lang_names = list(LANGUAGE_OPTIONS.keys())
+        current_lang_name = next(
+            (name for name, code in LANGUAGE_OPTIONS.items()
+             if code == st.session_state.user_lang),
+            "English"
+        )
+        selected = st.selectbox(
+            "Respond in:",
+            lang_names,
+            index=lang_names.index(current_lang_name),
+            help="The agent will understand your input and respond in this language."
+        )
+        new_code = LANGUAGE_OPTIONS[selected]
+        if new_code != st.session_state.user_lang:
+            st.session_state.user_lang = new_code
+            st.rerun()
+
+        if st.session_state.user_lang != "en":
+            st.info(
+                f"🌐 **{selected}** mode active\n\n"
+                "Your messages are auto-translated to English for processing, "
+                "then responses are translated back to your language."
+            )
+
+        st.divider()
+        st.subheader("🎙️ Voice Input")
+        st.caption(
+            "Uses OpenAI Whisper (runs locally). "
+            "Supports Hindi, Urdu, English and 90+ languages."
+        )
+        whisper_ok = True
+        try:
+            import whisper  # noqa: F401
+        except ImportError:
+            whisper_ok = False
+            st.warning("Whisper not installed.\n```\npip install openai-whisper\n```")
+
+        if whisper_ok:
+            st.caption("✅ Whisper available — use the mic button in the chat panel.")
+
+        st.divider()
+        st.subheader("ℹ️ About")
+        st.caption(
+            "Mental health screening powered by:\n"
+            "- **Gemini 2.5 Flash** (LLM)\n"
+            "- **LangGraph** (dialogue flow)\n"
+            "- **SBERT** (safety monitor)\n"
+            "- **Google Translate** (multilingual)\n"
+            "- **Whisper** (voice-to-text)"
+        )
+        st.caption("⚠️ This is a screening tool only — not a clinical diagnosis.")
+
+        if st.button("🔄 Reset Session", type="secondary", use_container_width=True):
+            reset_session()
+            st.rerun()
+
+
+# ─── Helper: process one user turn ────────────────────────────────────────────
+
+def process_user_turn(user_input_original: str):
+    """
+    Handle safety check, translation, LLM processing, and response translation.
+    Updates st.session_state in place.
+    """
+    user_lang = st.session_state.user_lang
+
+    # 1. Auto-detect language if set to English but input looks non-English
+    detected = detect_language(user_input_original)
+    if detected not in ("en",) and user_lang == "en":
+        # Silently update to detected language
+        user_lang = detected
+        st.session_state.user_lang = detected
+
+    # 2. Translate input → English for processing
+    if user_lang != "en":
+        user_input_en = translate_to_english(user_input_original, user_lang)
+    else:
+        user_input_en = user_input_original
+
+    # 3. Safety check on English text
+    safety = check_safety(user_input_en)
+    # Also check original (catches script-specific keywords)
+    safety_orig = check_safety(user_input_original)
+    if safety["triggered"] or safety_orig["triggered"]:
+        st.session_state.safety_alert = True
+
+    # 4. Show user message in original language
+    st.session_state.chat_history.append({"role": "user", "content": user_input_original})
+
+    # 5. Process through dialogue manager (always English internally)
+    with st.spinner("Thinking..." if user_lang == "en" else "Processing..."):
+        new_state, bot_response_en = run_interactive_turn(
+            user_input_en,
+            st.session_state.dialogue_state,
+            st.session_state.graph
+        )
+
+    st.session_state.dialogue_state = new_state
+
+    # 6. Detect quota / LLM failure
+    if new_state.get("llm_failed"):
+        st.session_state.quota_error = True
+
+    if not bot_response_en or bot_response_en.strip() == "":
+        st.session_state.quota_error = True
+        return
+
+    # 7. Translate bot response → user's language
+    if user_lang != "en":
+        bot_response = translate_from_english(bot_response_en, user_lang)
+    else:
+        bot_response = bot_response_en
+
+    st.session_state.chat_history.append({"role": "assistant", "content": bot_response})
+
+    if new_state.get("safety_triggered"):
+        st.session_state.safety_alert = True
 
 
 # ─── Main App ─────────────────────────────────────────────────────────────────
 
 def main():
     init_session()
+    render_sidebar()
 
-    st.title("Mental Health Screening Agent")
+    user_lang = st.session_state.user_lang
+    lang_label = "" if user_lang == "en" else f"<span class='lang-badge'>🌐 {get_language_name(user_lang)}</span>"
+
+    st.markdown(f"## 🧠 Mental Health Screening Agent {lang_label}", unsafe_allow_html=True)
     st.caption("Adaptive conversational screening powered by Gemini + LangGraph")
 
     # Load resources
@@ -123,154 +286,206 @@ def main():
         with st.spinner("Loading dialogue graph..."):
             st.session_state.graph = load_graph()
 
-    # Safety alert banner
+    # ── Quota error banner ──
     if st.session_state.get("quota_error"):
         st.error(
-            "⚠️ **Gemini API quota exceeded.** The free tier allows only 20 requests/day for this model.\n\n"
+            "⚠️ **Gemini API quota exceeded** — the free tier allows ~20 requests/day.\n\n"
             "**Fix:** Enable billing at https://console.cloud.google.com/billing  \n"
-            "Cost: ~$0.15 per million tokens (pennies per session). Restart the app after enabling.",
+            "Cost: ~$0.15 per million tokens (pennies per session). Restart after enabling.",
             icon="🚫"
         )
 
+    # ── Safety alert banner ──
     if st.session_state.safety_alert:
         st.markdown("""
         <div class="safety-alert">
-            SAFETY ALERT — Crisis resources detected in message.
-            If you are in crisis, call or text 988 (Suicide & Crisis Lifeline).
+            🚨 SAFETY ALERT — If you are in crisis, call or text <b>988</b> (Suicide &amp; Crisis Lifeline) right now.
         </div>
         """, unsafe_allow_html=True)
 
     # ── Two-column layout ──
     col_chat, col_monitor = st.columns([3, 2])
 
-    # ── LEFT: Chat Panel ──
+    # ════════════════════════════════════════════
+    # LEFT: Chat Panel
+    # ════════════════════════════════════════════
     with col_chat:
         st.subheader("Conversation")
 
         # Chat display area
-        chat_container = st.container(height=450)
+        chat_container = st.container(height=430)
         with chat_container:
             if not st.session_state.chat_history:
-                st.info("Start the conversation by typing a message below.")
+                st.info("Start the conversation by typing or recording your message below.")
 
             for msg in st.session_state.chat_history:
-                role = msg["role"]
+                role    = msg["role"]
                 content = msg["content"]
+                note    = msg.get("note", "")
                 if role == "assistant":
                     with st.chat_message("assistant", avatar="🧠"):
                         st.write(content)
+                        if note:
+                            st.markdown(f"<span class='translation-note'>{note}</span>", unsafe_allow_html=True)
                 else:
                     with st.chat_message("user", avatar="👤"):
                         st.write(content)
+                        if note:
+                            st.markdown(f"<span class='translation-note'>{note}</span>", unsafe_allow_html=True)
 
-        # Input area
-        if st.session_state.dialogue_state.get("session_complete") or st.session_state.safety_alert:
+        # ── Input area ──
+        session_done = (
+            st.session_state.dialogue_state.get("session_complete")
+            or st.session_state.safety_alert
+        )
+
+        if session_done:
             if st.session_state.dialogue_state.get("session_complete"):
-                st.success("Session complete. See your scores in the right panel.")
-            if st.button("Start New Session", type="primary"):
+                st.success("✅ Session complete. See your scores in the right panel.")
+            if st.button("🔄 Start New Session", type="primary"):
                 reset_session()
                 st.rerun()
+
         else:
-            # Show welcome message if session hasn't started
+            # ── Opening greeting (first load) ──
             if not st.session_state.session_started:
-                from llm_client import call_llm
                 greetings = [
-                    "Hi, thanks for being here today. How have things been going for you lately?",
-                    "Hello! I'm glad you came in. How have you been doing recently?",
-                    "Welcome — I appreciate you taking the time. How have things been for you lately?",
+                    "Hi, I'm glad you're here. How have things been going for you lately?",
+                    "Hello! Thanks for coming in. How have you been doing recently?",
+                    "Welcome — I appreciate you taking the time. How have things been for you?",
+                    "Hi there, good to see you. What's been on your mind lately?",
                 ]
-                import random as _random
+                from llm_client import call_llm
                 try:
-                    greeting = call_llm(
+                    greeting_en = call_llm(
                         "You are starting a warm mental health check-in. "
-                        "Write one short, friendly opening sentence (max 20 words) asking how the person has been doing lately. "
-                        "Do not use asterisks or markdown. Plain text only.",
+                        "Write ONE short friendly opening sentence (max 18 words) asking how the person has been doing. "
+                        "Plain text only, no asterisks or markdown.",
                         temperature=0.7,
-                        max_tokens=60,
+                        max_tokens=50,
                     )
-                    # Sanity check — must be a proper sentence
-                    if not greeting or len(greeting) < 10 or greeting.count(" ") < 3:
-                        greeting = _random.choice(greetings)
+                    if not greeting_en or len(greeting_en) < 10 or greeting_en.count(" ") < 3:
+                        greeting_en = random.choice(greetings)
                 except Exception:
-                    greeting = _random.choice(greetings)
+                    greeting_en = random.choice(greetings)
+
+                # Translate greeting to user language
+                if user_lang != "en":
+                    greeting = translate_from_english(greeting_en, user_lang)
+                else:
+                    greeting = greeting_en
 
                 st.session_state.chat_history.append({"role": "assistant", "content": greeting})
                 st.session_state.session_started = True
                 st.rerun()
 
-            user_input = st.chat_input("Type your message here...")
+            # ── Voice input ──
+            try:
+                import whisper as _whisper_check  # noqa: F401
+                whisper_available = True
+            except ImportError:
+                whisper_available = False
+
+            if whisper_available:
+                with st.expander("🎙️ Voice Input (click to record)", expanded=False):
+                    st.caption("Record your message — Whisper transcribes in any language automatically.")
+                    audio_input = st.audio_input("Record your voice message")
+
+                    if audio_input is not None:
+                        audio_bytes = audio_input.read()
+                        if audio_bytes and len(audio_bytes) > 1000:
+                            with st.spinner("Transcribing with Whisper..."):
+                                result = transcribe_audio(audio_bytes, user_lang)
+
+                            if result["success"] and result["text"]:
+                                transcript = result["text"]
+                                detected_voice_lang = result["language"]
+                                st.success(f"Transcribed: **{transcript}**")
+
+                                # Update user language if Whisper detected something different
+                                if detected_voice_lang and detected_voice_lang != "en":
+                                    if st.session_state.user_lang == "en":
+                                        st.session_state.user_lang = detected_voice_lang
+
+                                if st.button("✅ Send this message", key="send_voice"):
+                                    process_user_turn(transcript)
+                                    st.rerun()
+                            else:
+                                st.error(f"Transcription failed: {result.get('error', 'Unknown error')}")
+
+            # ── Text input ──
+            placeholder = {
+                "en": "Type your message here...",
+                "hi": "यहाँ लिखें / Type here in Hindi...",
+                "ur": "یہاں لکھیں / Type here in Urdu...",
+                "bn": "এখানে লিখুন...",
+            }.get(user_lang, "Type your message here...")
+
+            user_input = st.chat_input(placeholder)
             if user_input and user_input.strip():
-                # Safety check first
-                safety = check_safety(user_input)
-                if safety["triggered"]:
-                    st.session_state.safety_alert = True
-
-                # Add user message to history
-                st.session_state.chat_history.append({"role": "user", "content": user_input})
-
-                # Process through dialogue manager
-                with st.spinner("Thinking..."):
-                    new_state, bot_response = run_interactive_turn(
-                        user_input,
-                        st.session_state.dialogue_state,
-                        st.session_state.graph
-                    )
-
-                st.session_state.dialogue_state = new_state
-
-                # Detect empty response (quota exhausted)
-                if not bot_response or bot_response.strip() == "":
-                    st.session_state.quota_error = True
-                else:
-                    st.session_state.chat_history.append({"role": "assistant", "content": bot_response})
-
-                if new_state.get("safety_triggered"):
-                    st.session_state.safety_alert = True
-
+                process_user_turn(user_input.strip())
                 st.rerun()
 
-    # ── RIGHT: Monitor Panel ──
+    # ════════════════════════════════════════════
+    # RIGHT: Monitor Panel
+    # ════════════════════════════════════════════
     with col_monitor:
         st.subheader("Live Session Monitor")
 
-        state = st.session_state.dialogue_state
-        confidence = state.get("confidence", {d: 0.0 for d in DOMAINS})
-        scores = state.get("scores", {})
+        state          = st.session_state.dialogue_state
+        confidence     = state.get("confidence", {d: 0.0 for d in DOMAINS})
+        scores         = state.get("scores", {})
         current_domain = state.get("current_domain", "")
-        phase = state.get("phase", "rapport")
-        turn_count = state.get("turn_count", 0)
+        phase          = state.get("phase", "rapport")
+        turn_count     = state.get("turn_count", 0)
         session_complete = state.get("session_complete", False)
 
-        # Session info
-        st.markdown(f"**Phase:** `{phase.upper()}` | **Turn:** `{turn_count}`")
+        # ── Phase / progress ──
+        if phase == "rapport":
+            rapport_done = min(turn_count, RAPPORT_TURNS)
+            phase_label  = f"RAPPORT ({rapport_done}/{RAPPORT_TURNS} turns)"
+        else:
+            phase_label = "SCREENING"
 
-        if current_domain:
+        # Language badge
+        lang_str = "" if user_lang == "en" else f" 🌐 {get_language_name(user_lang)}"
+        st.markdown(f"**Phase:** `{phase_label}` | **Turn:** `{turn_count}`{lang_str}")
+
+        if phase == "rapport" and turn_count < RAPPORT_TURNS:
+            st.progress(turn_count / RAPPORT_TURNS,
+                        text=f"Building rapport ({turn_count}/{RAPPORT_TURNS})")
+        elif current_domain and not session_complete:
+            domain_display_map = {
+                "sleep": "Sleep", "mood": "Mood / Anhedonia",
+                "energy": "Energy", "appetite": "Appetite",
+                "concentration": "Concentration",
+            }
             st.markdown(f"""
             <div class="current-domain-box">
-                Currently screening: <b>{current_domain.replace('_', ' ').title()}</b>
+                Currently screening: <b>{domain_display_map.get(current_domain, current_domain.replace('_',' ').title())}</b>
             </div>
             """, unsafe_allow_html=True)
 
         st.divider()
 
-        # Confidence bars
+        # ── Domain confidence bars ──
         st.markdown("**Domain Confidence**")
         domain_display = {
-            "sleep": "Sleep",
-            "mood": "Mood / Anhedonia",
-            "energy": "Energy",
-            "appetite": "Appetite",
+            "sleep":         "Sleep",
+            "mood":          "Mood / Anhedonia",
+            "energy":        "Energy",
+            "appetite":      "Appetite",
             "concentration": "Concentration",
         }
 
         for domain in DOMAINS:
-            conf = confidence.get(domain, 0.0)
+            conf   = confidence.get(domain, 0.0)
             scored = domain in scores
 
             label_col, bar_col = st.columns([2, 3])
             with label_col:
                 if scored:
-                    score_val = scores[domain]
+                    score_val   = scores[domain]
                     score_class = f"score-{score_val}"
                     st.markdown(
                         f"<span class='domain-label'>{domain_display[domain]}</span><br>"
@@ -282,64 +497,74 @@ def main():
                         f"<span class='domain-label'>{domain_display[domain]}</span>",
                         unsafe_allow_html=True
                     )
-
             with bar_col:
-                # Color the bar based on threshold
-                if scored:
-                    bar_color = "#28a745"
-                elif conf >= 0.75:
-                    bar_color = "#17a2b8"
-                else:
-                    bar_color = "#6c757d"
-                st.progress(
-                    min(1.0, conf),
-                    text=f"{conf:.0%}"
-                )
+                st.progress(min(1.0, conf), text=f"{conf:.0%}")
 
         st.divider()
 
-        # Final scores table (shown when complete)
+        # ── Final results (session complete) ──
         if session_complete and scores:
-            st.markdown("**Final PHQ-9 Scores**")
             total = sum(scores.values())
 
-            severity_labels = {
-                (0, 4): ("Minimal", "green"),
-                (5, 9): ("Mild", "orange"),
-                (10, 14): ("Moderate", "darkorange"),
-                (15, 27): ("Severe", "red"),
-            }
-            severity_label = "Unknown"
-            severity_color = "gray"
-            for (lo, hi), (label, color) in severity_labels.items():
-                if lo <= total <= hi:
-                    severity_label = label
-                    severity_color = color
-                    break
+            if total <= 2:
+                severity_label, sev_emoji, sev_color, sev_bg = "Minimal", "🟢", "#155724", "#d4edda"
+                recommendation = "No significant symptoms detected. Continue healthy habits and check in periodically."
+            elif total <= 5:
+                severity_label, sev_emoji, sev_color, sev_bg = "Mild", "🟡", "#856404", "#fff3cd"
+                recommendation = "Mild symptoms present. Consider speaking with a counselor or GP."
+            elif total <= 9:
+                severity_label, sev_emoji, sev_color, sev_bg = "Moderate", "🟠", "#7d4e00", "#ffe5b4"
+                recommendation = "Moderate symptoms. Speaking with a mental health professional is recommended."
+            else:
+                severity_label, sev_emoji, sev_color, sev_bg = "Severe", "🔴", "#721c24", "#f8d7da"
+                recommendation = "Significant symptoms detected. Please reach out to a mental health professional promptly."
 
-            # Scores table
-            score_data = {
-                "Domain": [domain_display[d] for d in DOMAINS],
-                "Score": [scores.get(d, "-") for d in DOMAINS],
-                "Severity": [
-                    ["None", "Mild", "Moderate", "Severe"][scores.get(d, 0)] if d in scores else "-"
-                    for d in DOMAINS
-                ]
-            }
-            st.table(score_data)
+            # Translate recommendation if needed
+            if user_lang != "en":
+                recommendation = translate_from_english(recommendation, user_lang)
 
-            st.markdown(f"**Total PHQ-9: {total}/15** — "
-                       f"<span style='color:{severity_color};font-weight:bold'>{severity_label}</span>",
-                       unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='background:{sev_bg};border-radius:8px;padding:12px 16px;margin-bottom:12px;'>"
+                f"<div style='font-size:1.3rem;font-weight:bold;color:{sev_color};'>{sev_emoji} {severity_label} — {total}/15</div>"
+                f"<div style='font-size:0.85rem;color:{sev_color};margin-top:4px;'>{recommendation}</div>"
+                f"</div>",
+                unsafe_allow_html=True
+            )
 
-            st.caption("Note: This is a screening tool only. "
-                      "Please consult a qualified mental health professional for diagnosis and treatment.")
+            st.markdown("**Domain Breakdown**")
+            score_labels      = ["None", "Mild", "Moderate", "Severe"]
+            score_colors      = ["#d4edda", "#fff3cd", "#ffe5b4", "#f8d7da"]
+            score_text_colors = ["#155724", "#856404", "#7d4e00", "#721c24"]
+
+            for d in DOMAINS:
+                s = scores.get(d, 0)
+                col_a, col_b = st.columns([3, 2])
+                with col_a:
+                    st.markdown(
+                        f"<span style='font-size:0.9rem;'>{domain_display[d]}</span>",
+                        unsafe_allow_html=True
+                    )
+                with col_b:
+                    st.markdown(
+                        f"<span style='background:{score_colors[s]};color:{score_text_colors[s]};"
+                        f"padding:2px 10px;border-radius:10px;font-size:0.85rem;font-weight:bold;'>"
+                        f"{score_labels[s]} ({s}/3)</span>",
+                        unsafe_allow_html=True
+                    )
+
+            st.divider()
+            st.caption(
+                "⚠️ This is a screening tool only, covering 5 of 9 PHQ-9 domains. "
+                "Scores are not a clinical diagnosis. Please consult a qualified mental health professional."
+            )
+            if total >= 6:
+                st.info("🆘 If you are in crisis, call or text **988** (Suicide & Crisis Lifeline) anytime.")
 
         elif not session_complete:
             domains_scored = len(scores)
-            domains_remaining = len(DOMAINS) - domains_scored
             st.markdown(f"**Progress:** {domains_scored}/{len(DOMAINS)} domains assessed")
-            if domains_remaining > 0:
+            st.progress(domains_scored / len(DOMAINS))
+            if domains_scored < len(DOMAINS):
                 remaining = [d for d in DOMAINS if d not in scores]
                 st.caption(f"Remaining: {', '.join(domain_display[d] for d in remaining)}")
 

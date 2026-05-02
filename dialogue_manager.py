@@ -25,6 +25,15 @@ MIN_PROBE_TURNS = 1   # Minimum turns per domain before scoring
 MAX_DOMAIN_TURNS = 3  # Force score after this many turns regardless of confidence
 RAPPORT_TURNS = 4     # 4 open-ended turns as per M1 presentation
 
+# Varied rapport fallbacks so repeated failures aren't robotic
+_RAPPORT_FALLBACKS = [
+    "I hear you — that sounds like a lot to carry. What's been the hardest part lately?",
+    "Thank you for sharing that. How long have things been feeling this way?",
+    "That must be really tough. Can you tell me a bit more about what's been going on?",
+    "I appreciate you opening up. How has this been affecting your day-to-day life?",
+    "It takes courage to talk about this. What feels most overwhelming right now?",
+]
+
 
 # ─── State Schema ──────────────────────────────────────────────────────────────
 
@@ -44,6 +53,7 @@ class DialogueState(TypedDict):
     confidence_history: dict        # {domain: [float per turn]}
     response_latencies: list        # [float seconds per bot turn]
     last_response: str              # Most recent bot message
+    llm_failed: bool                # True if LLM call failed (quota/network)
 
 
 # ─── Keyword Extractor for Rapport Phase ──────────────────────────────────────
@@ -86,8 +96,10 @@ Write a short, natural response (1-2 sentences) that:
 Return ONLY your response, no preamble."""
 
     response = call_llm(prompt, system, max_tokens=300)
+    llm_failed = not response
     if not response:
-        response = "Thanks for being here today. How have things been going for you lately — what's life been like?"
+        # Pick a varied fallback based on turn so it doesn't repeat
+        response = _RAPPORT_FALLBACKS[turn_count % len(_RAPPORT_FALLBACKS)]
 
     latency = time.time() - t0
 
@@ -127,6 +139,7 @@ Return ONLY your response, no preamble."""
         "domain_order": new_domain_order,
         "response_latencies": new_latencies,
         "last_response": response,
+        "llm_failed": llm_failed,
     }
 
 
@@ -195,6 +208,7 @@ Write 1-2 warm sentences that:
 
 Do NOT mention a score or diagnosis. Return ONLY the response text."""
             response = call_llm(prompt, system, max_tokens=200)
+            llm_failed = not response
             if not response:
                 response = "Thank you for sharing that. I'd like to hear a bit more about how things have been for you overall."
 
@@ -230,6 +244,7 @@ Write ONE short, natural follow-up question that:
 Return ONLY the question, no preamble."""
 
             response = call_llm(prompt, system, max_tokens=150)
+            llm_failed = not response
             if not response:
                 # Fallback to a fresh probe not yet used
                 used = set(already_asked)
@@ -275,6 +290,7 @@ Keep it to 2-3 sentences. Do NOT mention specific scores or diagnoses. Return ON
             "response_latencies": new_latencies,
             "last_response": response,
             "domain_order": new_domain_order,
+            "llm_failed": llm_failed,
         }
 
     domain_node.__name__ = f"{domain}_node"
@@ -427,6 +443,7 @@ def create_initial_state() -> DialogueState:
         "confidence_history": {d: [] for d in DOMAINS},
         "response_latencies": [],
         "last_response": "",
+        "llm_failed": False,
     }
 
 
