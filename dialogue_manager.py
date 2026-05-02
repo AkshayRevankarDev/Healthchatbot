@@ -9,8 +9,8 @@ import random
 from typing import TypedDict, Optional
 from pathlib import Path
 
-import ollama
 from langgraph.graph import StateGraph, END
+from llm_client import call_llm
 
 from inference_engine import score_domain, estimate_confidence_increment
 from safety_monitor import check_safety
@@ -19,9 +19,11 @@ from safety_monitor import check_safety
 with open("dsm_kb.json") as f:
     DSM_KB = json.load(f)
 
-DOMAINS = ["sleep", "mood", "energy", "concentration", "self_worth"]
+DOMAINS = ["sleep", "mood", "energy", "appetite", "concentration"]
 CONFIDENCE_THRESHOLD = 0.75
-MIN_PROBE_TURNS = 2  # Minimum turns per domain before scoring
+MIN_PROBE_TURNS = 1   # Minimum turns per domain before scoring
+MAX_DOMAIN_TURNS = 3  # Force score after this many turns regardless of confidence
+RAPPORT_TURNS = 4     # 4 open-ended turns as per M1 presentation
 
 
 # ─── State Schema ──────────────────────────────────────────────────────────────
@@ -44,25 +46,6 @@ class DialogueState(TypedDict):
     last_response: str              # Most recent bot message
 
 
-# ─── Ollama Helper ─────────────────────────────────────────────────────────────
-
-def call_ollama(prompt: str, system: str = "", temperature: float = 0.7) -> str:
-    messages = []
-    if system:
-        messages.append({"role": "system", "content": system})
-    messages.append({"role": "user", "content": prompt})
-    try:
-        response = ollama.chat(
-            model="llama3",
-            messages=messages,
-            options={"temperature": temperature, "num_predict": 300}
-        )
-        return response["message"]["content"].strip()
-    except Exception as e:
-        print(f"[DialogueManager WARN] Ollama failed: {e}")
-        return "I appreciate you sharing that. Could you tell me a bit more?"
-
-
 # ─── Keyword Extractor for Rapport Phase ──────────────────────────────────────
 
 def extract_domain_signals(text: str) -> dict:
@@ -80,7 +63,7 @@ def extract_domain_signals(text: str) -> dict:
 # ─── Node: Rapport ─────────────────────────────────────────────────────────────
 
 def rapport_node(state: DialogueState) -> DialogueState:
-    """First 3 turns: casual open-ended conversation + keyword scanning."""
+    """First 4 turns: casual open-ended conversation + keyword scanning."""
     t0 = time.time()
 
     messages = state["messages"]
@@ -88,16 +71,21 @@ def rapport_node(state: DialogueState) -> DialogueState:
 
     # Generate rapport question
     conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-6:])
-    system = "You are a warm, empathetic mental health counselor starting a conversation. Be casual, caring, and open-ended."
-    prompt = f"""This is turn {turn_count + 1} of a mental health screening session (rapport phase, first 3 turns).
-Previous exchange:
+    system = "You are a warm, empathetic mental health counselor having a genuine conversation. Sound like a real human, not a script."
+    prompt = f"""You are in the early part of a mental health check-in (turn {turn_count + 1} of 4 rapport turns).
+
+Recent exchange:
 {conv_text}
 
-Generate ONE open-ended, warm question to build rapport and learn about the patient's recent life.
-Keep it conversational and natural. Do not ask about symptoms directly.
-Return ONLY the question, no other text."""
+Write a short, natural response (1-2 sentences) that:
+- First briefly acknowledges or responds to what the patient just said
+- Then asks ONE gentle open-ended question about their life, feelings, or what's been going on
+- Does NOT use clinical language or feel like a questionnaire
+- Sounds warm and genuine
 
-    response = call_ollama(prompt, system)
+Return ONLY your response, no preamble."""
+
+    response = call_llm(prompt, system, max_tokens=300)
     if not response:
         response = "Thanks for being here today. How have things been going for you lately — what's life been like?"
 
@@ -121,7 +109,7 @@ Return ONLY the question, no other text."""
     new_phase = "rapport"
     new_domain_order = list(state["domain_order"])
 
-    if turn_count >= 2:  # After turn 3, move to screening
+    if turn_count >= RAPPORT_TURNS - 1:  # After 4 rapport turns, move to screening
         new_phase = "screening"
         # Order domains by pre-activated confidence (highest first)
         remaining = [d for d in DOMAINS if d not in state["scores"]]
@@ -162,15 +150,30 @@ def make_domain_node(domain: str):
         # Update confidence from most recent patient response
         new_confidence = dict(confidence)
         patient_msgs = [m for m in messages if m["role"] == "patient"]
+        last_patient = ""
         if patient_msgs:
             last_patient = patient_msgs[-1]["content"]
+            # Current domain update
             increment = estimate_confidence_increment(domain, last_patient, kb_entry)
             new_confidence[domain] = min(1.0, new_confidence[domain] + increment)
+            # Cross-domain update: boost other domains from same response
+            cross_boosts = extract_domain_signals(last_patient)
+            for d, boost in cross_boosts.items():
+                if d != domain:
+                    new_confidence[d] = min(1.0, new_confidence[d] + boost * 0.6)
 
         conf = new_confidence[domain]
 
+        # Re-sort domain_order by updated confidence so most-signaled domains come next
+        current_order = list(state["domain_order"]) if state["domain_order"] else [d for d in DOMAINS if d not in scores]
+        unscored = [d for d in current_order if d not in scores]
+        new_domain_order = sorted(unscored, key=lambda d: new_confidence[d], reverse=True)
+
         # Decide: probe or score
-        should_score = (conf >= CONFIDENCE_THRESHOLD and current_turns >= MIN_PROBE_TURNS)
+        should_score = (
+            (conf >= CONFIDENCE_THRESHOLD and current_turns >= MIN_PROBE_TURNS)
+            or current_turns >= MAX_DOMAIN_TURNS  # force score after ceiling
+        )
 
         if should_score and domain not in scores:
             # Score the domain via CoT
@@ -178,39 +181,59 @@ def make_domain_node(domain: str):
             scores[domain] = cot_result["score"]
             cot_chains[domain] = cot_result
 
-            # Generate a transitional response
-            system = "You are a warm mental health counselor. Acknowledge what the patient said and smoothly transition."
-            prompt = f"""The patient just discussed their {domain} experiences.
-Generate a brief empathetic acknowledgment (1-2 sentences) and naturally transition to the next topic.
-Return ONLY the response text."""
-            response = call_ollama(prompt, system)
+            # Generate a transitional acknowledgment
+            system = "You are a warm, empathetic mental health counselor."
+            conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-4:])
+            prompt = f"""The patient has been discussing their {domain} experiences.
+
+Recent exchange:
+{conv_text}
+
+Write 1-2 warm sentences that:
+1. Acknowledge or validate what they just shared
+2. Naturally signal you're moving on to something else
+
+Do NOT mention a score or diagnosis. Return ONLY the response text."""
+            response = call_llm(prompt, system, max_tokens=200)
             if not response:
-                response = f"Thank you for sharing that with me. I'd like to understand a bit more about how you've been feeling overall."
+                response = "Thank you for sharing that. I'd like to hear a bit more about how things have been for you overall."
 
             domain_turn_counts[domain] = current_turns + 1
 
         else:
-            # Generate a probe question
+            # Generate a contextual follow-up — never recycle the same question
             probe_questions = kb_entry.get("probe_questions", [])
-            # Pick probe question based on turn count to avoid repetition
-            probe_idx = current_turns % len(probe_questions)
+            conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-8:])
 
-            system = "You are a warm, empathetic mental health counselor. Ask natural, conversational follow-up questions."
-            conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-6:])
-            prompt = f"""You are screening for: {kb_entry['item_name']} — {kb_entry['description']}
+            # Collect what the bot has already asked in this domain
+            bot_msgs = [m["content"] for m in messages if m["role"] == "assistant"]
+            already_asked = bot_msgs[-current_turns:] if current_turns > 0 else []
+
+            system = "You are a warm, empathetic mental health counselor having a real conversation."
+            prompt = f"""You are gently exploring the patient's {domain} ({kb_entry['item_name']}: {kb_entry['description']}).
 
 Recent conversation:
 {conv_text}
 
-Suggested probe: "{probe_questions[probe_idx]}"
+Example probe directions (do NOT copy verbatim):
+{chr(10).join(f'- {q}' for q in probe_questions)}
 
-Generate a natural, empathetic question to explore the patient's {domain} symptoms further.
-Build on what they've already said. Don't repeat earlier questions.
-Keep it conversational. Return ONLY the question."""
+Questions you have ALREADY asked (do not repeat these):
+{chr(10).join(f'- {q}' for q in already_asked) if already_asked else '- none yet'}
 
-            response = call_ollama(prompt, system)
+Write ONE short, natural follow-up question that:
+- Directly responds to what the patient just said
+- Explores {domain} without repeating anything above
+- Sounds like a real human conversation, not a questionnaire
+- Is 1 sentence only
+
+Return ONLY the question, no preamble."""
+
+            response = call_llm(prompt, system, max_tokens=150)
             if not response:
-                response = probe_questions[probe_idx]
+                # Fallback to a fresh probe not yet used
+                used = set(already_asked)
+                response = next((q for q in probe_questions if q not in used), probe_questions[0])
 
             domain_turn_counts[domain] = current_turns + 1
 
@@ -231,7 +254,7 @@ Keep it conversational. Return ONLY the question."""
             prompt = f"""The screening session is complete. Generate a warm, empathetic closing statement.
 Thank the patient for sharing, briefly acknowledge their courage, and let them know next steps will be discussed.
 Keep it to 2-3 sentences. Do NOT mention specific scores or diagnoses. Return ONLY the closing statement."""
-            closing = call_ollama(prompt, system)
+            closing = call_llm(prompt, system, max_tokens=300)
             if not closing:
                 closing = "Thank you so much for sharing all of this with me today. It takes real courage to talk about these things. We'll review what we've discussed and talk about the best path forward for you."
             response = closing
@@ -251,6 +274,7 @@ Keep it to 2-3 sentences. Do NOT mention specific scores or diagnoses. Return ON
             "session_complete": session_complete,
             "response_latencies": new_latencies,
             "last_response": response,
+            "domain_order": new_domain_order,
         }
 
     domain_node.__name__ = f"{domain}_node"
@@ -282,7 +306,7 @@ Generate an immediate, compassionate response that:
 
 Keep it warm and non-clinical. Return ONLY the response."""
 
-        response = call_ollama(prompt, system, temperature=0.3)
+        response = call_llm(prompt, system, temperature=0.3, max_tokens=300)
         if not response:
             response = ("I hear you, and I'm really glad you shared that with me. What you're feeling matters deeply. "
                        "If you're in crisis, please reach out to the 988 Suicide & Crisis Lifeline — call or text 988. "
@@ -312,7 +336,7 @@ def route_next(state: DialogueState) -> str:
     phase = state["phase"]
     turn_count = state["turn_count"]
 
-    if phase == "rapport" and turn_count < 3:
+    if phase == "rapport" and turn_count < RAPPORT_TURNS:
         return "rapport"
 
     # Move to screening
@@ -445,21 +469,54 @@ def run_session(conversation: list, graph=None) -> dict:
 
 def run_interactive_turn(user_message: str, state: DialogueState, graph=None) -> tuple:
     """
-    Process a single user turn interactively.
+    Process ONE patient turn and return a single bot response.
+
+    Directly dispatches to the correct node rather than calling graph.invoke(),
+    which would run the entire graph to completion in one shot (wrong for interactive use).
+
     Returns (updated_state, bot_response).
     """
-    if graph is None:
-        graph = build_dialogue_graph()
-
-    # Add user message
+    # Add patient message
     state = {**state, "messages": state["messages"] + [{"role": "patient", "content": user_message}]}
 
+    # Safety check always runs first
     try:
-        result = graph.invoke(state)
-        return result, result.get("last_response", "I appreciate you sharing that.")
+        new_state = safety_node(state)
     except Exception as e:
-        print(f"[DialogueManager ERROR] {e}")
+        print(f"[DialogueManager ERROR] safety_node: {e}")
+        new_state = state
+
+    if new_state.get("safety_triggered"):
+        return new_state, new_state.get("last_response", "")
+
+    state = new_state  # carry safety_info forward
+
+    # Dispatch to exactly ONE node
+    try:
+        phase        = state["phase"]
+        turn_count   = state["turn_count"]
+        scores       = state["scores"]
+        domain_order = state["domain_order"]
+
+        if phase == "rapport" and turn_count < RAPPORT_TURNS:
+            new_state = rapport_node(state)
+        else:
+            # Find the next unscored domain
+            ordered = domain_order if domain_order else [d for d in DOMAINS if d not in scores]
+            domain  = next((d for d in ordered if d not in scores), None)
+
+            if domain is None:
+                # All domains scored — session complete
+                return {**state, "session_complete": True}, state.get("last_response", "Thank you for completing the screening.")
+
+            node_fn   = make_domain_node(domain)
+            new_state = node_fn(state)
+
+    except Exception as e:
+        print(f"[DialogueManager ERROR] node dispatch: {e}")
         return state, "I appreciate you sharing that. Could you tell me more?"
+
+    return new_state, new_state.get("last_response", "I appreciate you sharing that.")
 
 
 if __name__ == "__main__":

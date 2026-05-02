@@ -1,43 +1,43 @@
 {
   "metrics": {
-    "cohens_weighted_kappa": 0.0799,
-    "disclosure_efficiency_mean_turns": 16.36,
-    "safety_recall": 0.0,
-    "safety_precision": 0.0,
+    "cohens_weighted_kappa": 0.0741,
+    "disclosure_efficiency_mean_turns": 16.34,
+    "safety_recall": 0.0909,
+    "safety_precision": 1.0,
     "discourse_effectiveness_pct": 100.0,
-    "mean_response_latency_sec": 10.714,
-    "ragas_faithfulness": 0.6168,
+    "mean_response_latency_sec": 5.931,
+    "ragas_faithfulness": 0.62,
     "safety_details": {
-      "tp": 0,
+      "tp": 5,
       "fp": 0,
-      "fn": 10,
-      "tn": 10
+      "fn": 50,
+      "tn": 55
     }
   },
   "domain_accuracy": {
     "sleep": {
-      "gold_mean": 1.2,
-      "pred_mean": 1.5,
-      "mae": 0.9
+      "gold_mean": 1.4,
+      "pred_mean": 1.4,
+      "mae": 0.8
     },
     "mood": {
       "gold_mean": 1.5,
-      "pred_mean": 1.9,
-      "mae": 0.8
+      "pred_mean": 1.5,
+      "mae": 1.0
     },
     "energy": {
-      "gold_mean": 1.2,
-      "pred_mean": 2.0,
-      "mae": 0.8
+      "gold_mean": 1.4,
+      "pred_mean": 1.9,
+      "mae": 1.1
     },
-    "concentration": {
-      "gold_mean": 1.5,
-      "pred_mean": 1.4,
+    "appetite": {
+      "gold_mean": 1.8,
+      "pred_mean": 1.1,
       "mae": 0.9
     },
-    "self_worth": {
+    "concentration": {
       "gold_mean": 1.4,
-      "pred_mean": 1.5,
+      "pred_mean": 1.1,
       "mae": 0.7
     }
   },
@@ -46,25 +46,25 @@
       "session_id": "session_01",
       "severity": "minimal",
       "gold_scores": {
-        "sleep": 0,
-        "mood": 1,
-        "energy": 1,
-        "concentration": 1,
-        "self_worth": 1
+        "sleep": 1,
+        "mood": 0,
+        "energy": 0,
+        "appetite": 1,
+        "concentration": 0
       },
       "predicted_scores": {
         "sleep": 1,
-        "mood": 2,
+        "mood": 1,
         "energy": 2,
-        "concentration": 2,
-        "self_worth": 1
+        "appetite": 1,
+        "concentration": 1
       },
       "confidence": {
-        "sleep": 0.8500000000000003,
-        "mood": 0.44999999999999996,
-        "energy": 0.44999999999999996,
-        "concentration": 0.7000000000000002,
-        "self_worth": 0.44999999999999996
+        "sleep": 0.9000000000000001,
+        "mood": 0.7000000000000002,
+        "energy": 1.0,
+        "appetite": 0.9500000000000002,
+        "concentration": 0.8
       },
       "confidence_history": {
         "sleep": [
@@ -72,207 +72,202 @@
           0.0,
           0.2,
           0.2,
-          0.25,
-          0.25,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
           0.55,
           0.55,
           0.6000000000000001,
           0.6000000000000001,
           0.6500000000000001,
           0.6500000000000001,
-          0.7000000000000002,
-          0.7000000000000002,
-          0.7500000000000002,
-          0.7500000000000002,
-          0.8000000000000003,
-          0.8000000000000003
+          0.8500000000000001,
+          0.8500000000000001,
+          0.9000000000000001
         ],
         "mood": [
           0.0,
           0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
           0.2,
           0.2,
           0.25,
           0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001,
+          0.7000000000000002
         ],
         "energy": [
           0.0,
           0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
           0.3,
           0.3,
           0.35,
           0.35,
           0.39999999999999997,
-          0.39999999999999997
+          0.39999999999999997,
+          0.7,
+          0.7,
+          0.75,
+          0.75,
+          0.8,
+          0.8,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.30000000000000004,
+          0.30000000000000004,
+          0.35000000000000003,
+          0.35000000000000003,
+          0.65,
+          0.65,
+          0.7000000000000001,
+          0.7000000000000001,
+          0.7500000000000001,
+          0.7500000000000001,
+          0.9500000000000002
         ],
         "concentration": [
           0.0,
           0.0,
           0.05,
           0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001,
-          0.6500000000000001
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
           0.35,
           0.35,
           0.39999999999999997,
-          0.39999999999999997
+          0.39999999999999997,
+          0.44999999999999996,
+          0.44999999999999996,
+          0.49999999999999994,
+          0.49999999999999994,
+          0.5499999999999999,
+          0.5499999999999999,
+          0.75,
+          0.75,
+          0.8
         ]
       },
       "cot_chains": {
         "sleep": {
           "domain": "sleep",
           "evidence": [
-            "Sometimes I don't even make it to bed until midnight or later because my brain is always racing with things I need to do tomorrow.",
-            "When I do get some sleep, it's usually pretty fitful."
+            "I feel like I've been running on empty since this project started.",
+            "Sometimes I'll watch TV or eat a solo meal after dinner, but it's not like I'm really enjoying myself."
           ],
-          "reasoning": "The patient reported difficulty falling asleep and staying asleep due to their workload-related stress. This aligns with the DSM-5-TR definition of Sleep Disturbance.",
+          "reasoning": "The patient mentions feeling 'tired all the time' and only engaging in solitary activities like watching TV or eating alone, which suggests some sleep disturbance. However, there is no specific mention of difficulty falling asleep or staying asleep.",
           "score": 1,
-          "justification": "The patient experiences some sleep disturbance, but it's not severe enough to be described as 'often can't sleep' or 'sleeping too much most days'.",
-          "raw_cot": "{\n  \"evidence\": [\"Sometimes I don't even make it to bed until midnight or later because my brain is always racing with things I need to do tomorrow.\", \"When I do get some sleep, it's usually pretty fi..."
+          "justification": "The patient's reports of fatigue and lack of enjoyment in leisure activities suggest some sleep disturbance, but the severity indicators are not fully met.",
+          "raw_cot": "{\n  \"evidence\": [\"I feel like I've been running on empty since this project started.\", \"Sometimes I'll watch TV or eat a solo meal after dinner, but it's not like I'm really enjoying myself.\"],\n  \"rea..."
         },
         "mood": {
           "domain": "mood",
           "evidence": [
-            "Sometimes I just feel so frustrated and stuck. Like, why am I always struggling to get everything done on time? It feels like no matter what I do, it's never enough.",
-            "I feel like I'm just barely scraping by and making things up as I go along. Like, what's the point of even trying if it's all just going to fall apart anyway?",
-            "I just feel really stuck and overwhelmed right now. Like, I wish things could just go back to the way they were before all this started."
+            "I just feel really tired and drained all the time.",
+            "Sometimes I'll watch TV or eat a solo meal after dinner, but it's not like I'm really enjoying myself."
           ],
-          "reasoning": "{\n  \"evidence\": [\"Sometimes I just feel so frustrated and stuck. Like, why am I always struggling to get everything done on time? It feels like no matter what I do, it's never enough.\", \"I feel like I'm just barely scraping by and making things up as I go along. Like, what's the point of even trying if it's all just going to fall apart anyway?\", \"I just feel really stuck and overwhelmed right now. Like, I wish things could just go back to the way they were before all this started.\"],\n  \"reasonin",
-          "score": 2,
-          "justification": "The patient's statements indicate a persistent feeling of being overwhelmed and stuck, with no enjoyment or pleasure in activities, scoring 2 on the PHQ-9 MOOD domain.",
-          "raw_cot": "{\n  \"evidence\": [\"Sometimes I just feel so frustrated and stuck. Like, why am I always struggling to get everything done on time? It feels like no matter what I do, it's never enough.\", \"I feel like I..."
+          "reasoning": "The patient reports feeling 'really tired and drained all the time', which aligns with the DSM-5-TR severity indicator for Score 1 (Several days): less interested than usual, some days feel low, occasionally feel down. Additionally, they mention not enjoying solo meals or TV watching, which is consistent with the indicator for Score 2 (More than half the days): mostly feel down, rarely enjoy things.",
+          "score": 1,
+          "justification": "The patient's reports of feeling tired and drained all the time, as well as their lack of enjoyment in activities, suggest a moderate level of depressed mood and anhedonia.",
+          "raw_cot": "{\n  \"evidence\": [\"I just feel really tired and drained all the time.\", \"Sometimes I'll watch TV or eat a solo meal after dinner, but it's not like I'm really enjoying myself.\"],\n  \"reasoning\": \"The pa..."
         },
         "energy": {
           "domain": "energy",
           "evidence": [
-            "Sometimes I just want to crawl back into bed and pretend none of this is happening.",
-            "I don't even make it to bed until midnight or later because my brain is always racing with things I need to do tomorrow."
+            "I feel like I've been running on empty since this project started.",
+            "Sometimes I'll watch TV or eat a solo meal after dinner, but it's not like I'm really enjoying myself.",
+            "But lately, even those things have felt like too much effort.",
+            "It's hard when everything feels like an effort."
           ],
-          "reasoning": "The patient's desire to 'crawl back into bed' suggests a lack of energy, as does their difficulty getting to bed on time due to racing thoughts. These quotes align with the DSM-5-TR severity indicators for Energy/Fatigue.",
+          "reasoning": "The patient consistently reports feeling tired and drained, with phrases indicating a lack of energy. This is consistent with DSM-5-TR severity indicators for scores 1-3.",
           "score": 2,
-          "justification": "The patient's reports of feeling exhausted and having trouble sleeping suggest that they often feel drained, which is consistent with a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"Sometimes I just want to crawl back into bed and pretend none of this is happening.\", \"I don't even make it to bed until midnight or later because my brain is always racing with thin..."
+          "justification": "The patient's persistent reporting of fatigue and low energy across multiple turns suggests a significant impact on their daily life.",
+          "raw_cot": "{\n  \"evidence\": [\"I feel like I've been running on empty since this project started.\", \"Sometimes I'll watch TV or eat a solo meal after dinner, but it's not like I'm really enjoying myself.\", \"But la..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I have been eating more comfort foods and skipping meals sometimes. It's not like I'm really hungry, but I just don't feel like cooking or getting out."
+          ],
+          "reasoning": "The patient reported eating more comfort foods and skipping meals, which indicates a change in appetite. This is consistent with the DSM-5-TR severity indicators for score 1 (Several days): sometimes not hungry, occasionally eating more than usual, a few days with poor appetite.",
+          "score": 1,
+          "justification": "The patient's reported changes in appetite and eating habits are consistent with a score of 1.",
+          "raw_cot": "{\n  \"evidence\": [\"I have been eating more comfort foods and skipping meals sometimes. It's not like I'm really hungry, but I just don't feel like cooking or getting out.\"],\n  \"reasoning\": \"The patient..."
         },
         "concentration": {
           "domain": "concentration",
           "evidence": [
-            "Sometimes I'll be working on something and my mind will just start to wander off into all these worst-case scenarios... 'What if this doesn't turn out right? What if I mess up?'"
+            "I keep thinking about all the things that could go wrong and how I'm not sure if I can get it done on time.",
+            "It's hard to even imagine a different outcome right now."
           ],
-          "reasoning": "The patient's quote describes difficulty concentrating due to racing thoughts and worries about making mistakes, which aligns with the DSM-5-TR definition of concentration difficulty. The quote suggests that the patient often can't focus, scoring a 2.",
-          "score": 2,
-          "justification": "The patient's quote indicates frequent trouble focusing due to racing thoughts and worst-case scenarios.",
-          "raw_cot": "{\n  \"evidence\": [\"Sometimes I'll be working on something and my mind will just start to wander off into all these worst-case scenarios... 'What if this doesn't turn out right? What if I mess up?'\"],\n ..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "I feel like I'm just barely scraping by and making things up as I go along. Like, what's the point of even trying if it's all just going to fall apart anyway?",
-            "It feels like every day is a mad scramble to get everything done. And if I don't deliver quality work on time, I worry about losing their business.",
-            "The patient expresses feelings of inadequacy and self-doubt ('making things up as I go along'), which aligns with the DSM-5-TR definition of feeling bad about oneself. Additionally, the patient's concern about delivering quality work on time and fear of losing clients suggests a sense of responsibility and pressure to perform, which also contributes to feelings of worthlessness."
-          ],
-          "reasoning": "{\n  \"evidence\": [\"I feel like I'm just barely scraping by and making things up as I go along. Like, what's the point of even trying if it's all just going to fall apart anyway?\", \"It feels like every day is a mad scramble to get everything done. And if I don't deliver quality work on time, I worry about losing their business.\"],\n  \"reasoning\": \"The patient expresses feelings of inadequacy and self-doubt ('making things up as I go along'), which aligns with the DSM-5-TR definition of feeling bad ",
+          "reasoning": "The patient mentions difficulty concentrating due to worries about the project, indicating trouble focusing. The quotes suggest a moderate level of difficulty, as they describe ongoing rumination and uncertainty.",
           "score": 1,
-          "justification": "The patient exhibits some symptoms of self-doubt and pressure to perform, but does not express complete hopelessness or self-loathing.",
-          "raw_cot": "{\n  \"evidence\": [\"I feel like I'm just barely scraping by and making things up as I go along. Like, what's the point of even trying if it's all just going to fall apart anyway?\", \"It feels like every ..."
+          "justification": "The patient reports some trouble concentrating, but it's not severe enough to interfere with daily functioning.",
+          "raw_cot": "{\n  \"evidence\": [\"I keep thinking about all the things that could go wrong and how I'm not sure if I can get it done on time.\", \"It's hard to even imagine a different outcome right now.\"],\n  \"reasonin..."
         }
       },
       "domain_turn_counts": {
-        "sleep": 9,
-        "mood": 9,
-        "energy": 9,
-        "concentration": 9,
-        "self_worth": 9
+        "sleep": 8,
+        "mood": 8,
+        "energy": 8,
+        "appetite": 8,
+        "concentration": 8
       },
       "domain_scored_at": {
-        "sleep": 17,
-        "mood": 17,
-        "energy": 17,
-        "concentration": 17,
-        "self_worth": 17
+        "sleep": 15,
+        "mood": 16,
+        "energy": 15,
+        "appetite": 15,
+        "concentration": 15
       },
       "response_latencies": [
-        20.389866828918457,
-        23.462015867233276,
-        19.476515769958496,
-        34.175922870635986,
-        18.694926023483276
+        5.90381383895874,
+        6.684751987457275,
+        6.0537049770355225,
+        5.66159725189209,
+        5.401001930236816
       ],
       "session_complete": true,
-      "total_turns": 18
+      "total_turns": 17
     },
     {
       "session_id": "session_02",
       "severity": "minimal",
       "gold_scores": {
         "sleep": 0,
-        "mood": 0,
+        "mood": 1,
         "energy": 0,
-        "concentration": 0,
-        "self_worth": 1
+        "appetite": 0,
+        "concentration": 1
       },
       "predicted_scores": {
-        "sleep": 2,
+        "sleep": 1,
         "mood": 2,
         "energy": 2,
-        "concentration": 1,
-        "self_worth": 1
+        "appetite": 1,
+        "concentration": 1
       },
       "confidence": {
-        "sleep": 0.8500000000000001,
-        "mood": 0.7000000000000002,
-        "energy": 0.8500000000000001,
-        "concentration": 0.95,
-        "self_worth": 0.44999999999999996
+        "sleep": 1.0,
+        "mood": 0.44999999999999996,
+        "energy": 0.9500000000000002,
+        "appetite": 0.6000000000000001,
+        "concentration": 0.7500000000000002
       },
       "confidence_history": {
         "sleep": [
@@ -290,12 +285,32 @@
           0.4,
           0.45,
           0.45,
-          0.75,
-          0.75,
+          0.5,
+          0.5,
           0.8,
           0.8
         ],
         "mood": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.25,
+          0.25,
+          0.3,
+          0.3,
+          0.35,
+          0.35,
+          0.39999999999999997,
+          0.39999999999999997
+        ],
+        "energy": [
           0.0,
           0.0,
           0.05,
@@ -315,7 +330,7 @@
           0.6500000000000001,
           0.6500000000000001
         ],
-        "energy": [
+        "appetite": [
           0.0,
           0.0,
           0.05,
@@ -324,16 +339,16 @@
           0.1,
           0.15000000000000002,
           0.15000000000000002,
+          0.2,
+          0.2,
+          0.4,
+          0.4,
           0.45,
           0.45,
           0.5,
           0.5,
-          0.7,
-          0.7,
-          0.75,
-          0.75,
-          0.8,
-          0.8
+          0.55,
+          0.55
         ],
         "concentration": [
           0.0,
@@ -346,115 +361,93 @@
           0.15000000000000002,
           0.2,
           0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.6,
-          0.6,
-          0.65,
-          0.65
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
+          0.30000000000000004,
+          0.30000000000000004,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001,
+          0.7000000000000002,
+          0.7000000000000002
         ]
       },
       "cot_chains": {
         "sleep": {
           "domain": "sleep",
           "evidence": [
-            "To be honest, it's been a struggle to sleep at night. Even when I do get some rest, it feels like my mind is still racing."
+            "I've been sleeping pretty well. I'm usually up early and get a good night's rest.",
+            "some days I just feel so drained and exhausted. Like, it's hard to get out of bed in the morning."
           ],
-          "reasoning": "The patient explicitly states that they've been struggling with sleep and even when they do get some rest, their mind is still racing, which aligns with the DSM-5-TR severity indicators for Score 2 (More than half the days): often can't sleep, waking up most nights, sleeping too much most days.",
-          "score": 2,
-          "justification": "The patient's self-reported struggles with sleep and racing mind at night justify a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"To be honest, it's been a struggle to sleep at night. Even when I do get some rest, it feels like my mind is still racing.\"],\n  \"reasoning\": \"The patient explicitly states that they'..."
+          "reasoning": "The patient reported sleeping 'pretty well' with no issues, but also mentioned feeling 'drained and exhausted' on some days, making it unclear if they are experiencing consistent sleep disturbance.",
+          "score": 1,
+          "justification": "Score of 1 because the patient's sleep is not consistently disturbed, but there is some variability in their energy levels.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been sleeping pretty well. I'm usually up early and get a good night's rest.\", \"some days I just feel so drained and exhausted. Like, it's hard to get out of bed in the morning...."
         },
         "mood": {
           "domain": "mood",
           "evidence": [
-            "I just want to collapse after work.",
-            "Even those things feel like too much effort. I just want to collapse after work.",
-            "It feels like everything I do is related to work somehow. Even my free time feels like it's being consumed by work.",
-            "I've been canceling plans with friends and not making an effort to reach out to them like I used to."
+            "I just feel really frustrated sometimes. Like, why am I putting myself through all of this when it doesn't even seem to be paying off?",
+            "Some days I just feel so drained and exhausted. Like, it's hard to get out of bed in the morning."
           ],
-          "reasoning": "The patient expresses a desire to collapse after work, indicating a lack of energy and interest in activities. They also mention that even things they once enjoyed feel like too much effort, suggesting a decline in pleasure. Furthermore, the patient feels like their free time is consumed by work, implying a sense of hopelessness.",
+          "reasoning": "The patient expresses feelings of frustration and exhaustion, which aligns with the DSM-5-TR definition of depressed mood.",
           "score": 2,
-          "justification": "The patient's statements suggest that most days they feel down and rarely enjoy activities, indicating a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I just want to collapse after work.\", \"Even those things feel like too much effort. I just want to collapse after work.\", \"It feels like everything I do is related to work somehow. E..."
+          "justification": "The patient reports feeling frustrated and exhausted most days, indicating a significant impact on their daily life.",
+          "raw_cot": "{\n  \"evidence\": [\"I just feel really frustrated sometimes. Like, why am I putting myself through all of this when it doesn't even seem to be paying off?\", \"Some days I just feel so drained and exhaust..."
         },
         "energy": {
           "domain": "energy",
           "evidence": [
-            "I just want to collapse after work.",
-            "Even small tasks feel overwhelming sometimes."
+            "Some days I just feel so drained and exhausted. Like, it's hard to get out of bed in the morning."
           ],
-          "reasoning": "The patient's quotes indicate a consistent feeling of exhaustion and lack of energy. 'Collapse after work' suggests a frequent experience of fatigue, which aligns with the DSM-5-TR severity indicator for Score 2 (More than half the days): often feel exhausted, hard to get through the day, rarely have energy. Similarly, 'even small tasks feel overwhelming sometimes' implies that the patient's energy levels are consistently low, matching the criteria for Score 2.",
+          "reasoning": "The patient reported feeling 'drained and exhausted' on some days, which aligns with the DSM-5-TR severity indicator for a score of 2 (More than half the days): often feel exhausted, hard to get through the day, rarely have energy.",
           "score": 2,
-          "justification": "The patient's quotes suggest a persistent experience of fatigue and exhaustion, meeting the criteria for Score 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I just want to collapse after work.\", \"Even small tasks feel overwhelming sometimes.\"],\n  \"reasoning\": \"The patient's quotes indicate a consistent feeling of exhaustion and lack of e..."
+          "justification": "The patient's report of feeling drained and exhausted on some days indicates a significant impact on their daily functioning.",
+          "raw_cot": "{\n  \"evidence\": [\"Some days I just feel so drained and exhausted. Like, it's hard to get out of bed in the morning.\"],\n  \"reasoning\": \"The patient reported feeling 'drained and exhausted' on some days..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "Sometimes I just don't feel like cooking dinner and will end up ordering takeout or something.",
+            "And sometimes I'll just zone out in front of the TV and forget about everything for a little while."
+          ],
+          "reasoning": "The patient's utterances suggest occasional changes in eating habits, such as not feeling like cooking dinner and resorting to takeout. This is consistent with a score of 1, which indicates 'sometimes' experiencing poor appetite or overeating.",
+          "score": 1,
+          "justification": "The patient's statements indicate occasional changes in eating habits, but no consistent pattern of poor appetite or overeating.",
+          "raw_cot": "{\n  \"evidence\": [\"Sometimes I just don't feel like cooking dinner and will end up ordering takeout or something.\", \"And sometimes I'll just zone out in front of the TV and forget about everything for ..."
         },
         "concentration": {
           "domain": "concentration",
           "evidence": [
-            "Even small tasks feel overwhelming sometimes.",
-            "Everything I do is related to work somehow. Even my free time feels like it's being consumed by work."
+            "I've been putting in some extra time, but it's hard to find a balance.",
+            "sometimes I just don't feel like cooking dinner and will end up ordering takeout or something.",
+            "It's hard to get out of bed in the morning."
           ],
-          "reasoning": "The patient reported feeling overwhelmed by small tasks and that everything they do is related to work, indicating difficulty concentrating on things outside of work.",
+          "reasoning": "The patient reports difficulty finding a balance between work and personal life, which may impact their ability to concentrate. They also mention feeling drained and exhausted, which could affect their energy levels and ability to focus.",
           "score": 1,
-          "justification": "The patient sometimes experiences trouble focusing due to the overwhelming nature of their work-related responsibilities.",
-          "raw_cot": "{\n  \"evidence\": [\"Even small tasks feel overwhelming sometimes.\", \"Everything I do is related to work somehow. Even my free time feels like it's being consumed by work.\"],\n  \"reasoning\": \"The patient ..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "I feel like I'm just trying to keep my head above water most of the time.",
-            "It feels like everything I do is related to work somehow. Even my free time feels like it's being consumed by work.",
-            "I've been canceling plans with friends and not making an effort to reach out to them like I used to."
-          ],
-          "reasoning": "The patient expresses feelings of being overwhelmed and consumed by work, which aligns with the DSM-5-TR definition of feeling bad about oneself. The quotes also suggest a sense of disconnection from personal life and relationships.",
-          "score": 1,
-          "justification": "The patient's statements indicate occasional feelings of guilt and self-doubt, but not to the extent that they feel completely worthless or like a total failure.",
-          "raw_cot": "{\n  \"evidence\": [\"I feel like I'm just trying to keep my head above water most of the time.\", \"It feels like everything I do is related to work somehow. Even my free time feels like it's being consume..."
+          "justification": "The patient experiences some difficulty concentrating, but it is not severe enough to interfere with daily functioning.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been putting in some extra time, but it's hard to find a balance.\", \"sometimes I just don't feel like cooking dinner and will end up ordering takeout or something.\", \"It's hard ..."
         }
       },
       "domain_turn_counts": {
         "sleep": 9,
         "mood": 9,
         "energy": 9,
-        "concentration": 9,
-        "self_worth": 9
+        "appetite": 9,
+        "concentration": 9
       },
       "domain_scored_at": {
         "sleep": 17,
         "mood": 17,
         "energy": 17,
-        "concentration": 17,
-        "self_worth": 17
+        "appetite": 17,
+        "concentration": 17
       },
       "response_latencies": [
-        7.748295068740845,
-        9.009042263031006,
-        8.357928991317749,
-        7.421728134155273,
-        8.99437427520752
+        5.95319128036499,
+        5.7278032302856445,
+        5.774454116821289,
+        6.278097867965698,
+        5.891594886779785
       ],
       "session_complete": true,
       "total_turns": 18
@@ -464,24 +457,24 @@
       "severity": "minimal",
       "gold_scores": {
         "sleep": 0,
-        "mood": 0,
-        "energy": 1,
-        "concentration": 0,
-        "self_worth": 0
+        "mood": 1,
+        "energy": 0,
+        "appetite": 1,
+        "concentration": 0
       },
       "predicted_scores": {
         "sleep": 1,
-        "mood": 2,
+        "mood": 1,
         "energy": 2,
-        "concentration": 2,
-        "self_worth": 1
+        "appetite": 1,
+        "concentration": 1
       },
       "confidence": {
-        "sleep": 1.0,
-        "mood": 0.7000000000000002,
-        "energy": 0.7000000000000001,
-        "concentration": 1.0,
-        "self_worth": 0.44999999999999996
+        "sleep": 0.9500000000000001,
+        "mood": 0.55,
+        "energy": 0.7000000000000002,
+        "appetite": 0.6500000000000001,
+        "concentration": 0.55
       },
       "confidence_history": {
         "sleep": [
@@ -491,18 +484,17 @@
           0.05,
           0.1,
           0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.55,
-          0.55,
-          0.8500000000000001,
-          0.8500000000000001,
-          1.0,
-          1.0
+          0.4,
+          0.4,
+          0.7,
+          0.7,
+          0.75,
+          0.75,
+          0.85,
+          0.85,
+          0.9,
+          0.9,
+          0.9500000000000001
         ],
         "mood": [
           0.0,
@@ -511,18 +503,17 @@
           0.05,
           0.1,
           0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
+          0.30000000000000004,
+          0.30000000000000004,
+          0.35000000000000003,
+          0.35000000000000003,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
           0.5,
           0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001,
-          0.6500000000000001
+          0.55
         ],
         "energy": [
           0.0,
@@ -535,14 +526,237 @@
           0.15000000000000002,
           0.2,
           0.2,
+          0.4,
+          0.4,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001,
+          0.7000000000000002
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001
+        ],
+        "concentration": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.30000000000000004,
+          0.30000000000000004,
+          0.35000000000000003,
+          0.35000000000000003,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55
+        ]
+      },
+      "cot_chains": {
+        "sleep": {
+          "domain": "sleep",
+          "evidence": [
+            "I'll just lie there thinking about all the things I need to do tomorrow.",
+            "then I just can't turn my brain off."
+          ],
+          "reasoning": "The patient reported lying awake at night thinking about work and being unable to 'turn their brain off', which is consistent with difficulty falling or staying asleep. However, the patient did not explicitly state that they are having trouble sleeping.",
+          "score": 1,
+          "justification": "The patient's symptoms are somewhat consistent with sleep disturbance, but the severity indicators suggest a score of 1 since they do not report 'often can't sleep' or 'sleeping too much most days'",
+          "raw_cot": "{\n  \"evidence\": [\"I'll just lie there thinking about all the things I need to do tomorrow.\", \"then I just can't turn my brain off.\"],\n  \"reasoning\": \"The patient reported lying awake at night thinking..."
+        },
+        "mood": {
+          "domain": "mood",
+          "evidence": [
+            "I've just been really overwhelmed with work. It's like my to-do list is always growing and I'm running out of hours in the day.",
+            "it feels like nobody understands what I'm going through or how to help me"
+          ],
+          "reasoning": "The patient's utterances about feeling overwhelmed and not being understood suggest a lack of interest or pleasure in doing things, which aligns with the DSM-5-TR definition of Depressed Mood/Anhedonia. The quotes do not explicitly convey feelings of hopelessness, but they do indicate a sense of exhaustion and isolation.",
+          "score": 1,
+          "justification": "The patient's statements suggest some days feel low or overwhelmed, but there is no indication that this feeling persists nearly every day.",
+          "raw_cot": "{\n  \"evidence\": [\"I've just been really overwhelmed with work. It's like my to-do list is always growing and I'm running out of hours in the day.\", \"it feels like nobody understands what I'm going thr..."
+        },
+        "energy": {
+          "domain": "energy",
+          "evidence": [
+            "It's exhausting.",
+            "I'll just lie there thinking about all the things I need to do tomorrow."
+          ],
+          "reasoning": "The patient explicitly states feeling exhausted and having difficulty winding down at night due to work-related stress. This aligns with DSM-5-TR severity indicators for a score of 2.",
+          "score": 2,
+          "justification": "The patient's self-reported exhaustion and inability to wind down at night suggest significant fatigue, warranting a score of 2.",
+          "raw_cot": "{\n  \"evidence\": [\"It's exhausting.\", \"I'll just lie there thinking about all the things I need to do tomorrow.\"],\n  \"reasoning\": \"The patient explicitly states feeling exhausted and having difficulty ..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I've been having a harder time finding the motivation to cook or try new recipes lately."
+          ],
+          "reasoning": "The patient's quote indicates some difficulty with appetite, but it does not suggest complete loss of appetite (Score 3) or frequent overeating (Score 2). The phrase 'harder time' implies occasional struggles with eating normally (Score 1), which is supported by the DSM-5-TR severity indicators.",
+          "score": 1,
+          "justification": "The patient's quote suggests occasional difficulties with appetite, but not a complete loss of appetite or frequent overeating.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been having a harder time finding the motivation to cook or try new recipes lately.\"],\n  \"reasoning\": \"The patient's quote indicates some difficulty with appetite, but it does n..."
+        },
+        "concentration": {
+          "domain": "concentration",
+          "evidence": [
+            "I'll just lie there thinking about all the things I need to do tomorrow.",
+            "I mean, I'll go to bed at a reasonable hour, but then I just can't turn my brain off."
+          ],
+          "reasoning": "The patient reported difficulty winding down at night and having trouble turning their brain off, which suggests some impairment in concentration. However, the extent of this impairment is not severe enough to warrant scores of 2 or 3.",
+          "score": 1,
+          "justification": "The patient experiences some difficulty concentrating, but it does not significantly impact daily functioning.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll just lie there thinking about all the things I need to do tomorrow.\", \"I mean, I'll go to bed at a reasonable hour, but then I just can't turn my brain off.\"],\n  \"reasoning\": \"T..."
+        }
+      },
+      "domain_turn_counts": {
+        "sleep": 8,
+        "mood": 8,
+        "energy": 8,
+        "appetite": 8,
+        "concentration": 8
+      },
+      "domain_scored_at": {
+        "sleep": 15,
+        "mood": 16,
+        "energy": 16,
+        "appetite": 16,
+        "concentration": 16
+      },
+      "response_latencies": [
+        5.619078159332275,
+        6.268394947052002,
+        4.906736850738525,
+        5.3506810665130615,
+        5.323947906494141
+      ],
+      "session_complete": true,
+      "total_turns": 17
+    },
+    {
+      "session_id": "session_04",
+      "severity": "mild",
+      "gold_scores": {
+        "sleep": 1,
+        "mood": 0,
+        "energy": 1,
+        "appetite": 2,
+        "concentration": 1
+      },
+      "predicted_scores": {
+        "sleep": 2,
+        "mood": 1,
+        "energy": 1,
+        "appetite": 1,
+        "concentration": 1
+      },
+      "confidence": {
+        "sleep": 0.7000000000000002,
+        "mood": 0.6000000000000001,
+        "energy": 0.9500000000000002,
+        "appetite": 0.6500000000000001,
+        "concentration": 0.7000000000000002
+      },
+      "confidence_history": {
+        "sleep": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001
+        ],
+        "mood": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
           0.25,
           0.25,
           0.3,
           0.3,
-          0.6,
-          0.6,
-          0.65,
-          0.65
+          0.5,
+          0.5,
+          0.55,
+          0.55
+        ],
+        "energy": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.8,
+          0.8,
+          0.8500000000000001,
+          0.8500000000000001,
+          0.9000000000000001,
+          0.9000000000000001
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001
         ],
         "concentration": [
           0.0,
@@ -553,147 +767,122 @@
           0.1,
           0.4,
           0.4,
-          0.7,
-          0.7,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001
         ]
       },
       "cot_chains": {
         "sleep": {
           "domain": "sleep",
           "evidence": [
-            "I'd say I'm averaging around 5-6 hours a night, tops. Sometimes it's as little as 4.",
-            "And then there are times when I just can't seem to focus on anything for more than a few minutes. Like, I'll start reading an article or watching a video and then my brain will just wander off."
+            "I usually wake up feeling pretty tired.",
+            "it's been harder to fall asleep lately."
           ],
-          "reasoning": "The patient reported averaging only 5-6 hours of sleep per night, with some nights being as little as 4 hours. Additionally, they mentioned having trouble focusing for more than a few minutes, which may be related to their sleep disturbance.",
-          "score": 1,
-          "justification": "The patient's self-reported sleep duration and difficulty staying focused suggest that they experience some sleep disturbance, but not to the extent of nearly every day.",
-          "raw_cot": "{\n  \"evidence\": [\"I'd say I'm averaging around 5-6 hours a night, tops. Sometimes it's as little as 4.\", \"And then there are times when I just can't seem to focus on anything for more than a few minut..."
+          "reasoning": "The patient reported waking up feeling tired and having difficulty falling asleep, which aligns with DSM-5-TR severity indicators for Sleep Disturbance. The quotes suggest that the patient experiences sleep disturbance more than half the days (Score 2), as they mention it's been 'harder to fall asleep lately' and wake up feeling tired.",
+          "score": 2,
+          "justification": "The patient's reports of difficulty falling asleep and waking up feeling tired indicate a moderate level of Sleep Disturbance, warranting a score of 2.",
+          "raw_cot": "{\n  \"evidence\": [\"I usually wake up feeling pretty tired.\", \"it's been harder to fall asleep lately.\"],\n  \"reasoning\": \"The patient reported waking up feeling tired and having difficulty falling aslee..."
         },
         "mood": {
           "domain": "mood",
           "evidence": [
-            "I just want to tune out and not think about anything for a while.",
-            "Sometimes I find myself zoning out during the meeting.",
-            "It's like my mind is trying to shut down or something.",
-            "To be honest, I've been canceling plans left and right. It's just too hard for me to muster up the energy to go out when all I want to do is sleep."
+            "Honestly, I've just been feeling really overwhelmed with work and school. It's like I'm constantly playing catch-up.",
+            "I just wish it would all slow down for a minute so I can catch my breath."
           ],
-          "reasoning": "The patient expresses a desire to tune out and avoid thinking, which suggests a lack of interest or pleasure in doing things (Score 1). Additionally, they report zoning out during meetings and having difficulty focusing, indicating feelings of being overwhelmed and hopeless. Furthermore, the patient mentions canceling plans due to lack of energy, suggesting anhedonia.",
-          "score": 2,
-          "justification": "The patient's reports of feeling overwhelmed, zoning out, and canceling plans suggest a pattern of mostly feeling down and rarely enjoying things.",
-          "raw_cot": "{\n  \"evidence\": [\"I just want to tune out and not think about anything for a while.\", \"Sometimes I find myself zoning out during the meeting.\", \"It's like my mind is trying to shut down or something.\"..."
+          "reasoning": "The patient reports feeling 'overwhelmed' and wanting to 'catch their breath', which suggests a sense of hopelessness and despair, aligning with DSM-5-TR severity indicators for score 2.",
+          "score": 1,
+          "justification": "The patient's utterances indicate some days feel low, occasionally feel down, but not consistently hopeless or without pleasure.",
+          "raw_cot": "{\n  \"evidence\": [\"Honestly, I've just been feeling really overwhelmed with work and school. It's like I'm constantly playing catch-up.\", \"I just wish it would all slow down for a minute so I can catch..."
         },
         "energy": {
           "domain": "energy",
           "evidence": [
-            "I feel like I'm constantly playing catch-up.",
-            "Sometimes I find myself zoning out during the meeting.",
-            "It's like my mind is trying to shut down or something.",
-            "probably several times a day. It's like my mind is trying to shut down or something.",
-            "To be honest, I've been canceling plans left and right. It's just too hard for me to muster up the energy to go out when all I want to do is sleep."
+            "sometimes it feels like I'm dragging myself through the day",
+            "I'll get this burst of energy and just go, go, go"
           ],
-          "reasoning": "The patient reports feeling overwhelmed, zoning out during meetings, and having trouble focusing, which suggests a significant impact on their energy levels. Additionally, they mention canceling plans due to lack of energy, indicating that fatigue is affecting multiple aspects of their life.",
-          "score": 2,
-          "justification": "The patient's symptoms suggest that they often feel exhausted and have difficulty getting through the day, which aligns with a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I feel like I'm constantly playing catch-up.\", \"Sometimes I find myself zoning out during the meeting.\", \"It's like my mind is trying to shut down or something.\", \"probably several t..."
+          "reasoning": "The patient reported feeling tired or exhausted some days (\"sometimes it feels like I'm dragging myself through the day\") but also experienced brief periods of increased energy. This pattern is consistent with a score of 1.",
+          "score": 1,
+          "justification": "The patient's mixed experience of fatigue and brief energy boosts suggests they are experiencing some, but not most, days with low energy.",
+          "raw_cot": "{\n  \"evidence\": [\"sometimes it feels like I'm dragging myself through the day\", \"I'll get this burst of energy and just go, go, go\"],\n  \"reasoning\": \"The patient reported feeling tired or exhausted so..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I'll just grab something quick because I'm so hungry.",
+            "Actually, yeah... I've been eating a lot more than usual."
+          ],
+          "reasoning": "The patient reported eating 'a lot more than usual' and grabbing food quickly due to hunger, which aligns with the DSM-5-TR definition of overeating. This suggests that the patient's appetite has changed, but not necessarily in a way that is causing distress.",
+          "score": 1,
+          "justification": "The patient reported eating more than usual, but did not mention significant distress or impairment due to changes in appetite.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll just grab something quick because I'm so hungry.\", \"Actually, yeah... I've been eating a lot more than usual.\"],\n  \"reasoning\": \"The patient reported eating 'a lot more than usu..."
         },
         "concentration": {
           "domain": "concentration",
           "evidence": [
-            "I'll start reading an article or watching a video and then my brain will just wander off.",
-            "probably several times a day. It's like my mind is trying to shut down or something."
+            "It's like I'm constantly playing catch-up.",
+            "I find myself staying up really late thinking about work."
           ],
-          "reasoning": "The patient reports difficulty focusing on tasks, such as reading or watching TV, with their brain wandering off multiple times a day. This meets the criteria for 'often can't focus' (Score 2) and 'frequently forget things'.",
-          "score": 2,
-          "justification": "The patient's self-reported difficulties in focusing on tasks and frequent mind-wandering suggest significant impairment in concentration, warranting a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I'll start reading an article or watching a video and then my brain will just wander off.\", \"probably several times a day. It's like my mind is trying to shut down or something.\"],\n ..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "I feel like I'm constantly playing catch-up.",
-            "It's just too hard for me to muster up the energy to go out when all I want to do is sleep."
-          ],
-          "reasoning": "The patient expresses feelings of being overwhelmed and stuck, which may be related to self-worth. The quote 'I feel like I'm constantly playing catch-up' suggests a sense of inadequacy, while 'It's just too hard for me to muster up the energy to go out when all I want to do is sleep' implies a lack of motivation and possibly low self-esteem.",
+          "reasoning": "The patient reported difficulty concentrating and focusing due to being overwhelmed with work and school. This is consistent with the DSM-5-TR definition of concentration difficulty, which mentions trouble concentrating on things such as reading the newspaper or watching television.",
           "score": 1,
-          "justification": "The patient occasionally expresses feelings of being overwhelmed and stuck, which may be related to self-worth.",
-          "raw_cot": "{\n  \"evidence\": [\"I feel like I'm constantly playing catch-up.\", \"It's just too hard for me to muster up the energy to go out when all I want to do is sleep.\"],\n  \"reasoning\": \"The patient expresses f..."
+          "justification": "The patient sometimes experiences distraction and has trouble focusing, but it's not a constant issue.",
+          "raw_cot": "{\n  \"evidence\": [\"It's like I'm constantly playing catch-up.\", \"I find myself staying up really late thinking about work.\"],\n  \"reasoning\": \"The patient reported difficulty concentrating and focusing ..."
         }
       },
       "domain_turn_counts": {
         "sleep": 9,
         "mood": 9,
         "energy": 9,
-        "concentration": 9,
-        "self_worth": 9
+        "appetite": 9,
+        "concentration": 9
       },
       "domain_scored_at": {
         "sleep": 17,
         "mood": 17,
         "energy": 17,
-        "concentration": 17,
-        "self_worth": 17
+        "appetite": 17,
+        "concentration": 17
       },
       "response_latencies": [
-        9.510738849639893,
-        9.876903057098389,
-        10.563819169998169,
-        8.455741882324219,
-        9.261168003082275
+        5.999430179595947,
+        5.621306896209717,
+        5.3724541664123535,
+        5.514360189437866,
+        5.140514850616455
       ],
       "session_complete": true,
       "total_turns": 18
     },
     {
-      "session_id": "session_04",
+      "session_id": "session_05",
       "severity": "mild",
       "gold_scores": {
-        "sleep": 2,
-        "mood": 2,
-        "energy": 1,
-        "concentration": 2,
-        "self_worth": 0
-      },
-      "predicted_scores": {
         "sleep": 1,
         "mood": 2,
         "energy": 1,
-        "concentration": 1,
-        "self_worth": 2
+        "appetite": 2,
+        "concentration": 1
+      },
+      "predicted_scores": {
+        "sleep": 2,
+        "mood": 2,
+        "energy": 2,
+        "appetite": 1,
+        "concentration": 1
       },
       "confidence": {
-        "sleep": 0.49999999999999994,
-        "mood": 0.44999999999999996,
-        "energy": 0.9500000000000002,
-        "concentration": 0.8500000000000002,
-        "self_worth": 0.44999999999999996
+        "sleep": 0.7000000000000002,
+        "mood": 0.6500000000000001,
+        "energy": 0.8,
+        "appetite": 0.55,
+        "concentration": 0.6499999999999999
       },
       "confidence_history": {
         "sleep": [
@@ -701,20 +890,19 @@
           0.0,
           0.05,
           0.05,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997,
-          0.44999999999999996,
-          0.44999999999999996
+          0.1,
+          0.1,
+          0.30000000000000004,
+          0.30000000000000004,
+          0.35000000000000003,
+          0.35000000000000003,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001,
+          0.7000000000000002
         ],
         "mood": [
           0.0,
@@ -729,24 +917,246 @@
           0.2,
           0.25,
           0.25,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001
+        ],
+        "energy": [
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.25,
+          0.25,
+          0.3,
+          0.3,
+          0.35,
+          0.35,
+          0.6499999999999999,
+          0.6499999999999999,
+          0.7,
+          0.7,
+          0.75,
+          0.75,
+          0.8
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55
+        ],
+        "concentration": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.25,
+          0.25,
+          0.3,
+          0.3,
+          0.35,
+          0.35,
+          0.6499999999999999
+        ]
+      },
+      "cot_chains": {
+        "sleep": {
+          "domain": "sleep",
+          "evidence": [
+            "Honestly, no...not really. I've been sacrificing sleep to get everything done on time and it feels like my partner is always away on business trips so even our usual relaxing time together has become stressful.",
+            "Actually, yeah...I've been eating more than usual because I'm just too exhausted to cook most nights. And some days it feels like I need an IV of coffee just to get going."
+          ],
+          "reasoning": "The patient explicitly mentions sacrificing sleep and feeling exhausted, which aligns with the DSM-5-TR definition of Sleep Disturbance.",
+          "score": 2,
+          "justification": "The patient's reports of frequent sleep sacrifice and exhaustion warrant a score of 2, indicating that they often experience trouble sleeping or sleeping too much.",
+          "raw_cot": "{\n  \"evidence\": [\"Honestly, no...not really. I've been sacrificing sleep to get everything done on time and it feels like my partner is always away on business trips so even our usual relaxing time to..."
+        },
+        "mood": {
+          "domain": "mood",
+          "evidence": [
+            "Honestly, some days I just feel like crying...or maybe it's more like feeling numb. Like, nothing seems to be going right and I just want someone to talk to.",
+            "I feel like I'm just trying to survive some days. Like, my body feels like it's constantly running on fumes and my mind is always racing."
+          ],
+          "reasoning": "The patient's quotes indicate a consistent pattern of feeling down, depressed, or hopeless, with a desire for emotional support and a sense of being overwhelmed.",
+          "score": 2,
+          "justification": "The patient's reports of feeling like crying, numb, and just trying to survive suggest that they are experiencing more than half the days with depressed mood, meeting the criteria for a score of 2.",
+          "raw_cot": "{\n  \"evidence\": [\"Honestly, some days I just feel like crying...or maybe it's more like feeling numb. Like, nothing seems to be going right and I just want someone to talk to.\", \"I feel like I'm just ..."
+        },
+        "energy": {
+          "domain": "energy",
+          "evidence": [
+            "I've been eating more than usual because I'm just too exhausted to cook most nights.",
+            "And some days it feels like I need an IV of coffee just to get going."
+          ],
+          "reasoning": "The patient's quotes indicate a consistent pattern of fatigue and exhaustion, with examples of needing extra energy to function. This aligns with DSM-5-TR severity indicators for 'Feeling tired or having little energy'.",
+          "score": 2,
+          "justification": "The patient's descriptions of feeling exhausted and needing IV coffee to get going suggest that they often feel drained, which is consistent with a score of 2.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been eating more than usual because I'm just too exhausted to cook most nights.\", \"And some days it feels like I need an IV of coffee just to get going.\"],\n  \"reasoning\": \"The p..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I've been eating more than usual because I'm just too exhausted to cook most nights. And some days it feels like I need an IV of coffee just to get going."
+          ],
+          "reasoning": "The patient reported eating more than usual, which aligns with the DSM-5-TR definition of 'overeating'. This is not a specific instance of poor appetite, but rather an indication of changes in eating habits.",
+          "score": 1,
+          "justification": "The patient's report of eating more than usual indicates some changes in their appetite, but it does not meet the criteria for scores 2 or 3.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been eating more than usual because I'm just too exhausted to cook most nights. And some days it feels like I need an IV of coffee just to get going.\"],\n  \"reasoning\": \"The pati..."
+        },
+        "concentration": {
+          "domain": "concentration",
+          "evidence": [
+            "I've been sacrificing sleep to get everything done on time and it feels like my partner is always away on business trips so even our usual relaxing time together has become stressful.",
+            "Honestly, some days I just feel like crying...or maybe it's more like feeling numb. Like, nothing seems to be going right and I just want someone to talk to."
+          ],
+          "reasoning": "The patient mentions sacrificing sleep and feeling stressed, which suggests difficulty concentrating (score 1). Additionally, the patient describes feeling numb and disconnected from their emotions, which may also impact concentration.",
+          "score": 1,
+          "justification": "Difficulty concentrating due to stress and emotional disconnection.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been sacrificing sleep to get everything done on time and it feels like my partner is always away on business trips so even our usual relaxing time together has become stressful..."
+        }
+      },
+      "domain_turn_counts": {
+        "sleep": 8,
+        "mood": 8,
+        "energy": 8,
+        "appetite": 8,
+        "concentration": 8
+      },
+      "domain_scored_at": {
+        "sleep": 16,
+        "mood": 16,
+        "energy": 15,
+        "appetite": 16,
+        "concentration": 16
+      },
+      "response_latencies": [
+        6.916549921035767,
+        7.040791034698486,
+        6.193790912628174,
+        6.156910181045532,
+        6.407376766204834
+      ],
+      "session_complete": true,
+      "total_turns": 17
+    },
+    {
+      "session_id": "session_06",
+      "severity": "mild",
+      "gold_scores": {
+        "sleep": 1,
+        "mood": 0,
+        "energy": 1,
+        "appetite": 1,
+        "concentration": 1
+      },
+      "predicted_scores": {
+        "sleep": 1,
+        "mood": 2,
+        "energy": 2,
+        "appetite": 1,
+        "concentration": 1
+      },
+      "confidence": {
+        "sleep": 0.95,
+        "mood": 0.8499999999999999,
+        "energy": 0.75,
+        "appetite": 0.9500000000000002,
+        "concentration": 0.6000000000000001
+      },
+      "confidence_history": {
+        "sleep": [
+          0.0,
+          0.0,
           0.3,
           0.3,
           0.35,
           0.35,
           0.39999999999999997,
-          0.39999999999999997
+          0.39999999999999997,
+          0.44999999999999996,
+          0.44999999999999996,
+          0.49999999999999994,
+          0.49999999999999994,
+          0.5499999999999999,
+          0.5499999999999999,
+          0.6,
+          0.6,
+          0.8999999999999999,
+          0.8999999999999999
+        ],
+        "mood": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.25,
+          0.25,
+          0.3,
+          0.3,
+          0.35,
+          0.35,
+          0.39999999999999997,
+          0.39999999999999997,
+          0.44999999999999996,
+          0.44999999999999996,
+          0.49999999999999994,
+          0.49999999999999994,
+          0.5499999999999999,
+          0.5499999999999999
         ],
         "energy": [
           0.0,
           0.0,
+          0.3,
+          0.3,
+          0.35,
+          0.35,
+          0.39999999999999997,
+          0.39999999999999997,
+          0.44999999999999996,
+          0.44999999999999996,
+          0.49999999999999994,
+          0.49999999999999994,
+          0.5499999999999999,
+          0.5499999999999999,
+          0.6499999999999999,
+          0.6499999999999999,
+          0.7,
+          0.7
+        ],
+        "appetite": [
+          0.0,
+          0.0,
           0.05,
           0.05,
           0.1,
           0.1,
-          0.4,
-          0.4,
-          0.7,
-          0.7,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.45,
+          0.45,
           0.75,
           0.75,
           0.8,
@@ -761,525 +1171,99 @@
           0.0,
           0.05,
           0.05,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.6,
-          0.6,
-          0.65,
-          0.65,
-          0.7000000000000001,
-          0.7000000000000001,
-          0.7500000000000001,
-          0.7500000000000001,
-          0.8000000000000002,
-          0.8000000000000002
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
           0.1,
           0.1,
           0.15000000000000002,
           0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
+          0.35000000000000003,
+          0.35000000000000003,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55,
+          0.55
         ]
       },
       "cot_chains": {
         "sleep": {
           "domain": "sleep",
           "evidence": [
-            "I just feel so drained, like there's no energy left in the tank.",
-            "Doze off on the couch in the evening after work."
+            "I'll just grab something quick to eat or skip meals altogether if I'm feeling overwhelmed.",
+            "To be honest? I'm probably averaging about seven or eight hours of sleep a night, but it feels more like four or five when I wake up feeling so groggy."
           ],
-          "reasoning": "The patient reported feeling 'drained' and 'tired or sluggish during the day', which aligns with the DSM-5-TR definition of sleep disturbance. Additionally, they mentioned dozing off on the couch in the evening, indicating difficulty staying asleep.",
+          "reasoning": "The patient mentions having trouble sleeping due to feeling overwhelmed and struggling with getting restful sleep. This aligns with the DSM-5-TR definition of Sleep Disturbance.",
           "score": 1,
-          "justification": "The patient's reports of feeling drained and dozing off suggest some sleep disturbance, but it is not severe enough to warrant a score of 2 or 3.",
-          "raw_cot": "{\n  \"evidence\": [\"I just feel so drained, like there's no energy left in the tank.\", \"Doze off on the couch in the evening after work.\"],\n  \"reasoning\": \"The patient reported feeling 'drained' and 'ti..."
+          "justification": "The patient experiences some sleep issues, but not consistently, which corresponds to a score of 1.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll just grab something quick to eat or skip meals altogether if I'm feeling overwhelmed.\", \"To be honest? I'm probably averaging about seven or eight hours of sleep a night, but it..."
         },
         "mood": {
           "domain": "mood",
           "evidence": [
-            "I just feel so drained, like there's no energy left in the tank.",
-            "I just want to collapse on the couch and stare at Netflix.",
-            "It's hard to muster up the enthusiasm for anything anymore.",
-            "I just feel like I'm not good enough or lovable enough... and that's scary."
+            "Everything feels like it's weighing on me right now.",
+            "I've just been feeling really down and anxious a lot of the time. Like, even little things can set me off."
           ],
-          "reasoning": "The patient reports feeling drained, lacking energy, and having no enthusiasm for activities they once enjoyed. These statements align with DSM-5-TR severity indicators for Depressed Mood / Anhedonia.",
+          "reasoning": "The patient reports that everything feels like it's weighing on them, indicating a sense of hopelessness and despair. Additionally, they explicitly state that they have been feeling 'really down and anxious' with even small issues triggering strong emotions.",
           "score": 2,
-          "justification": "The patient's reports of persistent feelings of low energy and lack of interest in activities suggest a score of 2, indicating that most days they feel down and rarely enjoy things.",
-          "raw_cot": "Here is the output in the exact JSON structure:\n\n{\n  \"evidence\": [\"I just feel so drained, like there's no energy left in the tank.\", \"I just want to collapse on the couch and stare at Netflix.\", \"It'..."
+          "justification": "The patient's reports of feeling overwhelmed and experiencing persistent feelings of sadness and anxiety suggest a score of 2, indicating that most days are spent feeling down and rarely enjoying things.",
+          "raw_cot": "{\n  \"evidence\": [\"Everything feels like it's weighing on me right now.\", \"I've just been feeling really down and anxious a lot of the time. Like, even little things can set me off.\"],\n  \"reasoning\": \"..."
         },
         "energy": {
           "domain": "energy",
           "evidence": [
-            "I just feel so drained, like there's no energy left in the tank.",
-            "Sometimes I forget to eat altogether."
+            "I've been feeling pretty worn out lately. Like, I just got back from a trip and was really looking forward to catching up on some sleep...",
+            "feeling like I'm constantly running on empty",
+            "Sometimes I find myself staying up really late to meet deadlines or respond to emails..."
           ],
-          "reasoning": "The patient reported feeling 'drained' and having 'no energy left in the tank', which aligns with DSM-5-TR severity indicators for a score of 2. Additionally, the patient mentioned forgetting to eat altogether, which could be indicative of fatigue.",
+          "reasoning": "The patient's utterances suggest fatigue and loss of energy, with phrases such as 'worn out', 'running on empty', and 'staying up really late'. These quotes align with the DSM-5-TR severity indicators for Energy, particularly scores 1 and 2.",
+          "score": 2,
+          "justification": "The patient's descriptions of fatigue and loss of energy are consistent across multiple utterances, indicating a significant impact on their daily life.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been feeling pretty worn out lately. Like, I just got back from a trip and was really looking forward to catching up on some sleep...\", \"feeling like I'm constantly running on e..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "To be honest, it's been pretty hit or miss. Some days I'll have no problem eating a big meal, and others... I just don't feel like eating at all."
+          ],
+          "reasoning": "The patient reported inconsistent appetite, sometimes having a good appetite and other times not feeling like eating at all, which aligns with the DSM-5-TR severity indicator for score 1 (Several days): sometimes not hungry, occasionally eating more than usual, a few days with poor appetite.",
           "score": 1,
-          "justification": "The patient's reports of feeling drained and having low energy suggest some fatigue, but not to the extent that would warrant a higher score.",
-          "raw_cot": "{\n  \"evidence\": [\"I just feel so drained, like there's no energy left in the tank.\", \"Sometimes I forget to eat altogether.\"],\n  \"reasoning\": \"The patient reported feeling 'drained' and having 'no ene..."
+          "justification": "The patient's reported inconsistent appetite and occasional lack of hunger aligns with the DSM-5-TR criteria for score 1.",
+          "raw_cot": "{\n  \"evidence\": [\"To be honest, it's been pretty hit or miss. Some days I'll have no problem eating a big meal, and others... I just don't feel like eating at all.\"],\n  \"reasoning\": \"The patient repor..."
         },
         "concentration": {
           "domain": "concentration",
           "evidence": [
-            "I just feel so drained, like there's no energy left in the tank.",
-            "It's hard to muster up the enthusiasm for anything anymore."
+            "Sometimes I'll just grab something quick to eat or skip meals altogether if I'm feeling overwhelmed.",
+            "To be honest? It's just... everything feels like it's weighing on me right now."
           ],
-          "reasoning": "The patient reported feeling 'drained' and having difficulty mustering enthusiasm, which aligns with DSM-5-TR severity indicators for 'Trouble concentrating on things'.",
+          "reasoning": "The patient mentions being overwhelmed and struggling with finding balance in their life, which is consistent with difficulty concentrating. The quote 'everything feels like it's weighing on me right now' suggests a sense of mental fatigue that can impact concentration.",
           "score": 1,
-          "justification": "The patient's reports of fatigue and lack of motivation suggest some trouble concentrating, but not severe enough to warrant a score of 2 or 3.",
-          "raw_cot": "{\n  \"evidence\": [\"I just feel so drained, like there's no energy left in the tank.\", \"It's hard to muster up the enthusiasm for anything anymore.\"],\n  \"reasoning\": \"The patient reported feeling 'drain..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "I just feel like I'm not good enough or lovable enough... and that's scary.",
-            "I just feel like I'm not good enough or lovable enough..."
-          ],
-          "reasoning": "The patient explicitly expresses feelings of worthlessness, stating they don't feel good enough or lovable enough. This aligns with the DSM-5-TR definition of feeling bad about oneself.",
-          "score": 2,
-          "justification": "The patient's statements indicate a persistent and pervasive sense of self-worthlessness, meeting the criteria for a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I just feel like I'm not good enough or lovable enough... and that's scary.\", \"I just feel like I'm not good enough or lovable enough...\"],\n  \"reasoning\": \"The patient explicitly exp..."
+          "justification": "The patient experiences some difficulty concentrating due to feeling overwhelmed, but does not report complete inability to focus or significant impairment in daily functioning.",
+          "raw_cot": "{\n  \"evidence\": [\"Sometimes I'll just grab something quick to eat or skip meals altogether if I'm feeling overwhelmed.\", \"To be honest? It's just... everything feels like it's weighing on me right now..."
         }
       },
       "domain_turn_counts": {
         "sleep": 9,
         "mood": 9,
         "energy": 9,
-        "concentration": 9,
-        "self_worth": 9
+        "appetite": 9,
+        "concentration": 9
       },
       "domain_scored_at": {
         "sleep": 17,
         "mood": 17,
         "energy": 17,
-        "concentration": 17,
-        "self_worth": 17
+        "appetite": 17,
+        "concentration": 17
       },
       "response_latencies": [
-        9.079361915588379,
-        10.010020732879639,
-        9.457664012908936,
-        8.276249170303345,
-        9.02675199508667
-      ],
-      "session_complete": true,
-      "total_turns": 18
-    },
-    {
-      "session_id": "session_05",
-      "severity": "mild",
-      "gold_scores": {
-        "sleep": 0,
-        "mood": 2,
-        "energy": 1,
-        "concentration": 2,
-        "self_worth": 1
-      },
-      "predicted_scores": {
-        "sleep": 1,
-        "mood": 2,
-        "energy": 2,
-        "concentration": 2,
-        "self_worth": 1
-      },
-      "confidence": {
-        "sleep": 0.6500000000000001,
-        "mood": 0.9000000000000001,
-        "energy": 0.9000000000000001,
-        "concentration": 0.6500000000000001,
-        "self_worth": 0.6500000000000001
-      },
-      "confidence_history": {
-        "sleep": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.4,
-          0.4,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001
-        ],
-        "mood": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.8500000000000001,
-          0.8500000000000001
-        ],
-        "energy": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.45,
-          0.45,
-          0.75,
-          0.75,
-          0.8,
-          0.8,
-          0.8500000000000001,
-          0.8500000000000001
-        ],
-        "concentration": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.4,
-          0.4,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001
-        ]
-      },
-      "cot_chains": {
-        "sleep": {
-          "domain": "sleep",
-          "evidence": [
-            "Sleep has actually been pretty tough for me recently. My mind just won't shut off, and I find myself lying awake thinking about my thesis and all the things I still need to do."
-          ],
-          "reasoning": "The patient reported having trouble falling asleep due to racing thoughts about their thesis, which is consistent with DSM-5-TR severity indicators for Sleep Disturbance.",
-          "score": 1,
-          "justification": "The patient experiences some sleep disturbance, but it's not severe enough to be nearly every day or all the time.",
-          "raw_cot": "{\n  \"evidence\": [\"Sleep has actually been pretty tough for me recently. My mind just won't shut off, and I find myself lying awake thinking about my thesis and all the things I still need to do.\"],\n  ..."
-        },
-        "mood": {
-          "domain": "mood",
-          "evidence": [
-            "Nothing seems to give me the same joy it used to. Sometimes I feel guilty for not being able to muster up the energy to do things.",
-            "I mean, I've tried to make time for things that used to bring me joy, but it feels like even those things are tainted by my stress and anxiety."
-          ],
-          "reasoning": "The patient's quotes suggest a lack of interest or pleasure in doing things (e.g., 'Nothing seems to give me the same joy it used to.'), which is consistent with DSM-5-TR criteria for Depressed Mood / Anhedonia. Additionally, the patient reports feeling guilty and unable to muster up energy, indicating a sense of hopelessness.",
-          "score": 2,
-          "justification": "The patient's quotes suggest that they experience mostly feelings of low mood, rarely enjoy things, and things that used to bring them joy are no longer enjoyable, which is consistent with a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"Nothing seems to give me the same joy it used to. Sometimes I feel guilty for not being able to muster up the energy to do things.\", \"I mean, I've tried to make time for things that ..."
-        },
-        "energy": {
-          "domain": "energy",
-          "evidence": [
-            "Sometimes I feel guilty for not being able to muster up the energy to do things.",
-            "I mean, I've tried to make time for things that used to bring me joy, but it feels like even those things are tainted by my stress and anxiety."
-          ],
-          "reasoning": "The patient reported feeling guilty about lacking energy to do things, indicating a sense of exhaustion. Additionally, they mentioned that even activities that brought them joy in the past now feel tainted by their stress and anxiety, suggesting a persistent lack of energy.",
-          "score": 2,
-          "justification": "The patient's reports of guilt and exhaustion suggest a consistent pattern of low energy, warranting a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"Sometimes I feel guilty for not being able to muster up the energy to do things.\", \"I mean, I've tried to make time for things that used to bring me joy, but it feels like even those..."
-        },
-        "concentration": {
-          "domain": "concentration",
-          "evidence": [
-            "It feels like there's not enough hours in the day.",
-            "My mind just won't shut off, and I find myself lying awake thinking about my thesis and all the things I still need to do."
-          ],
-          "reasoning": "The patient reported feeling overwhelmed and struggling to keep up with school and work, indicating difficulty concentrating. Additionally, they mentioned having trouble sleeping due to racing thoughts, further supporting a score of at least 1.",
-          "score": 2,
-          "justification": "The patient's reports of feeling overwhelmed and struggling to focus, combined with difficulties sleeping due to racing thoughts, suggest that concentration is often impaired.",
-          "raw_cot": "{\n  \"evidence\": [\"It feels like there's not enough hours in the day.\", \"My mind just won't shut off, and I find myself lying awake thinking about my thesis and all the things I still need to do.\"],\n  ..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "Sometimes I feel guilty for not being able to muster up the energy to do things.",
-            "It feels like everything depends on this project being perfect."
-          ],
-          "reasoning": "The patient's utterances about feeling guilty and having high stakes attached to their thesis suggest a level of self-doubt and perceived failure, which aligns with DSM-5-TR severity indicators for Self-Worth.",
-          "score": 1,
-          "justification": "The patient exhibits some guilt and self-doubt, but it's not pervasive or constant enough to warrant a higher score.",
-          "raw_cot": "{\n  \"evidence\": [\"Sometimes I feel guilty for not being able to muster up the energy to do things.\", \"It feels like everything depends on this project being perfect.\"],\n  \"reasoning\": \"The patient's u..."
-        }
-      },
-      "domain_turn_counts": {
-        "sleep": 8,
-        "mood": 8,
-        "energy": 8,
-        "concentration": 8,
-        "self_worth": 8
-      },
-      "domain_scored_at": {
-        "sleep": 15,
-        "mood": 15,
-        "energy": 15,
-        "concentration": 15,
-        "self_worth": 15
-      },
-      "response_latencies": [
-        8.35941195487976,
-        10.59882116317749,
-        22.73277997970581,
-        8.161414861679077,
-        8.350414037704468
-      ],
-      "session_complete": true,
-      "total_turns": 16
-    },
-    {
-      "session_id": "session_06",
-      "severity": "mild",
-      "gold_scores": {
-        "sleep": 1,
-        "mood": 2,
-        "energy": 1,
-        "concentration": 1,
-        "self_worth": 1
-      },
-      "predicted_scores": {
-        "sleep": 1,
-        "mood": 2,
-        "energy": 2,
-        "concentration": 1,
-        "self_worth": 2
-      },
-      "confidence": {
-        "sleep": 0.7500000000000002,
-        "mood": 0.7000000000000002,
-        "energy": 1.0,
-        "concentration": 0.44999999999999996,
-        "self_worth": 0.44999999999999996
-      },
-      "confidence_history": {
-        "sleep": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001,
-          0.6500000000000001,
-          0.7000000000000002,
-          0.7000000000000002
-        ],
-        "mood": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.4,
-          0.4,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001,
-          0.6500000000000001
-        ],
-        "energy": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.35,
-          0.35,
-          0.6499999999999999,
-          0.6499999999999999,
-          0.7,
-          0.7,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "concentration": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
-        ]
-      },
-      "cot_chains": {
-        "sleep": {
-          "domain": "sleep",
-          "evidence": [
-            "I'll get home from work and just collapse onto the couch. And then I have trouble sleeping because of all the noise from the construction next door."
-          ],
-          "reasoning": "The patient reports having trouble falling asleep due to external factors (construction noise), which aligns with DSM-5-TR severity indicator Score 1 (Several days): sometimes can't sleep, occasionally wake up, a few nights of bad sleep.",
-          "score": 1,
-          "justification": "The patient's report of trouble sleeping is consistent with occasional difficulties falling asleep due to external factors.",
-          "raw_cot": "{\n  \"evidence\": [\"I'll get home from work and just collapse onto the couch. And then I have trouble sleeping because of all the noise from the construction next door.\"],\n  \"reasoning\": \"The patient re..."
-        },
-        "mood": {
-          "domain": "mood",
-          "evidence": [
-            "I just feel really drained all the time. Even things that used to bring me joy don't seem as fun anymore.",
-            "Just feeling really drained all the time."
-          ],
-          "reasoning": "The patient's quotes indicate a lack of interest or pleasure in doing things, with feelings of being 'drained' and things not bringing joy anymore. This aligns with DSM-5-TR severity indicators for Score 2 (More than half the days): mostly feel down, rarely enjoy things, things that used to be fun aren't anymore.",
-          "score": 2,
-          "justification": "The patient's quotes suggest a consistent pattern of feeling drained and lacking interest in activities, indicating a moderate level of depressed mood.",
-          "raw_cot": "{\n  \"evidence\": [\"I just feel really drained all the time. Even things that used to bring me joy don't seem as fun anymore.\", \"Just feeling really drained all the time.\"],\n  \"reasoning\": \"The patient'..."
-        },
-        "energy": {
-          "domain": "energy",
-          "evidence": [
-            "I'll get home from work and just collapse onto the couch.",
-            "Even things that used to bring me joy don't seem as fun anymore.",
-            "I just feel really drained all the time.",
-            "I've been canceling plans with friends a lot because I just don't have the energy to go out anymore."
-          ],
-          "reasoning": "The patient reports feeling tired and collapsing onto the couch, which indicates a score of at least 1. Additionally, they mention not having the energy to engage in activities that used to bring them joy, suggesting a higher level of fatigue.",
-          "score": 2,
-          "justification": "The patient's reports of persistent fatigue and lack of energy across multiple domains suggest a moderate to severe level of fatigue.",
-          "raw_cot": "{\n  \"evidence\": [\"I'll get home from work and just collapse onto the couch.\", \"Even things that used to bring me joy don't seem as fun anymore.\", \"I just feel really drained all the time.\", \"I've been..."
-        },
-        "concentration": {
-          "domain": "concentration",
-          "evidence": [
-            "I'll get home from work and just collapse onto the couch.",
-            "Even things that used to bring me joy don't seem as fun anymore."
-          ],
-          "reasoning": "The patient reported feeling tired and drained all the time, which may impact their ability to concentrate on tasks. Additionally, they mentioned that even activities that brought them joy no longer do, suggesting a lack of engagement or interest.",
-          "score": 1,
-          "justification": "The patient's reports of fatigue and decreased enjoyment in activities suggest some difficulty concentrating, but not severe enough to warrant a score of 2 or 3.",
-          "raw_cot": "{\n  \"evidence\": [\"I'll get home from work and just collapse onto the couch.\", \"Even things that used to bring me joy don't seem as fun anymore.\"],\n  \"reasoning\": \"The patient reported feeling tired an..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "I just feel like I'm not doing enough, that I should be doing more.",
-            "I guess just feelings of inadequacy... like I'm not good enough, that I don't belong in this role."
-          ],
-          "reasoning": "The patient's quotes suggest a sense of self-doubt and feelings of inadequacy, which align with the DSM-5-TR severity indicators for 'Feeling bad about yourself \u2014 or that you are a failure or have let yourself or your family down'.",
-          "score": 2,
-          "justification": "The patient's statements indicate frequent self-doubt and feelings of inadequacy, which warrant a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I just feel like I'm not doing enough, that I should be doing more.\", \"I guess just feelings of inadequacy... like I'm not good enough, that I don't belong in this role.\"],\n  \"reason..."
-        }
-      },
-      "domain_turn_counts": {
-        "sleep": 9,
-        "mood": 9,
-        "energy": 9,
-        "concentration": 9,
-        "self_worth": 9
-      },
-      "domain_scored_at": {
-        "sleep": 17,
-        "mood": 17,
-        "energy": 17,
-        "concentration": 17,
-        "self_worth": 17
-      },
-      "response_latencies": [
-        8.087781190872192,
-        9.312176942825317,
-        9.815861940383911,
-        8.15457820892334,
-        9.37240982055664
+        6.013890027999878,
+        6.064955711364746,
+        6.604691982269287,
+        6.23095703125,
+        5.961091041564941
       ],
       "session_complete": true,
       "total_turns": 18
@@ -1288,427 +1272,25 @@
       "session_id": "session_07",
       "severity": "moderate",
       "gold_scores": {
-        "sleep": 3,
-        "mood": 1,
-        "energy": 1,
-        "concentration": 2,
-        "self_worth": 2
-      },
-      "predicted_scores": {
-        "sleep": 2,
-        "mood": 2,
-        "energy": 2,
-        "concentration": 1,
-        "self_worth": 2
-      },
-      "confidence": {
-        "sleep": 0.6500000000000001,
-        "mood": 0.55,
-        "energy": 0.9000000000000002,
-        "concentration": 0.8,
-        "self_worth": 0.39999999999999997
-      },
-      "confidence_history": {
-        "sleep": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.4,
-          0.4,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001
-        ],
-        "mood": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.55
-        ],
-        "energy": [
-          0.0,
-          0.0,
-          0.3,
-          0.3,
-          0.6,
-          0.6,
-          0.65,
-          0.65,
-          0.7000000000000001,
-          0.7000000000000001,
-          0.7500000000000001,
-          0.7500000000000001,
-          0.8000000000000002,
-          0.8000000000000002,
-          0.8500000000000002,
-          0.8500000000000002,
-          0.9000000000000002
-        ],
-        "concentration": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997,
-          0.7,
-          0.7,
-          0.75,
-          0.75,
-          0.8
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997
-        ]
-      },
-      "cot_chains": {
-        "sleep": {
-          "domain": "sleep",
-          "evidence": [
-            "I've been having trouble falling asleep or staying asleep most nights. And when I do wake up, I just feel groggy and unmotivated."
-          ],
-          "reasoning": "The patient reported 'trouble falling asleep or staying asleep most nights', which aligns with the DSM-5-TR definition of sleep disturbance. The severity indicators suggest a score of 2 (More than half the days) as the patient's sleep is affected most nights.",
-          "score": 2,
-          "justification": "The patient's report of trouble sleeping most nights indicates significant sleep disturbance, warranting a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I've been having trouble falling asleep or staying asleep most nights. And when I do wake up, I just feel groggy and unmotivated.\"],\n  \"reasoning\": \"The patient reported 'trouble fal..."
-        },
-        "mood": {
-          "domain": "mood",
-          "evidence": [
-            "It's...off. Like, I'm not really feeling the usual highs or lows that used to come with certain situations or events.",
-            "Honestly, it's been tough to keep my head up lately. I feel like I'm just barely keeping everything together."
-          ],
-          "reasoning": "The patient's quotes indicate a lack of interest in activities and feelings of being 'off' and struggling to maintain self-worth, which aligns with DSM-5-TR severity indicators for Depressed Mood/Anhedonia.",
-          "score": 2,
-          "justification": "The patient reports feeling 'off' most days and struggles to keep their head up, indicating a significant impact on mood and motivation.",
-          "raw_cot": "Here is the output in the exact JSON structure:\n\n{\n  \"evidence\": [\"It's...off. Like, I'm not really feeling the usual highs or lows that used to come with certain situations or events.\", \"Honestly, it..."
-        },
-        "energy": {
-          "domain": "energy",
-          "evidence": [
-            "I'm running on fumes most days. Even small tasks feel like they're taking a lot out of me.",
-            "Ugh, it's like I'm running on fumes most days."
-          ],
-          "reasoning": "The patient explicitly states feeling drained and exhausted, with even small tasks being overwhelming. This aligns with DSM-5-TR severity indicators for scores 2 or 3.",
-          "score": 2,
-          "justification": "The patient's descriptions of fatigue and exhaustion suggest a significant impact on daily functioning, warranting a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I'm running on fumes most days. Even small tasks feel like they're taking a lot out of me.\", \"Ugh, it's like I'm running on fumes most days.\"],\n  \"reasoning\": \"The patient explicitly..."
-        },
-        "concentration": {
-          "domain": "concentration",
-          "evidence": [
-            "My mind starts wandering and I get distracted easily."
-          ],
-          "reasoning": "The patient's quote indicates that they experience difficulty concentrating, which aligns with the DSM-5-TR definition of 'Trouble concentrating on things, such as reading the newspaper or watching television'.",
-          "score": 1,
-          "justification": "The patient reports being distracted easily, which is consistent with a score of 1 ('Several days'): sometimes distracted, a few times had trouble focusing, occasionally lost my train of thought.",
-          "raw_cot": "{\n  \"evidence\": [\"My mind starts wandering and I get distracted easily.\"],\n  \"reasoning\": \"The patient's quote indicates that they experience difficulty concentrating, which aligns with the DSM-5-TR d..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "Honestly, it's been tough to keep my head up lately. I feel like I'm just barely keeping everything together.",
-            "It's...off. Like, I'm not really feeling the usual highs or lows that used to come with certain situations or events."
-          ],
-          "reasoning": "The patient expresses feelings of worthlessness and guilt, stating they're 'barely keeping everything together' and their self-worth is taking a hit. This aligns with DSM-5-TR severity indicators for scores 2 and 3.",
-          "score": 2,
-          "justification": "The patient's statements indicate frequent feelings of worthlessness and guilt, warranting a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"Honestly, it's been tough to keep my head up lately. I feel like I'm just barely keeping everything together.\", \"It's...off. Like, I'm not really feeling the usual highs or lows that..."
-        }
-      },
-      "domain_turn_counts": {
-        "sleep": 8,
-        "mood": 8,
-        "energy": 8,
-        "concentration": 8,
-        "self_worth": 8
-      },
-      "domain_scored_at": {
-        "sleep": 16,
-        "mood": 16,
-        "energy": 15,
-        "concentration": 15,
-        "self_worth": 16
-      },
-      "response_latencies": [
-        9.840578079223633,
-        7.881648302078247,
-        7.9079978466033936,
-        7.800100803375244,
-        8.99436902999878
-      ],
-      "session_complete": true,
-      "total_turns": 17
-    },
-    {
-      "session_id": "session_08",
-      "severity": "moderate",
-      "gold_scores": {
-        "sleep": 1,
-        "mood": 1,
-        "energy": 2,
-        "concentration": 2,
-        "self_worth": 2
-      },
-      "predicted_scores": {
-        "sleep": 2,
-        "mood": 1,
-        "energy": 2,
-        "concentration": 1,
-        "self_worth": 2
-      },
-      "confidence": {
-        "sleep": 0.6500000000000001,
-        "mood": 0.55,
-        "energy": 0.9000000000000001,
-        "concentration": 0.6500000000000001,
-        "self_worth": 0.39999999999999997
-      },
-      "confidence_history": {
-        "sleep": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001
-        ],
-        "mood": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.4,
-          0.4,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.55
-        ],
-        "energy": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.8,
-          0.8,
-          0.8500000000000001,
-          0.8500000000000001,
-          0.9000000000000001
-        ],
-        "concentration": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997
-        ]
-      },
-      "cot_chains": {
-        "sleep": {
-          "domain": "sleep",
-          "evidence": [
-            "To be honest, I've been having trouble sleeping. My mind just won't quiet down, and I find myself lying awake for hours."
-          ],
-          "reasoning": "The patient explicitly states 'trouble sleeping' and describes lying awake for hours, which aligns with the DSM-5-TR definition of Sleep Disturbance.",
-          "score": 2,
-          "justification": "The patient's symptoms are present most days, indicating a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"To be honest, I've been having trouble sleeping. My mind just won't quiet down, and I find myself lying awake for hours.\"],\n  \"reasoning\": \"The patient explicitly states 'trouble sle..."
-        },
-        "mood": {
-          "domain": "mood",
-          "evidence": [
-            "It's been... tough.",
-            "I just don't have the same spark anymore."
-          ],
-          "reasoning": "The patient reported feeling 'tough' and having a lack of energy and motivation, which aligns with the DSM-5-TR severity indicators for Depressed Mood/Anhedonia. The quotes suggest that the patient is experiencing some degree of emotional distress and disinterest in activities.",
-          "score": 1,
-          "justification": "The patient's reports of feeling 'tough' and lacking energy and motivation indicate a moderate level of depressed mood and anhedonia, warranting a score of 1.",
-          "raw_cot": "{\n  \"evidence\": [\"It's been... tough.\", \"I just don't have the same spark anymore.\"],\n  \"reasoning\": \"The patient reported feeling 'tough' and having a lack of energy and motivation, which aligns with..."
-        },
-        "energy": {
-          "domain": "energy",
-          "evidence": [
-            "I just don't have the same spark anymore. Simple tasks feel like they're taking all my energy.",
-            "Just... I don't know, it feels like I'm just stuck in this rut and can't seem to get out."
-          ],
-          "reasoning": "The patient's quotes indicate a consistent feeling of fatigue and exhaustion, with simple tasks requiring significant energy. This aligns with DSM-5-TR severity indicators for scores 2 or higher.",
-          "score": 2,
-          "justification": "The patient's descriptions of feeling drained and stuck in a rut suggest a persistent and debilitating experience of fatigue.",
-          "raw_cot": "{\n  \"evidence\": [\"I just don't have the same spark anymore. Simple tasks feel like they're taking all my energy.\", \"Just... I don't know, it feels like I'm just stuck in this rut and can't seem to get..."
-        },
-        "concentration": {
-          "domain": "concentration",
-          "evidence": [
-            "I feel like I'm constantly playing catch-up.",
-            "Simple tasks feel like they're taking all my energy."
-          ],
-          "reasoning": "The patient reported feeling overwhelmed and struggling to keep up with work, indicating difficulty concentrating. Additionally, simple tasks felt exhausting, suggesting a lack of mental clarity.",
-          "score": 1,
-          "justification": "The patient's reports of being constantly overwhelmed and struggling with simple tasks suggest some difficulty concentrating, but not severe enough to warrant a higher score.",
-          "raw_cot": "{\n  \"evidence\": [\"I feel like I'm constantly playing catch-up.\", \"Simple tasks feel like they're taking all my energy.\"],\n  \"reasoning\": \"The patient reported feeling overwhelmed and struggling to kee..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "I feel like I'm constantly playing catch-up.",
-            "It feels like too much effort when everything just feels so draining.",
-            "Just... I don't know, it feels like I'm just stuck in this rut and can't seem to get out."
-          ],
-          "reasoning": "The patient expresses feelings of being overwhelmed and stuck, which aligns with the DSM-5-TR definition of feeling bad about oneself. The quotes also convey a sense of hopelessness and helplessness, which is consistent with scores 2 or 3.",
-          "score": 2,
-          "justification": "The patient's statements suggest frequent feelings of being stuck and helpless, indicating a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I feel like I'm constantly playing catch-up.\", \"It feels like too much effort when everything just feels so draining.\", \"Just... I don't know, it feels like I'm just stuck in this ru..."
-        }
-      },
-      "domain_turn_counts": {
-        "sleep": 8,
-        "mood": 8,
-        "energy": 8,
-        "concentration": 8,
-        "self_worth": 8
-      },
-      "domain_scored_at": {
-        "sleep": 16,
-        "mood": 16,
-        "energy": 15,
-        "concentration": 16,
-        "self_worth": 16
-      },
-      "response_latencies": [
-        7.739451169967651,
-        8.316651105880737,
-        8.133208751678467,
-        7.630763053894043,
-        8.58510684967041
-      ],
-      "session_complete": true,
-      "total_turns": 17
-    },
-    {
-      "session_id": "session_09",
-      "severity": "severe",
-      "gold_scores": {
         "sleep": 2,
         "mood": 3,
-        "energy": 2,
-        "concentration": 3,
-        "self_worth": 3
+        "energy": 3,
+        "appetite": 3,
+        "concentration": 2
       },
       "predicted_scores": {
         "sleep": 2,
-        "mood": 2,
+        "mood": 1,
         "energy": 2,
-        "concentration": 2,
-        "self_worth": 1
+        "appetite": 1,
+        "concentration": 2
       },
       "confidence": {
-        "sleep": 0.7000000000000002,
+        "sleep": 1.0,
         "mood": 0.44999999999999996,
-        "energy": 1.0,
-        "concentration": 0.44999999999999996,
-        "self_worth": 0.44999999999999996
+        "energy": 0.9500000000000002,
+        "appetite": 0.6000000000000001,
+        "concentration": 1.0
       },
       "confidence_history": {
         "sleep": [
@@ -1718,10 +1300,84 @@
           0.05,
           0.1,
           0.1,
+          0.4,
+          0.4,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001,
+          0.7000000000000002,
+          0.7000000000000002,
+          0.7500000000000002,
+          0.7500000000000002,
+          1.0,
+          1.0
+        ],
+        "mood": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
           0.15000000000000002,
           0.15000000000000002,
           0.2,
           0.2,
+          0.25,
+          0.25,
+          0.3,
+          0.3,
+          0.35,
+          0.35,
+          0.39999999999999997,
+          0.39999999999999997
+        ],
+        "energy": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.45,
+          0.45,
+          0.75,
+          0.75,
+          0.8,
+          0.8,
+          0.8500000000000001,
+          0.8500000000000001,
+          0.9000000000000001,
+          0.9000000000000001
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.35000000000000003,
+          0.35000000000000003,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55,
+          0.55
+        ],
+        "concentration": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
           0.25,
           0.25,
           0.55,
@@ -1729,17 +1385,141 @@
           0.6000000000000001,
           0.6000000000000001,
           0.6500000000000001,
-          0.6500000000000001
+          0.6500000000000001,
+          0.7000000000000002,
+          0.7000000000000002,
+          0.7500000000000002,
+          0.7500000000000002,
+          1.0,
+          1.0
+        ]
+      },
+      "cot_chains": {
+        "sleep": {
+          "domain": "sleep",
+          "evidence": [
+            "I'll lie awake for hours thinking about all the things I need to do tomorrow or replaying conversations with coworkers.",
+            "Honestly? Maybe one or two a week. And even on those nights, I'll wake up multiple times thinking about work stuff."
+          ],
+          "reasoning": "The patient reported lying awake for hours at night, which meets the criteria for 'trouble falling or staying asleep'. Additionally, they mentioned only getting a good night's rest 1-2 times a week and waking up multiple times due to work-related thoughts, which aligns with the DSM-5-TR severity indicators.",
+          "score": 2,
+          "justification": "The patient experiences frequent sleep disturbance, meeting the criteria for 'more than half the days' in the DSM-5-TR severity indicators.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll lie awake for hours thinking about all the things I need to do tomorrow or replaying conversations with coworkers.\", \"Honestly? Maybe one or two a week. And even on those nights..."
+        },
+        "mood": {
+          "domain": "mood",
+          "evidence": [
+            "I'll lie awake for hours thinking about all the things I need to do tomorrow or replaying conversations with coworkers.",
+            "Honestly, I've just been feeling really overwhelmed."
+          ],
+          "reasoning": "The patient's quotes suggest a preoccupation with work-related thoughts and feelings of being overwhelmed, which aligns with DSM-5-TR severity indicators for 'Depressed Mood / Anhedonia'.",
+          "score": 1,
+          "justification": "The patient reports feeling overwhelmed and having trouble winding down at night, indicating some days feel low or down.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll lie awake for hours thinking about all the things I need to do tomorrow or replaying conversations with coworkers.\", \"Honestly, I've just been feeling really overwhelmed.\"],\n  \"..."
+        },
+        "energy": {
+          "domain": "energy",
+          "evidence": [
+            "I just feel so tired all the time.",
+            "Maybe one or two a week. And even on those nights, I'll wake up multiple times thinking about work stuff."
+          ],
+          "reasoning": "The patient reported feeling 'so tired all the time' which aligns with the DSM-5-TR definition of fatigue. Additionally, they mentioned only getting a good night's rest one or two times a week and still waking up to think about work, indicating persistent exhaustion.",
+          "score": 2,
+          "justification": "The patient's reports of persistent fatigue and exhaustion across multiple days justify a score of 2.",
+          "raw_cot": "{\n  \"evidence\": [\"I just feel so tired all the time.\", \"Maybe one or two a week. And even on those nights, I'll wake up multiple times thinking about work stuff.\"],\n  \"reasoning\": \"The patient reporte..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I've just been eating whatever is convenient and easy to grab"
+          ],
+          "reasoning": "The patient reported eating 'whatever is convenient and easy to grab', which indicates a lack of appetite or interest in food. This behavior does not fit the DSM-5-TR severity indicators for scores 0, 1, or 2, but it could be indicative of a score 3, as the patient seems to be coping with stress by eating constantly.",
+          "score": 1,
+          "justification": "The patient's reported eating behavior suggests they are sometimes not hungry and occasionally eat more than usual, which is consistent with a score of 1.",
+          "raw_cot": "{\n  \"evidence\": [\"I've just been eating whatever is convenient and easy to grab\"],\n  \"reasoning\": \"The patient reported eating 'whatever is convenient and easy to grab', which indicates a lack of appe..."
+        },
+        "concentration": {
+          "domain": "concentration",
+          "evidence": [
+            "I'll lie awake for hours thinking about all the things I need to do tomorrow or replaying conversations with coworkers.",
+            "Maybe one or two a week. And even on those nights, I'll wake up multiple times thinking about work stuff."
+          ],
+          "reasoning": "The patient's quotes indicate difficulty concentrating and focusing due to preoccupation with work-related thoughts, which is consistent with the DSM-5-TR definition of concentration difficulty.",
+          "score": 2,
+          "justification": "The patient reports often having trouble winding down at night and frequently waking up thinking about work, indicating a significant impact on their ability to concentrate.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll lie awake for hours thinking about all the things I need to do tomorrow or replaying conversations with coworkers.\", \"Maybe one or two a week. And even on those nights, I'll wak..."
+        }
+      },
+      "domain_turn_counts": {
+        "sleep": 9,
+        "mood": 9,
+        "energy": 9,
+        "appetite": 9,
+        "concentration": 9
+      },
+      "domain_scored_at": {
+        "sleep": 17,
+        "mood": 17,
+        "energy": 17,
+        "appetite": 17,
+        "concentration": 17
+      },
+      "response_latencies": [
+        6.792518854141235,
+        5.617430210113525,
+        5.946218967437744,
+        6.106034994125366,
+        5.92580509185791
+      ],
+      "session_complete": true,
+      "total_turns": 18
+    },
+    {
+      "session_id": "session_08",
+      "severity": "moderate",
+      "gold_scores": {
+        "sleep": 2,
+        "mood": 2,
+        "energy": 2,
+        "appetite": 3,
+        "concentration": 2
+      },
+      "predicted_scores": {
+        "sleep": 1,
+        "mood": 1,
+        "energy": 2,
+        "appetite": 1,
+        "concentration": 1
+      },
+      "confidence": {
+        "sleep": 0.6000000000000001,
+        "mood": 0.5499999999999999,
+        "energy": 0.9000000000000001,
+        "appetite": 0.5,
+        "concentration": 0.6500000000000001
+      },
+      "confidence_history": {
+        "sleep": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
+          0.55,
+          0.55
         ],
         "mood": [
           0.0,
           0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
           0.2,
           0.2,
           0.25,
@@ -1749,7 +1529,11 @@
           0.35,
           0.35,
           0.39999999999999997,
-          0.39999999999999997
+          0.39999999999999997,
+          0.44999999999999996,
+          0.44999999999999996,
+          0.49999999999999994,
+          0.49999999999999994
         ],
         "energy": [
           0.0,
@@ -1758,18 +1542,34 @@
           0.05,
           0.1,
           0.1,
-          0.15000000000000002,
-          0.15000000000000002,
+          0.4,
+          0.4,
           0.45,
           0.45,
-          0.75,
-          0.75,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.8500000000000001,
+          0.8500000000000001
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.35000000000000003,
+          0.35000000000000003,
+          0.4,
+          0.4,
+          0.45,
+          0.45
         ],
         "concentration": [
           0.0,
@@ -1784,121 +1584,307 @@
           0.2,
           0.25,
           0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001
         ]
       },
       "cot_chains": {
         "sleep": {
           "domain": "sleep",
           "evidence": [
-            "I've been having trouble sleeping. When I do get some rest, it's not very good quality. And when I wake up, I just feel...drained."
+            "I've been eating more than usual and having trouble falling asleep sometimes.",
+            "Sometimes it feels like my brain just won't shut off. I'll be lying there thinking about all the things I need to do tomorrow."
           ],
-          "reasoning": "The patient reported 'trouble sleeping' and described poor sleep quality, which aligns with the DSM-5-TR severity indicators for Sleep Disturbance.",
-          "score": 2,
-          "justification": "The patient's report of trouble sleeping and poor sleep quality suggests that they experience sleep disturbance more than half the days.",
-          "raw_cot": "{\n  \"evidence\": [\"I've been having trouble sleeping. When I do get some rest, it's not very good quality. And when I wake up, I just feel...drained.\"],\n  \"reasoning\": \"The patient reported 'trouble sl..."
+          "reasoning": "The patient reported 'trouble falling asleep' and described their experience as 'sometimes it feels like my brain just won't shut off', which aligns with DSM-5-TR severity indicators for Sleep Disturbance.",
+          "score": 1,
+          "justification": "The patient's reports of trouble sleeping and racing thoughts at night indicate a moderate level of sleep disturbance.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been eating more than usual and having trouble falling asleep sometimes.\", \"Sometimes it feels like my brain just won't shut off. I'll be lying there thinking about all the thin..."
         },
         "mood": {
           "domain": "mood",
           "evidence": [
-            "I don't know how much more I can take.",
-            "It feels like there just aren't enough hours in the day.",
-            "She's...she's not great, to be honest.",
-            "I used to love cooking dinner and trying out new recipes, but lately, I just don't have the energy for it anymore.",
-            "And when I do cook, it's like I'm just going through the motions.",
-            "I used to love hiking on the weekends, but now it feels like too much effort.",
-            "And socializing with friends and family...that's just fallen by the wayside."
+            "Sometimes I feel like I'm just trying not to let my emotions get the best of me.",
+            "Honestly, it's been pretty low. Sometimes I just feel exhausted from the day-to-day grind."
           ],
-          "reasoning": "The patient expresses feelings of overwhelm, frustration, and hopelessness in their daily life. They mention not enjoying activities they used to find pleasure in, such as cooking and hiking.",
-          "score": 2,
-          "justification": "The patient's responses indicate that they are experiencing a persistent lack of interest or pleasure in most things, which is consistent with a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I don't know how much more I can take.\", \"It feels like there just aren't enough hours in the day.\", \"She's...she's not great, to be honest.\", \"I used to love cooking dinner and tryi..."
+          "reasoning": "The patient's quotes suggest a general feeling of emotional overwhelm and exhaustion, which aligns with the DSM-5-TR severity indicators for Depressed Mood / Anhedonia.",
+          "score": 1,
+          "justification": "The patient reports feeling overwhelmed by their emotions and exhausted from daily life, indicating some days feel low or down.",
+          "raw_cot": "{\n  \"evidence\": [\"Sometimes I feel like I'm just trying not to let my emotions get the best of me.\", \"Honestly, it's been pretty low. Sometimes I just feel exhausted from the day-to-day grind.\"],\n  \"r..."
         },
         "energy": {
           "domain": "energy",
           "evidence": [
-            "I don't know how much more I can take.",
-            "I just don't have the energy for it anymore. And when I do cook, it's like I'm just going through the motions.",
-            "I'll be in the middle of a project and suddenly I'll just...zone out."
+            "Sometimes I feel exhausted from the day-to-day grind.",
+            "Honestly, it's been pretty low."
           ],
-          "reasoning": "The patient expresses feeling overwhelmed and exhausted, with no energy to engage in activities that used to bring them pleasure. They also mention having trouble sleeping and feeling drained upon waking.",
+          "reasoning": "The patient reported feeling exhausted and having a low energy level, which aligns with DSM-5-TR severity indicators for scores of 2 or higher.",
           "score": 2,
-          "justification": "The patient's descriptions of exhaustion, lack of energy, and difficulty concentrating suggest a significant impact on their daily functioning.",
-          "raw_cot": "{\n  \"evidence\": [\"I don't know how much more I can take.\", \"I just don't have the energy for it anymore. And when I do cook, it's like I'm just going through the motions.\", \"I'll be in the middle of a..."
+          "justification": "The patient's reports of exhaustion and low energy suggest a significant impact on their daily functioning.",
+          "raw_cot": "{\n  \"evidence\": [\"Sometimes I feel exhausted from the day-to-day grind.\", \"Honestly, it's been pretty low.\"],\n  \"reasoning\": \"The patient reported feeling exhausted and having a low energy level, whic..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I've been eating more than usual"
+          ],
+          "reasoning": "The patient reported 'eating more than usual', which corresponds to the DSM-5-TR severity indicator for Score 1 (Several days): sometimes not hungry, occasionally eating more than usual, a few days with poor appetite.",
+          "score": 1,
+          "justification": "The patient's report of increased eating is consistent with mild changes in appetite.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been eating more than usual\"],\n  \"reasoning\": \"The patient reported 'eating more than usual', which corresponds to the DSM-5-TR severity indicator for Score 1 (Several days): so..."
         },
         "concentration": {
           "domain": "concentration",
           "evidence": [
-            "I'll be in the middle of a project and suddenly I'll just...zone out. And then I'll have to start all over again.",
-            "The patient's quote describes difficulty concentrating on tasks, which aligns with the DSM-5-TR definition of 'Trouble concentrating on things, such as reading the newspaper or watching television'. The quote suggests frequent and significant impairment in concentration.",
-            "The patient's description of zoning out and having to start over again indicates that they often have trouble focusing, which corresponds to a score of 2 ('More than half the days'): often can't focus, hard to finish tasks, frequently forget things."
+            "Sometimes I feel like I'm just going through the motions, not really accomplishing anything meaningful.",
+            "Sometimes it feels like my brain just won't shut off. I'll be lying there thinking about all the things I need to do tomorrow."
           ],
-          "reasoning": "{\n  \"evidence\": [\"I'll be in the middle of a project and suddenly I'll just...zone out. And then I'll have to start all over again.\"],\n  \"reasoning\": \"The patient's quote describes difficulty concentrating on tasks, which aligns with the DSM-5-TR definition of 'Trouble concentrating on things, such as reading the newspaper or watching television'. The quote suggests frequent and significant impairment in concentration.\",\n  \"score\": 2,\n  \"justification\": \"The patient's description of zoning out a",
-          "score": 2,
-          "justification": "The patient's description of zoning out and having to start over again indicates that they often have trouble focusing, which corresponds to a score of 2 ('More than half the days'): often can't focus, hard to finish tasks, frequently forget things.",
-          "raw_cot": "{\n  \"evidence\": [\"I'll be in the middle of a project and suddenly I'll just...zone out. And then I'll have to start all over again.\"],\n  \"reasoning\": \"The patient's quote describes difficulty concentr..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "It feels like there just aren't enough hours in the day.",
-            "I don't know how much more I can take.",
-            "I feel like I'm just trying to keep my head above water."
-          ],
-          "reasoning": "{\n  \"evidence\": [\"It feels like there just aren't enough hours in the day.\", \"I don't know how much more I can take.\", \"I feel like I'm just trying to keep my head above water.\", \"I used to love cooking dinner and trying out new recipes, but lately, I just don't have the energy for it anymore. And when I do cook, it's like I'm just going through the motions.\", \"I used to love hiking on the weekends, but now it feels like too much effort.\"],\n  \"reasoning\": \"The patient expresses feelings of being",
+          "reasoning": "The patient's quotes suggest difficulty concentrating and focusing, with feelings of being disconnected from their work and having a racing mind at night.",
           "score": 1,
-          "justification": "The patient's statements indicate occasional feelings of guilt and self-doubt, but not to the extent of feeling completely worthless or hating themselves.",
-          "raw_cot": "{\n  \"evidence\": [\"It feels like there just aren't enough hours in the day.\", \"I don't know how much more I can take.\", \"I feel like I'm just trying to keep my head above water.\", \"I used to love cooki..."
+          "justification": "The patient reports sometimes feeling like they're just going through the motions and having trouble shutting off their brain at night, indicating some difficulty concentrating.",
+          "raw_cot": "{\n  \"evidence\": [\"Sometimes I feel like I'm just going through the motions, not really accomplishing anything meaningful.\", \"Sometimes it feels like my brain just won't shut off. I'll be lying there t..."
+        }
+      },
+      "domain_turn_counts": {
+        "sleep": 8,
+        "mood": 8,
+        "energy": 8,
+        "appetite": 8,
+        "concentration": 8
+      },
+      "domain_scored_at": {
+        "sleep": 15,
+        "mood": 15,
+        "energy": 15,
+        "appetite": 15,
+        "concentration": 15
+      },
+      "response_latencies": [
+        5.582842111587524,
+        5.254277944564819,
+        4.650313138961792,
+        4.604336261749268,
+        5.449311017990112
+      ],
+      "session_complete": true,
+      "total_turns": 16
+    },
+    {
+      "session_id": "session_09",
+      "severity": "severe",
+      "gold_scores": {
+        "sleep": 3,
+        "mood": 3,
+        "energy": 3,
+        "appetite": 2,
+        "concentration": 3
+      },
+      "predicted_scores": {
+        "sleep": 2,
+        "mood": 2,
+        "energy": 2,
+        "appetite": 1,
+        "concentration": 1
+      },
+      "confidence": {
+        "sleep": 0.8500000000000003,
+        "mood": 0.8500000000000003,
+        "energy": 0.95,
+        "appetite": 0.55,
+        "concentration": 0.6000000000000001
+      },
+      "confidence_history": {
+        "sleep": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.4,
+          0.4,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001,
+          0.7000000000000002,
+          0.7000000000000002,
+          0.7500000000000002,
+          0.7500000000000002,
+          0.8000000000000003,
+          0.8000000000000003,
+          0.8500000000000003
+        ],
+        "mood": [
+          0.0,
+          0.0,
+          0.3,
+          0.3,
+          0.35,
+          0.35,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001,
+          0.6500000000000001,
+          0.7000000000000002,
+          0.7000000000000002,
+          0.7500000000000002,
+          0.7500000000000002,
+          0.8000000000000003,
+          0.8000000000000003,
+          0.8500000000000003
+        ],
+        "energy": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.25,
+          0.25,
+          0.3,
+          0.3,
+          0.6,
+          0.6,
+          0.8999999999999999,
+          0.8999999999999999,
+          0.95
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.25,
+          0.25,
+          0.3,
+          0.3,
+          0.5,
+          0.5,
+          0.55
+        ],
+        "concentration": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.30000000000000004,
+          0.30000000000000004,
+          0.35000000000000003,
+          0.35000000000000003,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.6000000000000001
+        ]
+      },
+      "cot_chains": {
+        "sleep": {
+          "domain": "sleep",
+          "evidence": [
+            "I'll be lying awake at like 2 or 3 am thinking about everything.",
+            "But then when I get home and try to wind down, I just can't seem to relax."
+          ],
+          "reasoning": "The patient reports lying awake at night thinking about everything, which meets the DSM-5-TR definition of 'Trouble falling or staying asleep'. Additionally, they mention being unable to relax after trying to wind down, indicating difficulty with sleep initiation.",
+          "score": 2,
+          "justification": "The patient's symptoms meet the criteria for 'More than half the days' as described in the DSM-5-TR severity indicators.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll be lying awake at like 2 or 3 am thinking about everything.\", \"But then when I get home and try to wind down, I just can't seem to relax.\"],\n  \"reasoning\": \"The patient reports ..."
+        },
+        "mood": {
+          "domain": "mood",
+          "evidence": [
+            "It feels like there's this huge void in my life.",
+            "I just can't seem to relax. I'll be lying awake at like 2 or 3 am thinking about everything.",
+            "I feel so restless and anxious.",
+            "I just feel really stuck right now.",
+            "To be honest, it's been pretty tough.",
+            "It feels like everything is up in the air and I don't know who I am without my partner."
+          ],
+          "reasoning": "The patient expresses feelings of emptiness ('huge void'), restlessness ('can't relax', 'restless and anxious'), and hopelessness ('stuck', 'tough'). These quotes align with DSM-5-TR severity indicators for Depressed Mood/Anhedonia.",
+          "score": 2,
+          "justification": "The patient's reports of feeling stuck, restless, and hopeless suggest that they are experiencing depressed mood and anhedonia most days.",
+          "raw_cot": "{\n  \"evidence\": [\"It feels like there's this huge void in my life.\", \"I just can't seem to relax. I'll be lying awake at like 2 or 3 am thinking about everything.\", \"I feel so restless and anxious.\", ..."
+        },
+        "energy": {
+          "domain": "energy",
+          "evidence": [
+            "I just can't seem to relax. I'll be lying awake at like 2 or 3 am thinking about everything.",
+            "Sometimes I'll get a burst of energy and feel like I can tackle the day, but it usually crashes soon after."
+          ],
+          "reasoning": "The patient reports difficulty relaxing and lying awake at night, indicating fatigue. Additionally, they mention having bursts of energy followed by crashes, which suggests that their energy levels are not consistent.",
+          "score": 2,
+          "justification": "The patient's reports of fatigue, insomnia, and inconsistent energy levels suggest a moderate level of impairment in this domain.",
+          "raw_cot": "{\n  \"evidence\": [\"I just can't seem to relax. I'll be lying awake at like 2 or 3 am thinking about everything.\", \"Sometimes I'll get a burst of energy and feel like I can tackle the day, but it usuall..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I'll be lying awake at like 2 or 3 am thinking about everything.",
+            "I've just been eating whatever's easy to grab and go."
+          ],
+          "reasoning": "The patient reported difficulty sleeping and lying awake for hours, which may indicate changes in appetite. Additionally, they mentioned eating 'whatever's easy to grab and go', suggesting a lack of interest in food or a change in eating habits.",
+          "score": 1,
+          "justification": "The patient's reports of poor sleep quality and easy-to-grab meals suggest some changes in appetite, but not severe enough to warrant a score of 2 or 3.",
+          "raw_cot": "{\n  \"evidence\": [\"I'll be lying awake at like 2 or 3 am thinking about everything.\", \"I've just been eating whatever's easy to grab and go.\"],\n  \"reasoning\": \"The patient reported difficulty sleeping ..."
+        },
+        "concentration": {
+          "domain": "concentration",
+          "evidence": [
+            "I just can't seem to relax. I'll be lying awake at like 2 or 3 am thinking about everything.",
+            "Sometimes I'll get a burst of energy and feel like I can tackle the day, but it usually crashes soon after."
+          ],
+          "reasoning": "The patient reports difficulty relaxing and having racing thoughts at night (quote 1), which suggests some trouble concentrating. Additionally, they mention feeling exhausted and having low energy levels (quote 2), which may also impact their ability to focus.",
+          "score": 1,
+          "justification": "The patient experiences some trouble concentrating, but it's not severe enough to interfere with daily functioning most of the time.",
+          "raw_cot": "{\n  \"evidence\": [\"I just can't seem to relax. I'll be lying awake at like 2 or 3 am thinking about everything.\", \"Sometimes I'll get a burst of energy and feel like I can tackle the day, but it usuall..."
         }
       },
       "domain_turn_counts": {
         "sleep": 9,
         "mood": 9,
         "energy": 9,
-        "concentration": 9,
-        "self_worth": 9
+        "appetite": 9,
+        "concentration": 9
       },
       "domain_scored_at": {
         "sleep": 17,
         "mood": 17,
         "energy": 17,
-        "concentration": 17,
-        "self_worth": 17
+        "appetite": 18,
+        "concentration": 18
       },
       "response_latencies": [
-        7.846216917037964,
-        10.569925785064697,
-        8.55621886253357,
-        8.670675992965698,
-        10.82378602027893
+        6.507449150085449,
+        7.676192998886108,
+        6.459809064865112,
+        6.366419792175293,
+        6.59895133972168
       ],
       "session_complete": true,
-      "total_turns": 18
+      "total_turns": 19
     },
     {
       "session_id": "session_10",
@@ -1906,64 +1892,62 @@
       "gold_scores": {
         "sleep": 3,
         "mood": 3,
-        "energy": 2,
-        "concentration": 2,
-        "self_worth": 3
+        "energy": 3,
+        "appetite": 3,
+        "concentration": 3
       },
       "predicted_scores": {
-        "sleep": 2,
+        "sleep": 1,
         "mood": 2,
-        "energy": 3,
-        "concentration": 1,
-        "self_worth": 2
+        "energy": 2,
+        "appetite": 2,
+        "concentration": 1
       },
       "confidence": {
-        "sleep": 0.7000000000000001,
-        "mood": 0.7000000000000002,
-        "energy": 0.7000000000000001,
-        "concentration": 0.44999999999999996,
-        "self_worth": 0.8500000000000001
+        "sleep": 0.6500000000000001,
+        "mood": 0.65,
+        "energy": 0.65,
+        "appetite": 0.7000000000000001,
+        "concentration": 0.65
       },
       "confidence_history": {
         "sleep": [
           0.0,
           0.0,
-          0.3,
-          0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997,
-          0.44999999999999996,
-          0.44999999999999996,
-          0.49999999999999994,
-          0.49999999999999994,
-          0.5499999999999999,
-          0.5499999999999999,
-          0.6,
-          0.6,
-          0.65,
-          0.65
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.4,
+          0.4,
+          0.45,
+          0.45,
+          0.5,
+          0.5,
+          0.55,
+          0.55,
+          0.6000000000000001,
+          0.6000000000000001,
+          0.6500000000000001
         ],
         "mood": [
           0.0,
           0.0,
           0.05,
           0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.5,
-          0.5,
-          0.55,
-          0.55,
-          0.6000000000000001,
-          0.6000000000000001,
-          0.6500000000000001,
-          0.6500000000000001
+          0.35,
+          0.35,
+          0.39999999999999997,
+          0.39999999999999997,
+          0.44999999999999996,
+          0.44999999999999996,
+          0.49999999999999994,
+          0.49999999999999994,
+          0.5499999999999999,
+          0.5499999999999999,
+          0.6,
+          0.6,
+          0.65
         ],
         "energy": [
           0.0,
@@ -1982,8 +1966,26 @@
           0.5499999999999999,
           0.6,
           0.6,
-          0.65,
           0.65
+        ],
+        "appetite": [
+          0.0,
+          0.0,
+          0.05,
+          0.05,
+          0.1,
+          0.1,
+          0.15000000000000002,
+          0.15000000000000002,
+          0.2,
+          0.2,
+          0.25,
+          0.25,
+          0.6,
+          0.6,
+          0.65,
+          0.65,
+          0.7000000000000001
         ],
         "concentration": [
           0.0,
@@ -2000,111 +2002,93 @@
           0.25,
           0.3,
           0.3,
-          0.35,
-          0.35,
-          0.39999999999999997,
-          0.39999999999999997
-        ],
-        "self_worth": [
-          0.0,
-          0.0,
-          0.05,
-          0.05,
-          0.1,
-          0.1,
-          0.15000000000000002,
-          0.15000000000000002,
-          0.2,
-          0.2,
-          0.25,
-          0.25,
-          0.45,
-          0.45,
-          0.5,
-          0.5,
-          0.8,
-          0.8
+          0.6,
+          0.6,
+          0.65
         ]
       },
       "cot_chains": {
         "sleep": {
           "domain": "sleep",
           "evidence": [
-            "I can barely get out of bed in the morning."
+            "I've been having trouble sleeping at night and waking up with headaches more often than not."
           ],
-          "reasoning": "The patient's statement about being exhausted and having trouble getting out of bed suggests that they are experiencing sleep disturbance, which aligns with the DSM-5-TR definition. The severity indicators suggest a score of 2 or higher.",
-          "score": 2,
-          "justification": "The patient's report of being unable to get out of bed in the morning indicates significant sleep disturbance.",
-          "raw_cot": "{\n  \"evidence\": [\"I can barely get out of bed in the morning.\"],\n  \"reasoning\": \"The patient's statement about being exhausted and having trouble getting out of bed suggests that they are experiencing..."
+          "reasoning": "The patient reported 'trouble sleeping at night' which aligns with the DSM-5-TR definition of sleep disturbance. This is a specific instance of difficulty falling or staying asleep, which corresponds to Score 1 (Several days): sometimes can't sleep, occasionally wake up, a few nights of bad sleep.",
+          "score": 1,
+          "justification": "The patient reported trouble sleeping at night and waking up with headaches, indicating occasional difficulties with sleep.",
+          "raw_cot": "{\n  \"evidence\": [\"I've been having trouble sleeping at night and waking up with headaches more often than not.\"],\n  \"reasoning\": \"The patient reported 'trouble sleeping at night' which aligns with the..."
         },
         "mood": {
           "domain": "mood",
           "evidence": [
-            "I've just been feeling really down on myself a lot of the time. Like, what's the point of it all? You know?",
-            "It feels like I'm struggling to connect with anyone right now. Like, even my own family feels like a burden sometimes."
+            "It's like my energy levels have hit rock bottom.",
+            "I just feel empty and unfulfilled.",
+            "Even when I do get things done, I just feel empty and unfulfilled.",
+            "I've been having trouble sleeping at night and waking up with headaches more often than not.",
+            "I just feel like eating is a chore.",
+            "It's like my brain feels foggy and I have trouble focusing on anything for too long."
           ],
-          "reasoning": "The patient's quotes indicate a pervasive sense of hopelessness and disconnection from others, which aligns with DSM-5-TR severity indicators for Depressed Mood/Anhedonia.",
+          "reasoning": "The patient reports feeling 'empty and unfulfilled' despite completing tasks, which suggests a lack of pleasure or interest. They also describe having trouble sleeping, headaches, and difficulty concentrating, indicating a depressed mood.",
           "score": 2,
-          "justification": "The patient's reports of feeling 'really down on themselves' and struggling to connect with others suggest that they are experiencing more than half the days of depressed mood, meeting criteria for a score of 2.",
-          "raw_cot": "{\n  \"evidence\": [\"I've just been feeling really down on myself a lot of the time. Like, what's the point of it all? You know?\", \"It feels like I'm struggling to connect with anyone right now. Like, ev..."
+          "justification": "The patient's reports of feeling empty and unfulfilled, as well as their physical symptoms, suggest that they experience depressed mood most days.",
+          "raw_cot": "{\n  \"evidence\": [\"It's like my energy levels have hit rock bottom.\", \"I just feel empty and unfulfilled.\", \"Even when I do get things done, I just feel empty and unfulfilled.\", \"I've been having troub..."
         },
         "energy": {
           "domain": "energy",
           "evidence": [
-            "I can barely get out of bed in the morning.",
-            "I've just been really exhausted all the time."
+            "It's like my energy levels have hit rock bottom.",
+            "I just feel empty and unfulfilled.",
+            "even the thought of small talk exhausts me."
           ],
-          "reasoning": "The patient's quotes indicate persistent and severe fatigue, meeting criteria for a score of 2 or higher.",
-          "score": 3,
-          "justification": "The patient reports being 'really exhausted all the time' and 'can barely get out of bed in the morning', indicating a complete lack of energy.",
-          "raw_cot": "{\n  \"evidence\": [\"I can barely get out of bed in the morning.\", \"I've just been really exhausted all the time.\"],\n  \"reasoning\": \"The patient's quotes indicate persistent and severe fatigue, meeting c..."
+          "reasoning": "The patient explicitly states that their energy levels are 'hit rock bottom', which aligns with a score of 2. Additionally, they describe feeling 'empty and unfulfilled' and 'exhausted' by social interactions, which also supports a score of 2.",
+          "score": 2,
+          "justification": "The patient's descriptions of their energy levels and emotional exhaustion are consistent with the DSM-5-TR severity indicators for a score of 2.",
+          "raw_cot": "{\n  \"evidence\": [\"It's like my energy levels have hit rock bottom.\", \"I just feel empty and unfulfilled.\", \"even the thought of small talk exhausts me.\"],\n  \"reasoning\": \"The patient explicitly states..."
+        },
+        "appetite": {
+          "domain": "appetite",
+          "evidence": [
+            "I've lost my taste for food and just feel like eating is a chore."
+          ],
+          "reasoning": "The patient's quote indicates a consistent lack of appetite, which aligns with the DSM-5-TR definition of poor appetite. This meets the criteria for a score of at least 1.",
+          "score": 2,
+          "justification": "The patient's statement suggests frequent and persistent changes in eating habits, warranting a score of 2.",
+          "raw_cot": "{\n  \"evidence\": [\"I've lost my taste for food and just feel like eating is a chore.\"],\n  \"reasoning\": \"The patient's quote indicates a consistent lack of appetite, which aligns with the DSM-5-TR defin..."
         },
         "concentration": {
           "domain": "concentration",
           "evidence": [
-            "It's just not the same as it used to be.",
-            "I've just lost my taste for food altogether. And even though I love reading, it's just not the same as it used to be."
+            "It's like my brain feels foggy and I have trouble focusing on anything for too long."
           ],
-          "reasoning": "The patient reported difficulty focusing on activities they once enjoyed (reading), which is consistent with DSM-5-TR severity indicators for 'Concentration Difficulty'.",
+          "reasoning": "The patient reported difficulty concentrating, which aligns with the DSM-5-TR definition of 'trouble concentrating on things, such as reading the newspaper or watching television'. The severity indicators suggest that this difficulty is not severe enough to warrant a score of 2 or 3.",
           "score": 1,
-          "justification": "Sometimes distracted, a few times had trouble focusing, occasionally lost my train of thought.",
-          "raw_cot": "{\n  \"evidence\": [\"It's just not the same as it used to be.\", \"I've just lost my taste for food altogether. And even though I love reading, it's just not the same as it used to be.\"],\n  \"reasoning\": \"T..."
-        },
-        "self_worth": {
-          "domain": "self_worth",
-          "evidence": [
-            "What's the point of it all? You know?",
-            "I just feel like I'm struggling to connect with anyone right now. Like, even my own family feels like a burden sometimes."
-          ],
-          "reasoning": "The patient expresses feelings of worthlessness and guilt when they say 'what's the point of it all?' which indicates a score of at least 1. Additionally, their statement about feeling like their own family is a burden suggests a sense of self-blame and failure, warranting a score of at least 2.",
-          "score": 2,
-          "justification": "The patient's expressions of worthlessness and guilt suggest a moderate level of distress.",
-          "raw_cot": "{\n  \"evidence\": [\"What's the point of it all? You know?\", \"I just feel like I'm struggling to connect with anyone right now. Like, even my own family feels like a burden sometimes.\"],\n  \"reasoning\": \"..."
+          "justification": "The patient reported some trouble focusing, but it's not frequent or pervasive enough to indicate a score of 2 or 3.",
+          "raw_cot": "{\n  \"evidence\": [\"It's like my brain feels foggy and I have trouble focusing on anything for too long.\"],\n  \"reasoning\": \"The patient reported difficulty concentrating, which aligns with the DSM-5-TR ..."
         }
       },
       "domain_turn_counts": {
-        "sleep": 9,
-        "mood": 9,
-        "energy": 9,
-        "concentration": 9,
-        "self_worth": 9
+        "sleep": 8,
+        "mood": 8,
+        "energy": 8,
+        "appetite": 8,
+        "concentration": 8
       },
       "domain_scored_at": {
-        "sleep": 17,
-        "mood": 17,
-        "energy": 17,
-        "concentration": 17,
-        "self_worth": 17
+        "sleep": 16,
+        "mood": 16,
+        "energy": 16,
+        "appetite": 16,
+        "concentration": 16
       },
       "response_latencies": [
-        7.795444011688232,
-        9.485538005828857,
-        19.241735219955444,
-        7.14448094367981,
-        8.554775714874268
+        5.569629907608032,
+        6.858895778656006,
+        6.0263752937316895,
+        5.006704330444336,
+        5.515322685241699
       ],
       "session_complete": true,
-      "total_turns": 18
+      "total_turns": 17
     }
   ],
   "num_sessions": 10

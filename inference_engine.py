@@ -1,29 +1,12 @@
 """
 Chain-of-Thought Inference Engine
-Scores PHQ-9 domains using Ollama llama3 with strict 3-step CoT reasoning.
+Scores PHQ-9 domains using Gemini with strict 3-step CoT reasoning.
 """
 
 import json
 import re
-import ollama
 
-
-def call_ollama(prompt: str, system: str = "", temperature: float = 0.1) -> str:
-    """Call Ollama llama3 with error handling."""
-    messages = []
-    if system:
-        messages.append({"role": "system", "content": system})
-    messages.append({"role": "user", "content": prompt})
-    try:
-        response = ollama.chat(
-            model="llama3",
-            messages=messages,
-            options={"temperature": temperature, "num_predict": 800}
-        )
-        return response["message"]["content"].strip()
-    except Exception as e:
-        print(f"[InferenceEngine WARN] Ollama call failed: {e}")
-        return ""
+from llm_client import call_llm
 
 
 def score_domain(domain: str, conversation_history: list, kb_entry: dict) -> dict:
@@ -61,12 +44,23 @@ def score_domain(domain: str, conversation_history: list, kb_entry: dict) -> dic
 You follow a strict chain-of-thought protocol. Be precise, conservative, and evidence-based.
 Always return valid JSON."""
 
-    prompt = f"""Score the PHQ-9 domain "{domain.upper()}" ({kb_entry['item_name']}) from this conversation.
+    prompt = f"""Score the PHQ-9 domain "{domain.upper()}" ({kb_entry['item_name']}) from this patient conversation.
 
 DSM-5-TR Definition: {kb_entry['description']}
 
 Severity Indicators:
 {severity_ref}
+
+CALIBRATION (use as reference — be conservative):
+  Score 0: Patient clearly has NO issue. e.g. "I sleep fine", "my appetite is normal", "I feel good"
+  Score 1: Issue present SEVERAL DAYS only. e.g. "sometimes", "a few times", "occasionally", "a bit"
+  Score 2: Issue present MORE THAN HALF THE DAYS. e.g. "most days", "usually", "often", "frequently"
+  Score 3: Issue present NEARLY EVERY DAY. e.g. "every night", "constantly", "always", "I can't at all"
+
+RULES:
+- When in doubt between two scores, choose the LOWER one
+- Short or vague answers (e.g. "yes", "no", "okay") should score 0 or 1, not higher
+- Score 0 if the patient explicitly says there is no problem in this domain
 
 Conversation:
 {conv_text}
@@ -74,24 +68,20 @@ Conversation:
 Follow these EXACT 3 steps and return ONLY valid JSON:
 
 Step 1 EXTRACT: Find and quote all patient utterances relevant to {domain}.
-Step 2 REASON: Compare each quote to the DSM-5-TR severity indicators above.
-Step 3 SCORE: Assign a score of 0, 1, 2, or 3 with a one-sentence justification.
+Step 2 REASON: Compare each quote to the severity indicators. Apply the calibration rules.
+Step 3 SCORE: Assign 0, 1, 2, or 3.
 
 Return this exact JSON structure:
 {{
-  "evidence": ["quote 1 from patient", "quote 2 from patient"],
-  "reasoning": "Step-by-step reasoning comparing quotes to severity indicators",
+  "evidence": ["verbatim patient quote 1", "verbatim patient quote 2"],
+  "reasoning": "Step-by-step comparison to severity indicators",
   "score": 0,
-  "justification": "One sentence explaining the score"
+  "justification": "One sentence explaining the score and frequency"
 }}
 
-Rules:
-- evidence must be VERBATIM quotes from the patient turns only
-- score must be exactly 0, 1, 2, or 3
-- If no evidence found, score is 0
-- Return ONLY the JSON object, no other text"""
+Return ONLY the JSON object, no other text."""
 
-    raw_cot = call_ollama(prompt, system_prompt, temperature=0.1)
+    raw_cot = call_llm(prompt, system_prompt, temperature=0.1, max_tokens=1500, thinking=True)
 
     # Parse JSON from response
     result = _parse_cot_response(raw_cot, domain)
@@ -156,37 +146,24 @@ def _parse_cot_response(raw: str, domain: str) -> dict:
 
 def estimate_confidence_increment(domain: str, patient_response: str, kb_entry: dict) -> float:
     """
-    Estimate how much evidence a patient response provides for a domain.
-    Returns a float between 0.0 and 0.4.
+    Estimate confidence increment from keyword matching alone.
+    Fast, free, and accurate enough for routing decisions.
+    Returns 0.05–0.40.
     """
     keywords = kb_entry.get("keywords", [])
     text_lower = patient_response.lower()
+    hits = sum(1 for kw in keywords if kw in text_lower)
 
-    # Quick keyword check first (cheap)
-    keyword_hits = sum(1 for kw in keywords if kw in text_lower)
-    if keyword_hits == 0:
-        return 0.05  # Minimal increment even if no keywords
-
-    # Use Ollama to estimate richness
-    prompt = f"""On a scale of 0.0 to 0.4, how much evidence does this patient response provide about their "{domain}" symptoms?
-
-Patient response: "{patient_response}"
-
-Relevant keywords: {', '.join(keywords[:8])}
-
-Return ONLY a decimal number between 0.0 and 0.4. Examples: 0.05, 0.15, 0.25, 0.35, 0.40
-Higher values mean the response is detailed and directly relevant to {domain}."""
-
-    raw = call_ollama(prompt, temperature=0.1)
-
-    # Extract float from response
-    match = re.search(r'0\.\d+', raw)
-    if match:
-        val = float(match.group())
-        return max(0.0, min(0.4, val))
-
-    # Fallback based on keyword hits
-    return min(0.4, keyword_hits * 0.1)
+    if hits == 0:
+        return 0.05
+    elif hits == 1:
+        return 0.15
+    elif hits == 2:
+        return 0.25
+    elif hits == 3:
+        return 0.32
+    else:
+        return 0.40
 
 
 def compute_ragas_faithfulness(cot_result: dict) -> float:

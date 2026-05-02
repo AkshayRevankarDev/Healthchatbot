@@ -235,63 +235,63 @@
     ],
     "keywords": ["focus", "concentrate", "distracted", "forget", "memory", "attention", "scattered", "confused", "mind", "wander", "remember", "think"]
   },
-  "self_worth": {
-    "item_number": 6,
-    "item_name": "Feelings of Worthlessness / Guilt",
-    "description": "Feeling bad about yourself — or that you are a failure or have let yourself or your family down",
+  "appetite": {
+    "item_number": 5,
+    "item_name": "Appetite / Weight Changes",
+    "description": "Poor appetite or overeating",
     "score_0": {
       "label": "Not at all",
       "indicators": [
-        "feeling good about myself",
-        "confident",
-        "no guilt",
-        "proud of myself",
-        "feel worthy",
-        "no self-blame",
-        "positive self-image"
+        "eating normally",
+        "good appetite",
+        "no changes in eating",
+        "enjoying food",
+        "eating regular meals",
+        "weight stable",
+        "no food issues"
       ]
     },
     "score_1": {
       "label": "Several days",
       "indicators": [
-        "sometimes feel like a burden",
-        "a few times felt guilty",
-        "occasionally doubt myself",
-        "some days feel like I'm not doing enough",
-        "a bit hard on myself",
-        "felt like I let someone down once or twice",
-        "self-critical sometimes"
+        "sometimes not hungry",
+        "occasionally eating more than usual",
+        "a few days with poor appetite",
+        "skipped a meal here and there",
+        "eating a bit more for comfort sometimes",
+        "slight changes in appetite",
+        "not always interested in food"
       ]
     },
     "score_2": {
       "label": "More than half the days",
       "indicators": [
-        "often feel worthless",
-        "frequently blame myself",
-        "feel like a failure most days",
-        "often feel like a burden to others",
-        "usually feel guilty",
-        "rarely feel good about myself",
-        "often feel I'm disappointing everyone"
+        "often not hungry",
+        "frequently skipping meals",
+        "eating a lot more than usual most days",
+        "food doesn't appeal to me",
+        "using food to cope with stress regularly",
+        "noticeable weight change",
+        "most days I don't feel like eating"
       ]
     },
     "score_3": {
       "label": "Nearly every day",
       "indicators": [
-        "feel completely worthless",
-        "hate myself",
-        "believe I am a total failure",
-        "feel like everyone would be better without me",
-        "constant guilt about everything",
-        "feel like I ruin everything",
-        "no redeeming qualities"
+        "barely eating anything",
+        "no appetite at all",
+        "eating constantly to cope",
+        "lost significant weight",
+        "gained a lot of weight",
+        "food feels meaningless",
+        "skipping meals every day"
       ]
     },
     "probe_questions": [
-      "How do you feel about yourself lately — like, how are you doing as a person in your own eyes?",
-      "Do you ever find yourself being really hard on yourself or feeling like you're letting people down?",
-      "Have you had any thoughts about feeling like a burden to the people around you?"
+      "How has your appetite been lately — are you eating roughly the same as usual?",
+      "Have you noticed any changes in how much you're eating, or whether you're enjoying food?",
+      "Do you ever find yourself skipping meals, or on the flip side, eating more than you normally would?"
     ],
-    "keywords": ["worthless", "guilty", "failure", "burden", "blame", "shame", "disappoint", "useless", "worthwhile", "self-esteem", "confidence", "regret", "fault"]
+    "keywords": ["eat", "food", "hungry", "appetite", "meal", "snack", "weight", "overeat", "skip", "diet", "stomach", "cook", "breakfast", "lunch", "dinner", "craving"]
   }
 }

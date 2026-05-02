@@ -1,83 +1,87 @@
 {
   "session_id": "session_07",
   "severity": "moderate",
-  "total_phq9": 9,
+  "total_phq9": 13,
   "gold_scores": {
-    "sleep": 3,
-    "mood": 1,
-    "energy": 1,
-    "concentration": 2,
-    "self_worth": 2
+    "sleep": 2,
+    "mood": 3,
+    "energy": 3,
+    "appetite": 3,
+    "concentration": 2
   },
-  "patient_profile": "Here is a brief patient profile:\n\nPatient Profile:\n\nName: Emily\n\nEmily, a 28-year-old marketing specialist, has been struggling to find motivation at work since her promotion to team lead six months ago. She used to enjoy her job, but lately, she's been finding it increasingly difficult to wake up early and muster the energy to tackle even the smallest tasks. At home, Emily is feeling overwhelmed by her increasing workload and the constant pressure to meet tight deadlines. Despite her best efforts, she can't seem to get ahead of things, leaving her feeling exhausted and demoralized at the end of each day.\n\nNote: I've intentionally avoided mentioning depression or any specific diagnosis to reflect Emily's indirect expressions of distress in daily life.",
+  "patient_profile": "Here is a brief patient profile for a mental health screening session:\n\nSarah, a 32-year-old marketing specialist, has been feeling overwhelmed with her work responsibilities and personal life lately. She's been working long hours to meet tight deadlines at her job, which has left her little time for self-care or relaxation. Despite her best efforts to stay on top of things, she's struggled to get a good night's sleep and often finds herself lying awake in bed, replaying conversations with coworkers or worrying about meeting tomorrow's tasks. At home, Sarah has been neglecting her favorite hobbies and activities that bring her joy, feeling like there just aren't enough hours in the day to fit everything in.\n\nNote: This profile aims to capture Sarah's daily struggles and stressors without explicitly stating that she is \"depressed.\" Instead, it highlights her feelings of overwhelm, lack of energy, and difficulties with sleep and concentration.",
   "conversation": [
     {
       "role": "therapist",
-      "content": "Hi Emily, thank you for coming in today. How are you feeling lately?"
+      "content": "Hi Sarah, thanks for coming in today. How have you been feeling lately?"
     },
     {
       "role": "patient",
-      "content": "Honestly, I've just been feeling really drained and unmotivated at work. Like, I used to love my job, but now it's just a chore."
+      "content": "Honestly, I've just been feeling really overwhelmed. Work has been crazy and I'm always worried about meeting deadlines."
     },
     {
       "role": "therapist",
-      "content": "That sounds tough. What specifically is causing you to feel that way?"
+      "content": "That sounds tough. Can you tell me more about what's going on at work that's causing you so much stress?"
     },
     {
       "role": "patient",
-      "content": "I think it's the new responsibilities since I got promoted. It's like, my workload doubled, but my energy and motivation didn't exactly keep up."
+      "content": "Well, we're trying to launch this new campaign and it's just a lot of pressure. I've been putting in long hours and feeling like there's always something else that needs my attention."
     },
     {
       "role": "therapist",
-      "content": "So, it sounds like you're feeling overwhelmed. How are you sleeping lately?"
+      "content": "I see. It sounds like you're shouldering a lot of responsibility right now. Do you find yourself having trouble winding down at the end of the day?"
     },
     {
       "role": "patient",
-      "content": "Honestly? Not great. I've been having trouble falling asleep or staying asleep most nights. And when I do wake up, I just feel groggy and unmotivated."
+      "content": "Yeah, definitely. I'll lie awake for hours thinking about all the things I need to do tomorrow or replaying conversations with coworkers."
     },
     {
       "role": "therapist",
-      "content": "I see. So your sleep is suffering a bit too. How's your mood been?"
+      "content": "I bet that's frustrating. Have you noticed any changes in your appetite or energy levels lately?"
     },
     {
       "role": "patient",
-      "content": "It's...off. Like, I'm not really feeling the usual highs or lows that used to come with certain situations or events."
+      "content": "Honestly, I've just been eating whatever is convenient and easy to grab. And as for energy...I just feel so tired all the time."
     },
     {
       "role": "therapist",
-      "content": "That can be tough. It sounds like you're struggling to find your footing at work and home. How about your energy levels?"
+      "content": "Sarah, it sounds like you're struggling to find some balance in your life right now. Can you tell me what you used to do to relax or take care of yourself?"
     },
     {
       "role": "patient",
-      "content": "Ugh, it's like I'm running on fumes most days. Even small tasks feel like they're taking a lot out of me."
+      "content": "I used to love hiking on the weekends and practicing yoga during the week. But lately, I just haven't had the time or energy for those things."
     },
     {
       "role": "therapist",
-      "content": "That sounds really challenging. Are you finding that you can focus or concentrate when you need to?"
+      "content": "It sounds like you're missing some of your favorite activities. Are there any hobbies or interests that you still make time for?"
     },
     {
       "role": "patient",
-      "content": "Honestly, it's been tough. My mind starts wandering and I get distracted easily."
+      "content": "I try to squeeze in a podcast or two during my commute, but it's not the same as doing something I really love."
     },
     {
       "role": "therapist",
-      "content": "It sounds like you're having trouble with your concentration too. How about your self-worth? Do you feel like you're doing okay?"
+      "content": "It sounds like you're craving some sense of control and joy in your life. Can you tell me about your relationships with family and friends?"
     },
     {
       "role": "patient",
-      "content": "Honestly, it's been tough to keep my head up lately. I feel like I'm just barely keeping everything together."
+      "content": "They're all good, actually. My partner is super supportive and my friends are always there for me. It's just...work has been really taking over right now."
     },
     {
       "role": "therapist",
-      "content": "I see. So it sounds like your self-worth is taking a bit of a hit too. What do you think would help you start feeling more positive and motivated again?"
+      "content": "I think it's great that you have a strong support system. Sarah, I want to check in with you about your sleep lately. How many nights a week do you think you're getting a good night's rest?"
     },
     {
       "role": "patient",
-      "content": "Honestly, I'm not sure. Maybe just getting back to the basics, you know? Doing things that bring me joy and fulfillment."
+      "content": "Honestly? Maybe one or two a week. And even on those nights, I'll wake up multiple times thinking about work stuff."
     },
     {
       "role": "therapist",
-      "content": "That sounds like a great starting point. And remember, this is just between us \u2013 your secrets are safe here."
+      "content": "I see. It sounds like you're struggling to find some consistency in your sleep patterns. Sarah, before we wrap up today, what are your hopes for our sessions together?"
+    },
+    {
+      "role": "patient",
+      "content": "Honestly? I just want to feel like myself again. Like I'm not drowning in work and stress all the time."
     }
   ]
 }

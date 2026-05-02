@@ -1,87 +1,87 @@
 {
   "session_id": "session_06",
   "severity": "mild",
-  "total_phq9": 6,
+  "total_phq9": 4,
   "gold_scores": {
     "sleep": 1,
-    "mood": 2,
+    "mood": 0,
     "energy": 1,
-    "concentration": 1,
-    "self_worth": 1
+    "appetite": 1,
+    "concentration": 1
   },
-  "patient_profile": "Here is a brief patient profile:\n\nThe 28-year-old patient, Sarah, has been feeling overwhelmed with her new job as an event coordinator at a busy marketing firm. She's been working long hours, often going home late from events or meetings, and having trouble sleeping due to the constant noise and stress. Her friends have noticed that she's been canceling social plans and opting for solo activities, like yoga classes, as a way to unwind. Lately, Sarah has been struggling to muster the energy to tackle her to-do list, feeling exhausted by the end of each day.\n\nLet me know if you'd like me to make any changes!",
+  "patient_profile": "The 28-year-old patient has been working as a freelance writer for the past year, trying to establish a consistent client base while also taking on occasional part-time teaching gigs to make ends meet. They've been struggling to find a balance between work and personal life, often staying up late into the night to meet deadlines or respond to emails. Recently, they've experienced a few setbacks in their freelance career, including a cancelled project and a missed payment from a previous client. As a result, they've started to feel overwhelmed and anxious about making ends meet, which has been affecting their overall well-being.",
   "conversation": [
     {
       "role": "therapist",
-      "content": "Hi Sarah, it's nice to meet you. I understand you've been struggling with your new job as an event coordinator."
+      "content": "Hi, thank you for coming in today. I'm glad we have this opportunity to talk."
     },
     {
       "role": "patient",
-      "content": "Yeah, it's just a lot to take in. The marketing firm is so fast-paced, and I'm used to working in smaller teams."
+      "content": "Yeah, thanks for having me. I've been feeling pretty worn out lately. Like, I just got back from a trip and was really looking forward to catching up on some sleep..."
     },
     {
       "role": "therapist",
-      "content": "That must be tough. Can you tell me more about what's been going on? What are some of the challenges you're facing?"
+      "content": "A trip? That sounds like it could have been nice. How did you find the experience?"
     },
     {
       "role": "patient",
-      "content": "Well, I've just been really tired lately. Like, I'll get home from work and just collapse onto the couch. And then I have trouble sleeping because of all the noise from the construction next door."
+      "content": "It was okay, I guess. A bit exhausting, to be honest. But that's not really what's been bothering me lately. More just... feeling like I'm constantly running on empty."
     },
     {
       "role": "therapist",
-      "content": "I see. It sounds like you're feeling a bit overwhelmed. Have you noticed any changes in your mood recently?"
+      "content": "I see. Running on empty can be tough. What do you mean by 'constantly'? Is it something specific in your daily routine?"
     },
     {
       "role": "patient",
-      "content": "Honestly, yeah... I just feel really drained all the time. Even things that used to bring me joy don't seem as fun anymore."
+      "content": "Yeah, work. I've been doing freelance writing and teaching part-time. It's been tough to balance everything. Sometimes I find myself staying up really late to meet deadlines or respond to emails..."
     },
     {
       "role": "therapist",
-      "content": "That can be tough. Have you been able to find any ways to unwind and take care of yourself?"
+      "content": "That sounds like a lot of pressure. How do you usually take care of yourself when things get busy?"
     },
     {
       "role": "patient",
-      "content": "Yeah, I've started going to yoga classes at night after work. It's helped me relax a bit."
+      "content": "Honestly? Not very well, I think. Sometimes I'll just grab something quick to eat or skip meals altogether if I'm feeling overwhelmed."
     },
     {
       "role": "therapist",
-      "content": "That sounds like a great way to manage stress. Have you noticed any changes in your social life lately?"
+      "content": "I see. It sounds like you might be struggling with finding some balance in your life right now. How's your appetite been lately?"
     },
     {
       "role": "patient",
-      "content": "Yeah... I've been canceling plans with friends a lot because I just don't have the energy to go out anymore."
+      "content": "To be honest, it's been pretty hit or miss. Some days I'll have no problem eating a big meal, and others... I just don't feel like eating at all."
     },
     {
       "role": "therapist",
-      "content": "I understand. It can be hard to prioritize self-care when you're feeling overwhelmed. Can you tell me more about what's going on at work that's causing you stress?"
+      "content": "I'm going to take that as a score of about one out of three for your appetite lately?"
     },
     {
       "role": "patient",
-      "content": "Just everything, I guess... the constant meetings and emails, trying to keep up with the pace of the company. It feels like there are always things slipping through the cracks."
+      "content": "Yeah, I guess so. It's just... everything feels like it's weighing on me right now."
     },
     {
       "role": "therapist",
-      "content": "I see. It sounds like you're feeling a bit stuck in the whirlwind of your new job. Have you found ways to prioritize what's important and delegate tasks when needed?"
+      "content": "I understand that things can feel overwhelming. Can you tell me more about what's been going on with your work? You mentioned a cancelled project and missed payment?"
     },
     {
       "role": "patient",
-      "content": "Sometimes, yeah... but other times I just feel like I'm not doing enough, that I should be doing more."
+      "content": "Yeah... it's just really frustrating. I put in so much effort, and then to have something like that happen... it feels like a big waste of time."
     },
     {
       "role": "therapist",
-      "content": "It can be tough to balance responsibilities and expectations. Can you tell me more about what's been going through your mind when you're feeling stuck?"
+      "content": "I can imagine how disheartening that must be. How are you sleeping lately?"
     },
     {
       "role": "patient",
-      "content": "I guess just feelings of inadequacy... like I'm not good enough, that I don't belong in this role."
+      "content": "To be honest? I'm probably averaging about seven or eight hours of sleep a night, but it feels more like four or five when I wake up feeling so groggy."
     },
     {
       "role": "therapist",
-      "content": "It sounds like there may be some self-doubt creeping in. Can we explore ways to build your confidence and find more fulfillment in your work?"
+      "content": "I see. It sounds like you might be struggling with getting some restful sleep lately. And how about your mood? Has that been affected at all?"
     },
     {
       "role": "patient",
-      "content": "Yeah, that would be great. Just talking about it feels a little better."
+      "content": "Yeah... I've just been feeling really down and anxious a lot of the time. Like, even little things can set me off."
     }
   ]
 }

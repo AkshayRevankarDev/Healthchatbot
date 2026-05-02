@@ -37,6 +37,8 @@ def init_session():
         st.session_state.dialogue_state = create_initial_state()
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
+    if "quota_error" not in st.session_state:
+        st.session_state.quota_error = False
     if "graph" not in st.session_state:
         st.session_state.graph = None
     if "safety_alert" not in st.session_state:
@@ -113,7 +115,7 @@ def main():
     init_session()
 
     st.title("Mental Health Screening Agent")
-    st.caption("Adaptive conversational screening powered by Ollama llama3 + LangGraph")
+    st.caption("Adaptive conversational screening powered by Gemini + LangGraph")
 
     # Load resources
     kb = load_kb()
@@ -122,6 +124,14 @@ def main():
             st.session_state.graph = load_graph()
 
     # Safety alert banner
+    if st.session_state.get("quota_error"):
+        st.error(
+            "⚠️ **Gemini API quota exceeded.** The free tier allows only 20 requests/day for this model.\n\n"
+            "**Fix:** Enable billing at https://console.cloud.google.com/billing  \n"
+            "Cost: ~$0.15 per million tokens (pennies per session). Restart the app after enabling.",
+            icon="🚫"
+        )
+
     if st.session_state.safety_alert:
         st.markdown("""
         <div class="safety-alert">
@@ -163,26 +173,30 @@ def main():
         else:
             # Show welcome message if session hasn't started
             if not st.session_state.session_started:
-                with st.spinner("Starting session..."):
-                    state = st.session_state.dialogue_state
-                    # Generate initial greeting
-                    import ollama as _ollama
-                    try:
-                        resp = _ollama.chat(
-                            model="llama3",
-                            messages=[{
-                                "role": "user",
-                                "content": "Generate a warm, brief opening for a mental health check-in session. 2 sentences max. Ask how they've been doing."
-                            }],
-                            options={"temperature": 0.7, "num_predict": 100}
-                        )
-                        greeting = resp["message"]["content"].strip()
-                    except Exception:
-                        greeting = "Hi, welcome. I'm here to chat and check in with you. How have you been doing lately?"
+                from llm_client import call_llm
+                greetings = [
+                    "Hi, thanks for being here today. How have things been going for you lately?",
+                    "Hello! I'm glad you came in. How have you been doing recently?",
+                    "Welcome — I appreciate you taking the time. How have things been for you lately?",
+                ]
+                import random as _random
+                try:
+                    greeting = call_llm(
+                        "You are starting a warm mental health check-in. "
+                        "Write one short, friendly opening sentence (max 20 words) asking how the person has been doing lately. "
+                        "Do not use asterisks or markdown. Plain text only.",
+                        temperature=0.7,
+                        max_tokens=60,
+                    )
+                    # Sanity check — must be a proper sentence
+                    if not greeting or len(greeting) < 10 or greeting.count(" ") < 3:
+                        greeting = _random.choice(greetings)
+                except Exception:
+                    greeting = _random.choice(greetings)
 
-                    st.session_state.chat_history.append({"role": "assistant", "content": greeting})
-                    st.session_state.session_started = True
-                    st.rerun()
+                st.session_state.chat_history.append({"role": "assistant", "content": greeting})
+                st.session_state.session_started = True
+                st.rerun()
 
             user_input = st.chat_input("Type your message here...")
             if user_input and user_input.strip():
@@ -203,7 +217,12 @@ def main():
                     )
 
                 st.session_state.dialogue_state = new_state
-                st.session_state.chat_history.append({"role": "assistant", "content": bot_response})
+
+                # Detect empty response (quota exhausted)
+                if not bot_response or bot_response.strip() == "":
+                    st.session_state.quota_error = True
+                else:
+                    st.session_state.chat_history.append({"role": "assistant", "content": bot_response})
 
                 if new_state.get("safety_triggered"):
                     st.session_state.safety_alert = True
@@ -240,8 +259,8 @@ def main():
             "sleep": "Sleep",
             "mood": "Mood / Anhedonia",
             "energy": "Energy",
+            "appetite": "Appetite",
             "concentration": "Concentration",
-            "self_worth": "Self-Worth"
         }
 
         for domain in DOMAINS:

@@ -9,12 +9,12 @@ import random
 import time
 from pathlib import Path
 
-import ollama
+from llm_client import call_llm
 
 SESSIONS_DIR = Path("sessions")
 SESSIONS_DIR.mkdir(exist_ok=True)
 
-DOMAINS = ["sleep", "mood", "energy", "concentration", "self_worth"]
+DOMAINS = ["sleep", "mood", "energy", "appetite", "concentration"]
 
 # Severity buckets: (total_min, total_max, count)
 SEVERITY_PROFILES = [
@@ -25,22 +25,6 @@ SEVERITY_PROFILES = [
 ]
 
 
-def call_ollama(prompt: str, system: str = "") -> str:
-    """Call Ollama llama3 with error handling and fallback."""
-    messages = []
-    if system:
-        messages.append({"role": "system", "content": system})
-    messages.append({"role": "user", "content": prompt})
-    try:
-        response = ollama.chat(
-            model="llama3",
-            messages=messages,
-            options={"temperature": 0.8, "num_predict": 1500}
-        )
-        return response["message"]["content"].strip()
-    except Exception as e:
-        print(f"[WARN] Ollama call failed: {e}. Using fallback.")
-        return "I've been doing okay, just a bit stressed lately."
 
 
 def generate_gold_scores(severity_label: str, score_range: tuple) -> dict:
@@ -72,7 +56,7 @@ PHQ-9 domain scores (0=none, 3=severe): {score_desc}
 Write 3-4 sentences describing this patient's life situation, job/student status, and what's been going on lately.
 Make it realistic and specific. The patient should NOT say they are depressed — they express it indirectly through daily life.
 Do NOT include any diagnosis. Just describe the person and their recent life circumstances."""
-    return call_ollama(prompt)
+    return call_llm(prompt, temperature=0.8, max_tokens=300)
 
 
 def generate_conversation(patient_profile: str, gold_scores: dict, severity: str) -> list:
@@ -101,7 +85,7 @@ Format as JSON array:
 
 Generate exactly 16 turns total (alternating therapist/patient). Return ONLY the JSON array, no other text."""
 
-    raw = call_ollama(prompt, system_prompt)
+    raw = call_llm(prompt, system_prompt, temperature=0.8, max_tokens=1500)
 
     # Parse the JSON
     try:
@@ -153,8 +137,8 @@ def generate_fallback_conversation(gold_scores: dict, severity: str) -> list:
         {"role": "patient", "content": sleep_phrases[min(sleep_score, 3)]},
         {"role": "therapist", "content": "Thanks for sharing that. How are things going at work or school?"},
         {"role": "patient", "content": "It's been hard to keep up. I keep losing track of things."},
-        {"role": "therapist", "content": "How do you feel about yourself these days?"},
-        {"role": "patient", "content": "Sometimes I wonder if I'm doing enough, you know? Like I'm letting people down."},
+        {"role": "therapist", "content": "How has your appetite been — are you eating regularly?"},
+        {"role": "patient", "content": "Honestly, not really. Some days I forget to eat, other days I just snack all day."},
         {"role": "therapist", "content": "That's really understandable. Is there anything specific that's been weighing on you?"},
         {"role": "patient", "content": "Just this general heaviness, I guess. Like everything takes more effort than it should."},
         {"role": "therapist", "content": "Do you still find enjoyment in the things you used to like?"},
@@ -228,13 +212,13 @@ def main():
 
     # Print summary table
     print("\nSession Summary:")
-    print(f"{'ID':<12} {'Severity':<12} {'Total':>6}  {'Sleep':>5} {'Mood':>5} {'Energy':>7} {'Conc':>5} {'Worth':>6}")
+    print(f"{'ID':<12} {'Severity':<12} {'Total':>6}  {'Sleep':>5} {'Mood':>5} {'Energy':>7} {'Appet':>6} {'Conc':>5}")
     print("-" * 65)
     for s in sessions:
         g = s["gold_scores"]
         print(f"{s['session_id']:<12} {s['severity']:<12} {s['total_phq9']:>6}  "
               f"{g['sleep']:>5} {g['mood']:>5} {g['energy']:>7} "
-              f"{g['concentration']:>5} {g['self_worth']:>6}")
+              f"{g['appetite']:>6} {g['concentration']:>5}")
 
 
 if __name__ == "__main__":

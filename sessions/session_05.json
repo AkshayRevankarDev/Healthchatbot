@@ -1,79 +1,83 @@
 {
   "session_id": "session_05",
   "severity": "mild",
-  "total_phq9": 6,
+  "total_phq9": 7,
   "gold_scores": {
-    "sleep": 0,
+    "sleep": 1,
     "mood": 2,
     "energy": 1,
-    "concentration": 2,
-    "self_worth": 1
+    "appetite": 2,
+    "concentration": 1
   },
-  "patient_profile": "This 28-year-old patient is a full-time graduate student working part-time as a teaching assistant. They've been struggling to keep up with coursework and responsibilities since the sudden loss of a close family member six months ago. Lately, they've been having trouble sleeping due to racing thoughts about their thesis and feeling overwhelmed by the demands of school and work.\n\nDespite their best efforts, they've been putting off tasks and deadlines, which has led to feelings of guilt and self-doubt. Their social life has also suffered, as they've become hesitant to commit to plans or participate in group projects due to concerns about not being able to keep up.",
+  "patient_profile": "This 28-year-old software engineer has been feeling overwhelmed with work demands, juggling a tight project deadline and a recent change in management style that's making them question their job security. They've also been struggling to find time for self-care, sacrificing sleep to meet the demands of their role. On top of this, they've experienced some relationship stress with their partner, who's been away on business trips, leaving them feeling lonely and disconnected.\n\nDespite these challenges, they're trying to maintain a sense of normalcy by continuing to prioritize hobbies like hiking and cooking, but even those activities have become more stressful lately as they worry about having enough time for themselves. Overall, they feel like they're just trying to keep their head above water most days.",
   "conversation": [
     {
       "role": "therapist",
-      "content": "Hi, thanks for taking the time to talk with me today. How have you been doing lately?"
+      "content": "Hi there, I'm glad you're here to talk about what's been going on lately. Can you tell me a little bit about yourself and why you decided to reach out for some support?"
     },
     {
       "role": "patient",
-      "content": "Honestly, I've just been feeling really overwhelmed. School and work have been piling up, and it feels like there's not enough hours in the day."
+      "content": "Yeah...I guess I just feel like I've got my head above water most days, but it's definitely an effort. Work has been crazy busy lately and I'm trying to juggle a lot of responsibilities."
     },
     {
       "role": "therapist",
-      "content": "I understand that can be tough. Can you tell me more about what's been going on with school and work? What specifically is feeling overwhelming?"
+      "content": "That sounds challenging. Can you tell me more about what's been going on at work that's got you feeling so overwhelmed?"
     },
     {
       "role": "patient",
-      "content": "Well, I've got a lot of coursework and projects to keep up with, and my part-time job as a TA has been adding extra hours to my plate. It feels like I'm constantly juggling too many things."
+      "content": "Well, my manager changed their approach recently and it's thrown everything off kilter. I'm used to having a lot of autonomy, but now it feels like there are a million rules and regulations to follow."
     },
     {
       "role": "therapist",
-      "content": "I see. And how have you been sleeping lately? Have you noticed any changes in your ability to wind down or fall asleep?"
+      "content": "I see. It sounds like that's causing you some stress. Have you been able to find any time for yourself outside of work?"
     },
     {
       "role": "patient",
-      "content": "Sleep has actually been pretty tough for me recently. My mind just won't shut off, and I find myself lying awake thinking about my thesis and all the things I still need to do."
+      "content": "Honestly, no...not really. I've been sacrificing sleep to get everything done on time and it feels like my partner is always away on business trips so even our usual relaxing time together has become stressful."
     },
     {
       "role": "therapist",
-      "content": "That sounds really challenging. Have you noticed any changes in your mood lately? Are there certain emotions that have been sticking out?"
+      "content": "I'm sorry to hear that. It sounds like you're feeling a bit disconnected from your partner and also struggling with sleep. How are you taking care of yourself when you do have some downtime?"
     },
     {
       "role": "patient",
-      "content": "Yeah, I'd say my mood has just been kind of... flat. Nothing seems to give me the same joy it used to. Sometimes I feel guilty for not being able to muster up the energy to do things."
+      "content": "Well, I used to love hiking on the weekends, but lately it's been more about getting out there quickly so I can get back home and try to catch up on work."
     },
     {
       "role": "therapist",
-      "content": "I'm hearing that you've got a lot on your plate and it's impacting your mood and sleep. How about your social life? Have you noticed any changes in how you're interacting with friends or colleagues?"
+      "content": "I understand. It sounds like even your hobbies are starting to feel like a chore. Have you noticed any changes in your appetite or energy levels?"
     },
     {
       "role": "patient",
-      "content": "Honestly, I've just been pulling away from people lately. It feels like too much effort to keep up appearances or make plans when everything else is already so overwhelming."
+      "content": "Actually, yeah...I've been eating more than usual because I'm just too exhausted to cook most nights. And some days it feels like I need an IV of coffee just to get going."
     },
     {
       "role": "therapist",
-      "content": "It sounds like you're feeling really burnt out. Can you tell me more about what's going on with your thesis? What's been causing those racing thoughts?"
+      "content": "That sounds really tough. It's great that you're acknowledging these changes in your appetite and energy levels. How about your mood? Have you noticed any shifts?"
     },
     {
       "role": "patient",
-      "content": "I guess I just feel like it's not coming together the way I want it to, and that's causing a lot of stress. It feels like everything depends on this project being perfect."
+      "content": "Honestly, some days I just feel like crying...or maybe it's more like feeling numb. Like, nothing seems to be going right and I just want someone to talk to."
     },
     {
       "role": "therapist",
-      "content": "It sounds like there's a lot riding on your thesis for you. Have you considered taking any breaks or prioritizing self-care in all of this?"
+      "content": "I'm here for you and listening. It sounds like you're feeling a bit disconnected from your emotions too. Can you tell me about your relationships with others? Are there any changes or concerns you have?"
     },
     {
       "role": "patient",
-      "content": "I mean, I've tried to make time for things that used to bring me joy, but it feels like even those things are tainted by my stress and anxiety."
+      "content": "Yeah...my partner's been away so much that I feel like we're just going through the motions when they are home. It's hard to connect and it feels like we're drifting apart."
     },
     {
       "role": "therapist",
-      "content": "It sounds like you're feeling really stuck right now. What do you think would be the most helpful thing for us to work on in our sessions?"
+      "content": "That sounds really tough for you. It's understandable that you'd be feeling lonely and disconnected from your partner. How do you think this is affecting your overall well-being?"
     },
     {
       "role": "patient",
-      "content": "I guess just finding a way to manage all of this stress and anxiety would be a huge help. I feel like if I could just get my footing, everything else might start falling into place."
+      "content": "Honestly, I feel like I'm just trying to survive some days. Like, my body feels like it's constantly running on fumes and my mind is always racing."
+    },
+    {
+      "role": "therapist",
+      "content": "I hear you. It sounds like you're feeling really drained and overwhelmed. Let's take a step back and look at what we've talked about so far. Can you identify any patterns or themes that stand out to you?"
     }
   ]
 }

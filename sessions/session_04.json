@@ -1,87 +1,87 @@
 {
   "session_id": "session_04",
   "severity": "mild",
-  "total_phq9": 7,
+  "total_phq9": 5,
   "gold_scores": {
-    "sleep": 2,
-    "mood": 2,
+    "sleep": 1,
+    "mood": 0,
     "energy": 1,
-    "concentration": 2,
-    "self_worth": 0
+    "appetite": 2,
+    "concentration": 1
   },
-  "patient_profile": "Here is a brief patient profile:\n\nPatient Profile:\n\nSarah, a 28-year-old marketing specialist, has been struggling to keep up with her workload lately. She's been working long hours, often sacrificing her social life and sleep schedule to meet tight deadlines. Despite her best efforts, she's been feeling increasingly fatigued and irritable, finding it difficult to muster the enthusiasm to pursue her hobbies or spend time with loved ones.\n\nRecent Life Circumstances:\n\nSarah has been going through a rough patch in her personal life as well. Her boyfriend of three years recently ended things abruptly, leaving her feeling emotionally drained and uncertain about her future relationships. She's also had to take on more responsibilities at work due to a colleague's departure, which has added to her stress levels.\n\nThis patient profile highlights Sarah's mild symptoms across various PHQ-9 domains, with a focus on sleep, mood, energy, concentration, and self-worth.",
+  "patient_profile": "This 28-year-old marketing specialist has been working long hours to meet a tight deadline for an upcoming campaign, often finding herself staying up late to review reports and brainstorm new ideas. She's also been juggling a part-time graduate program in her free time, which has left her feeling exhausted. Lately, she's been experiencing some difficulty sleeping due to the stress of balancing work and school, and has noticed her appetite has increased as a coping mechanism. Despite this chaos, she's managed to maintain a sense of humor and stay focused on her goals, but is seeking support to better manage her daily life.",
   "conversation": [
     {
       "role": "therapist",
-      "content": "Hi Sarah, thank you for coming in today. I'm glad we have a chance to chat. Can you tell me a little bit about what brings you here?"
+      "content": "Hi, thanks for coming in today. How have you been feeling lately?"
     },
     {
       "role": "patient",
-      "content": "Honestly, I've just been feeling really overwhelmed with work and stuff. My boyfriend broke up with me a few months ago, and it's taken some time to adjust. But lately, even my job has started to feel like too much."
+      "content": "Honestly, I've just been feeling really overwhelmed with work and school. It's like I'm constantly playing catch-up."
     },
     {
       "role": "therapist",
-      "content": "I'm so sorry to hear that. Can you walk me through what a typical day looks like for you right now?"
+      "content": "I see. So it sounds like things have been moving pretty quickly for you lately. Can you tell me more about what's been going on at work that's got you feeling overwhelmed?"
     },
     {
       "role": "patient",
-      "content": "Well, I usually wake up around 7 am and immediately start checking my phone for work emails. Then I try to eat something quick before heading out the door. Sometimes I forget to eat altogether."
+      "content": "Well, we're getting ready to launch a big campaign and I'm in charge of reviewing all the reports and brainstorming ideas. It's a lot of responsibility."
     },
     {
       "role": "therapist",
-      "content": "It sounds like you might be having trouble getting a good night's sleep. Do you find yourself feeling tired or sluggish during the day?"
+      "content": "I bet that can be stressful. How do you typically handle stress?"
     },
     {
       "role": "patient",
-      "content": "Yeah, it's not uncommon for me to doze off on the couch in the evening after work. I just feel so drained, like there's no energy left in the tank."
+      "content": "Honestly, I've just been pushing through and hoping to get it all done. But lately, I find myself staying up really late thinking about work."
     },
     {
       "role": "therapist",
-      "content": "I understand how that can be tough. Can you tell me what kind of things make you feel most energized or motivated?"
+      "content": "Staying up late can definitely take a toll on your body. Have you noticed any changes in your sleep patterns?"
     },
     {
       "role": "patient",
-      "content": "Hmm, that's a good question. I used to love going on hikes with my friends, but lately, even thinking about it feels like too much effort. I just want to collapse on the couch and stare at Netflix."
+      "content": "Yeah... it's been harder to fall asleep lately. I usually wake up feeling pretty tired."
     },
     {
       "role": "therapist",
-      "content": "It sounds like your hobbies or social activities might be taking a hit right now. Do you find yourself withdrawing from things that used to bring you joy?"
+      "content": "I see. And how about your appetite? Has that changed at all?"
     },
     {
       "role": "patient",
-      "content": "Yeah, I guess so. It's hard to muster up the enthusiasm for anything anymore."
+      "content": "Actually, yeah... I've been eating a lot more than usual. Like, I'll just grab something quick because I'm so hungry."
     },
     {
       "role": "therapist",
-      "content": "I'm here to help you explore what might be going on and how we can work through it together. Can you tell me more about your experience with work lately?"
+      "content": "That can be a common coping mechanism when we're stressed. Have you noticed any changes in your energy levels?"
     },
     {
       "role": "patient",
-      "content": "It's just been a lot, you know? Deadlines and meetings and emails... I feel like I'm drowning in paperwork."
+      "content": "Yeah... sometimes it feels like I'm dragging myself through the day. But other times, I'll get this burst of energy and just go, go, go."
     },
     {
       "role": "therapist",
-      "content": "I can imagine that would be overwhelming. How have you been taking care of yourself during this time?"
+      "content": "I think we're starting to see a pattern here. It sounds like stress is definitely playing a role in your daily life. How do you feel about that?"
     },
     {
       "role": "patient",
-      "content": "Honestly, not very well at all. I've just been pushing through and hoping things get better soon."
+      "content": "Honestly... I just wish it would all slow down for a minute so I can catch my breath."
     },
     {
       "role": "therapist",
-      "content": "It sounds like self-care might be an area where we can work on building some strategies for you. Can you tell me more about what happened with your boyfriend?"
+      "content": "I understand. It sounds like you're really feeling the pressure right now. What do you think would help you feel more in control?"
     },
     {
       "role": "patient",
-      "content": "Oh, it was just a really sudden breakup. We had been together three years and I thought everything was fine... but I guess I was wrong."
+      "content": "Hmm... maybe just having someone to talk to about all this, and some advice on how to prioritize my time better."
     },
     {
       "role": "therapist",
-      "content": "I'm so sorry you went through that. It can be really tough to navigate relationship changes. Can you tell me how you've been doing with your own sense of self-worth lately?"
+      "content": "Well, we're definitely making progress here. Before we wrap up today, is there anything you're looking forward to in the coming weeks?"
     },
     {
       "role": "patient",
-      "content": "Honestly, it's been pretty rough. I just feel like I'm not good enough or lovable enough... and that's scary."
+      "content": "Yeah... I have a project due soon that I'm really excited about. And maybe just taking some time for myself and relaxing."
     }
   ]
 }

@@ -1,87 +1,91 @@
 {
   "session_id": "session_09",
   "severity": "severe",
-  "total_phq9": 13,
+  "total_phq9": 14,
   "gold_scores": {
-    "sleep": 2,
+    "sleep": 3,
     "mood": 3,
-    "energy": 2,
-    "concentration": 3,
-    "self_worth": 3
+    "energy": 3,
+    "appetite": 2,
+    "concentration": 3
   },
-  "patient_profile": "Here is a brief patient profile:\n\nThis 32-year-old woman has been working as a marketing manager for the past five years, juggling a demanding job with taking care of her elderly mother who lives with her. Recently, she's had to take on even more responsibilities at work due to staff shortages, causing her sleep and energy levels to suffer. Her social life has also taken a hit, as she finds herself canceling plans with friends and family more often than not.\n\nPlease note that this profile does not include any diagnosis or direct expression of depression. It simply describes the patient's daily life circumstances and how they may be impacting their mental health.",
+  "patient_profile": "Here is a brief patient profile:\n\n**Name:** Sarah Johnson\n\nSarah, 32, is a marketing specialist at a busy advertising firm in Chicago. She has been working long hours to meet tight deadlines, often arriving home exhausted around 9 PM. Lately, she's been having trouble sleeping, finding herself wide awake until the early morning hours despite her best efforts to wind down with a relaxing bath or book. Her usually vibrant personality has been dampened by a string of frustrating meetings at work and a recent breakup from her long-term partner.\n\n**Life Situation:** Sarah is currently living in a small apartment in Wicker Park, Chicago, trying to make the most of her new independence after the breakup. She's finding it challenging to maintain her social connections and sense of community now that she's no longer part of a couple.\n\nPlease let me know if you would like me to adjust anything!",
   "conversation": [
     {
       "role": "therapist",
-      "content": "Thank you for coming in today! How have things been going lately?"
+      "content": "Hi Sarah, thank you for agreeing to this appointment. Can you tell me a little bit about what's been going on in your life lately?"
     },
     {
       "role": "patient",
-      "content": "Honestly, it's been tough. Work has been crazy busy and I've had to take on more responsibilities because of some staff shortages. It feels like there just aren't enough hours in the day."
+      "content": "Well, I just got out of a long-term relationship and it's been tough adjusting to being alone again. I used to have so much fun with my partner, and now that's all gone. It feels like there's this huge void in my life."
     },
     {
       "role": "therapist",
-      "content": "I can imagine that would be stressful. Can you tell me a little bit about your job as a marketing manager?"
+      "content": "I'm sorry to hear that. How have you been taking care of yourself during this time?"
     },
     {
       "role": "patient",
-      "content": "It's been good, I guess. I like the creative aspect of it, but lately, it feels like I'm just trying to keep my head above water. I don't know how much more I can take."
+      "content": "Honestly, I've just been trying to keep busy at work and exhaust myself with long hours. It's not like I can just take a break or something."
     },
     {
       "role": "therapist",
-      "content": "I understand that feeling. Can you tell me about your mom? How's she doing?"
+      "content": "I understand. So, it sounds like you're putting in some overtime at work. Are you finding that helps distract you from your thoughts?"
     },
     {
       "role": "patient",
-      "content": "She's...she's not great, to be honest. She's been having some health issues and I've had to take on more care for her. It's just been a lot."
+      "content": "Yeah, to some extent. But then when I get home and try to wind down, I just can't seem to relax. I'll be lying awake at like 2 or 3 am thinking about everything."
     },
     {
       "role": "therapist",
-      "content": "That can be really overwhelming. Have you noticed anything else changing in your daily routine?"
+      "content": "That sounds really tough. Have you tried anything to help with sleep? Like a warm bath or reading a book before bed?"
     },
     {
       "role": "patient",
-      "content": "Yeah...I used to love cooking dinner and trying out new recipes, but lately, I just don't have the energy for it anymore. And when I do cook, it's like I'm just going through the motions."
+      "content": "Yeah, I've tried all that stuff. But nothing seems to work. I just feel so restless and anxious."
     },
     {
       "role": "therapist",
-      "content": "It sounds like you're not getting as much enjoyment out of things that used to bring you pleasure. Are there any other activities or hobbies you miss doing?"
+      "content": "It sounds like you're feeling really stuck right now. Can you tell me more about what's been going on at work? Any specific stressors or frustrations?"
     },
     {
       "role": "patient",
-      "content": "I used to love hiking on the weekends, but now it feels like too much effort. And socializing with friends and family...that's just fallen by the wayside."
+      "content": "Ugh, yeah. Just the usual corporate stuff. People not pulling their weight, meetings that go on forever... I just feel like I'm constantly fighting a losing battle."
     },
     {
       "role": "therapist",
-      "content": "It sounds like you're feeling pretty isolated right now. Can you tell me about your sleep lately?"
+      "content": "I see. It sounds like you're feeling really frustrated and overwhelmed. How has your social life been since the breakup?"
     },
     {
       "role": "patient",
-      "content": "Honestly, I've been having trouble sleeping. When I do get some rest, it's not very good quality. And when I wake up, I just feel...drained."
+      "content": "To be honest, it's been pretty tough. I'm not really sure how to reconnect with friends or meet new people on my own."
     },
     {
       "role": "therapist",
-      "content": "How about your mood? Has that changed at all?"
+      "content": "That can be a real challenge. Have you tried doing anything to get out and about in the city? Like going to concerts or trying new restaurants?"
     },
     {
       "role": "patient",
-      "content": "Yeah...I've noticed I'm getting a little snappier with my family and friends. They're starting to tell me I need to 'snap out of it' or something like that."
+      "content": "Yeah, I've been meaning to do more of that. But honestly, the thought of putting on real clothes and leaving my apartment feels like too much effort some days."
     },
     {
       "role": "therapist",
-      "content": "That can be really frustrating when people don't understand what you're going through. What about your concentration? Are you finding yourself having trouble focusing?"
+      "content": "I understand. It sounds like you're feeling really disconnected from your normal routine and activities. Have you noticed any changes in your appetite or energy levels recently?"
     },
     {
       "role": "patient",
-      "content": "Absolutely. I'll be in the middle of a project and suddenly I'll just...zone out. And then I'll have to start all over again."
+      "content": "Honestly, I've just been eating whatever's easy to grab and go. And my energy's been pretty low. Sometimes I'll get a burst of energy and feel like I can tackle the day, but it usually crashes soon after."
     },
     {
       "role": "therapist",
-      "content": "It sounds like you're feeling pretty overwhelmed right now. Can you tell me how you've been taking care of yourself?"
+      "content": "I see. It sounds like you're struggling with some pretty significant changes in your life right now. How are you feeling about yourself during this time?"
     },
     {
       "role": "patient",
-      "content": "Honestly, not very well. I feel like I'm just trying to survive day-to-day and there's no time left over for self-care."
+      "content": "To be honest, I'm just really struggling to find my sense of purpose and identity again. It feels like everything is up in the air and I don't know who I am without my partner."
+    },
+    {
+      "role": "therapist",
+      "content": "It sounds like you're feeling really lost right now. Let's work together to explore some strategies for getting your life back on track."
     }
   ]
 }

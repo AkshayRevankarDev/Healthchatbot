@@ -4,3 +4,4 @@ __pycache__/
 *.blg
 *.log
 .DS_Store
+.env

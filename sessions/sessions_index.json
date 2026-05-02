@@ -2,25 +2,25 @@
   {
     "session_id": "session_01",
     "severity": "minimal",
-    "total_phq9": 1,
+    "total_phq9": 2,
     "gold_scores": {
-      "sleep": 0,
+      "sleep": 1,
       "mood": 0,
-      "energy": 1,
-      "concentration": 0,
-      "self_worth": 0
+      "energy": 0,
+      "appetite": 1,
+      "concentration": 0
     }
   },
   {
     "session_id": "session_02",
     "severity": "minimal",
-    "total_phq9": 1,
+    "total_phq9": 2,
     "gold_scores": {
       "sleep": 0,
       "mood": 1,
       "energy": 0,
-      "concentration": 0,
-      "self_worth": 0
+      "appetite": 0,
+      "concentration": 1
     }
   },
   {
@@ -31,92 +31,92 @@
       "sleep": 0,
       "mood": 1,
       "energy": 0,
-      "concentration": 1,
-      "self_worth": 0
+      "appetite": 1,
+      "concentration": 0
     }
   },
   {
     "session_id": "session_04",
     "severity": "mild",
-    "total_phq9": 4,
+    "total_phq9": 5,
     "gold_scores": {
       "sleep": 1,
-      "mood": 1,
+      "mood": 0,
       "energy": 1,
-      "concentration": 1,
-      "self_worth": 0
+      "appetite": 2,
+      "concentration": 1
     }
   },
   {
     "session_id": "session_05",
     "severity": "mild",
-    "total_phq9": 6,
+    "total_phq9": 7,
     "gold_scores": {
-      "sleep": 0,
+      "sleep": 1,
       "mood": 2,
       "energy": 1,
-      "concentration": 2,
-      "self_worth": 1
+      "appetite": 2,
+      "concentration": 1
     }
   },
   {
     "session_id": "session_06",
     "severity": "mild",
-    "total_phq9": 6,
+    "total_phq9": 4,
     "gold_scores": {
       "sleep": 1,
-      "mood": 2,
+      "mood": 0,
       "energy": 1,
-      "concentration": 1,
-      "self_worth": 1
+      "appetite": 1,
+      "concentration": 1
     }
   },
   {
     "session_id": "session_07",
     "severity": "moderate",
-    "total_phq9": 9,
+    "total_phq9": 13,
     "gold_scores": {
-      "sleep": 3,
-      "mood": 1,
-      "energy": 1,
-      "concentration": 2,
-      "self_worth": 2
+      "sleep": 2,
+      "mood": 3,
+      "energy": 3,
+      "appetite": 3,
+      "concentration": 2
     }
   },
   {
     "session_id": "session_08",
     "severity": "moderate",
-    "total_phq9": 8,
+    "total_phq9": 11,
     "gold_scores": {
-      "sleep": 1,
-      "mood": 1,
+      "sleep": 2,
+      "mood": 2,
       "energy": 2,
-      "concentration": 2,
-      "self_worth": 2
+      "appetite": 3,
+      "concentration": 2
     }
   },
   {
     "session_id": "session_09",
     "severity": "severe",
-    "total_phq9": 13,
+    "total_phq9": 14,
     "gold_scores": {
-      "sleep": 2,
+      "sleep": 3,
       "mood": 3,
-      "energy": 2,
-      "concentration": 3,
-      "self_worth": 3
+      "energy": 3,
+      "appetite": 2,
+      "concentration": 3
     }
   },
   {
     "session_id": "session_10",
     "severity": "severe",
-    "total_phq9": 13,
+    "total_phq9": 15,
     "gold_scores": {
       "sleep": 3,
       "mood": 3,
-      "energy": 2,
-      "concentration": 2,
-      "self_worth": 3
+      "energy": 3,
+      "appetite": 3,
+      "concentration": 3
     }
   }
 ]
