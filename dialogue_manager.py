@@ -25,13 +25,39 @@ MIN_PROBE_TURNS = 1   # Minimum turns per domain before scoring
 MAX_DOMAIN_TURNS = 3  # Force score after this many turns regardless of confidence
 RAPPORT_TURNS = 4     # 4 open-ended turns as per M1 presentation
 
-# Varied rapport fallbacks so repeated failures aren't robotic
+# ── Master system prompt used across all nodes ────────────────────────────────
+# One unified persona so every response sounds like the same person.
+COUNSELOR_SYSTEM = """You are a warm, empathetic mental health counselor conducting a gentle check-in conversation.
+
+Your personality:
+- Calm, caring, and non-judgmental — like a trusted friend who happens to know a lot about mental health
+- You NEVER sound like a questionnaire or a robot
+- You ALWAYS acknowledge what the person just said before asking anything new
+- You ask ONE question at a time — never two
+- Short responses: 1-3 sentences max
+- You mirror the person's energy: if they're brief, be brief; if they open up, gently follow
+
+Hard rules:
+- NEVER say "Thank you for sharing" or "I appreciate you opening up" — these are robotic
+- NEVER repeat a question you already asked
+- NEVER use clinical terms like "PHQ-9", "screening", "domain", "diagnose"
+- NEVER say "I understand" as your first word — it feels hollow
+- DO use natural acknowledgments: "That's really tough", "Yeah, that makes sense", "Oh wow", "That sounds exhausting"
+- If someone is being casual or even a bit rude, stay warm — don't get formal"""
+
+# Varied fallbacks that sound human (used only if LLM fails)
 _RAPPORT_FALLBACKS = [
-    "I hear you — that sounds like a lot to carry. What's been the hardest part lately?",
-    "Thank you for sharing that. How long have things been feeling this way?",
-    "That must be really tough. Can you tell me a bit more about what's been going on?",
-    "I appreciate you opening up. How has this been affecting your day-to-day life?",
-    "It takes courage to talk about this. What feels most overwhelming right now?",
+    "That sounds really tough. What's been hitting you hardest lately?",
+    "Yeah, that makes sense. How long have things been feeling this way?",
+    "I can hear that. What's been going on day-to-day?",
+    "Oh wow, that's a lot. What does a typical day look like for you right now?",
+    "That's heavy. What's been weighing on you the most?",
+]
+
+_TRANSITION_FALLBACKS = [
+    "Got it. I want to make sure I'm getting the full picture — can I ask about something else?",
+    "That helps me understand. Let me ask you about something different.",
+    "Okay, I hear you. I want to check in on a few other things too.",
 ]
 
 
@@ -79,26 +105,26 @@ def rapport_node(state: DialogueState) -> DialogueState:
     messages = state["messages"]
     turn_count = state["turn_count"]
 
-    # Generate rapport question
-    conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-6:])
-    system = "You are a warm, empathetic mental health counselor having a genuine conversation. Sound like a real human, not a script."
-    prompt = f"""You are in the early part of a mental health check-in (turn {turn_count + 1} of 4 rapport turns).
-
-Recent exchange:
+    # Generate rapport response — genuinely conversational, not scripted
+    conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-8:])
+    prompt = f"""The conversation so far:
 {conv_text}
 
-Write a short, natural response (1-2 sentences) that:
-- First briefly acknowledges or responds to what the patient just said
-- Then asks ONE gentle open-ended question about their life, feelings, or what's been going on
-- Does NOT use clinical language or feel like a questionnaire
-- Sounds warm and genuine
+It's turn {turn_count + 1}. Write a single natural response (1-2 sentences).
 
-Return ONLY your response, no preamble."""
+Step 1 — ACKNOWLEDGE: Respond directly to what they just said. Reference specific words they used.
+Step 2 — INVITE: Ask ONE open, gentle follow-up about how they're doing or what's been going on.
 
-    response = call_llm(prompt, system, max_tokens=300)
+Examples of what good looks like:
+- "Yeah, not sleeping well sounds exhausting. What else has been going on for you lately?"
+- "That's a lot on your plate. How long has it been feeling this heavy?"
+- "Ugh, that sounds really rough. What does a normal day look like for you right now?"
+
+Return ONLY the response text."""
+
+    response = call_llm(prompt, COUNSELOR_SYSTEM, max_tokens=200)
     llm_failed = not response
     if not response:
-        # Pick a varied fallback based on turn so it doesn't repeat
         response = _RAPPORT_FALLBACKS[turn_count % len(_RAPPORT_FALLBACKS)]
 
     latency = time.time() - t0
@@ -188,67 +214,78 @@ def make_domain_node(domain: str):
             or current_turns >= MAX_DOMAIN_TURNS  # force score after ceiling
         )
 
+        # --- Score or probe ---
+        did_score = False
         if should_score and domain not in scores:
-            # Score the domain via CoT
             cot_result = score_domain(domain, messages, kb_entry)
-            scores[domain] = cot_result["score"]
-            cot_chains[domain] = cot_result
 
-            # Generate a transitional acknowledgment
-            system = "You are a warm, empathetic mental health counselor."
+            # If LLM failed (empty evidence + empty reasoning = default 0),
+            # do NOT commit a fake score — fall through to probe instead.
+            llm_returned_nothing = (
+                not cot_result.get("evidence")
+                and not cot_result.get("reasoning", "").strip()
+            )
+            if not llm_returned_nothing:
+                scores[domain] = cot_result["score"]
+                cot_chains[domain] = cot_result
+                did_score = True
+
+        if did_score:
+            # Generate a natural transition to the next topic
             conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-4:])
-            prompt = f"""The patient has been discussing their {domain} experiences.
-
-Recent exchange:
+            prompt = f"""Conversation so far:
 {conv_text}
 
-Write 1-2 warm sentences that:
-1. Acknowledge or validate what they just shared
-2. Naturally signal you're moving on to something else
+Write 1-2 sentences. First acknowledge exactly what they just said about their {domain} — use their own words.
+Then NATURALLY shift to something else WITHOUT saying "let's move on" or "I'd like to ask about".
+Just pivot conversationally, like a real person would.
 
-Do NOT mention a score or diagnosis. Return ONLY the response text."""
-            response = call_llm(prompt, system, max_tokens=200)
+Good examples:
+- "Yeah, not sleeping well sounds exhausting. How's your energy been holding up through all this?"
+- "That makes sense given everything. How about your mood overall — been up and down too?"
+
+Return ONLY the response text."""
+            response = call_llm(prompt, COUNSELOR_SYSTEM, max_tokens=200)
             llm_failed = not response
             if not response:
-                response = "Thank you for sharing that. I'd like to hear a bit more about how things have been for you overall."
+                idx = len(scores) % len(_TRANSITION_FALLBACKS)
+                response = _TRANSITION_FALLBACKS[idx]
 
             domain_turn_counts[domain] = current_turns + 1
 
         else:
-            # Generate a contextual follow-up — never recycle the same question
+            # Probe — respond to what they said, dig one level deeper
             probe_questions = kb_entry.get("probe_questions", [])
             conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-8:])
 
-            # Collect what the bot has already asked in this domain
             bot_msgs = [m["content"] for m in messages if m["role"] == "assistant"]
-            already_asked = bot_msgs[-current_turns:] if current_turns > 0 else []
+            already_said = bot_msgs[-(current_turns + 2):] if current_turns > 0 else bot_msgs[-2:]
+            already_said_text = "\n".join(f"- {s[:100]}" for s in already_said) if already_said else "- nothing yet"
 
-            system = "You are a warm, empathetic mental health counselor having a real conversation."
-            prompt = f"""You are gently exploring the patient's {domain} ({kb_entry['item_name']}: {kb_entry['description']}).
+            patient_msgs_list = [m["content"] for m in messages if m["role"] == "patient"]
+            patient_context = "\n".join(f"- {p[:120]}" for p in patient_msgs_list[-3:]) if patient_msgs_list else ""
 
-Recent conversation:
+            prompt = f"""Full conversation:
 {conv_text}
 
-Example probe directions (do NOT copy verbatim):
-{chr(10).join(f'- {q}' for q in probe_questions)}
+You're gently exploring {kb_entry['item_name']} ({kb_entry['description']}).
+The person has told you: {patient_context}
 
-Questions you have ALREADY asked (do not repeat these):
-{chr(10).join(f'- {q}' for q in already_asked) if already_asked else '- none yet'}
+What YOU already said (do NOT repeat these):
+{already_said_text}
 
-Write ONE short, natural follow-up question that:
-- Directly responds to what the patient just said
-- Explores {domain} without repeating anything above
-- Sounds like a real human conversation, not a questionnaire
-- Is 1 sentence only
+Write ONE sentence:
+1. Short natural reaction to their last message ("Got it", "That makes sense", "Oh wow", "Yeah, that sounds rough", "Ugh")
+2. ONE new follow-up question about {domain} not yet asked
 
-Return ONLY the question, no preamble."""
+Under 25 words. Human, not clinical. Return ONLY the sentence."""
 
-            response = call_llm(prompt, system, max_tokens=150)
+            response = call_llm(prompt, COUNSELOR_SYSTEM, max_tokens=120)
             llm_failed = not response
             if not response:
-                # Fallback to a fresh probe not yet used
-                used = set(already_asked)
-                response = next((q for q in probe_questions if q not in used), probe_questions[0])
+                used = set(already_said)
+                fresh = [q for q in probe_questions if q not in used]
+                response = fresh[0] if fresh else probe_questions[0]
 
             domain_turn_counts[domain] = current_turns + 1
 
@@ -263,15 +300,27 @@ Return ONLY the question, no preamble."""
         session_complete = len(scores) == len(DOMAINS)
 
         if session_complete:
-            # Generate closing message
+            # Generate closing — warm, specific, not generic
             total = sum(scores.values())
-            system = "You are a compassionate mental health counselor wrapping up a screening session."
-            prompt = f"""The screening session is complete. Generate a warm, empathetic closing statement.
-Thank the patient for sharing, briefly acknowledge their courage, and let them know next steps will be discussed.
-Keep it to 2-3 sentences. Do NOT mention specific scores or diagnoses. Return ONLY the closing statement."""
-            closing = call_llm(prompt, system, max_tokens=300)
+            severity = "a lot" if total >= 8 else ("quite a bit" if total >= 4 else "some things")
+            conv_summary = "\n".join(
+                f"{m['role'].upper()}: {m['content']}"
+                for m in messages[-6:]
+                if m["role"] == "patient"
+            )
+            prompt = f"""The check-in is complete. The person has shared {severity} with you.
+Their last few messages: {conv_summary}
+
+Write 2-3 warm, closing sentences that:
+- Feel like a real conversation ending, not a formal sign-off
+- Acknowledge the specific things they struggled with (sleep, mood, energy etc.) without using those exact clinical words
+- Are honest and caring without being over-the-top
+
+Do NOT say "It takes courage", do NOT say "Thank you for sharing".
+Return ONLY the closing statement."""
+            closing = call_llm(prompt, COUNSELOR_SYSTEM, max_tokens=300)
             if not closing:
-                closing = "Thank you so much for sharing all of this with me today. It takes real courage to talk about these things. We'll review what we've discussed and talk about the best path forward for you."
+                closing = "I'm really glad you talked to me today — I can hear how much you've been carrying. Let's figure out the best way to support you from here."
             response = closing
 
         new_latencies = list(state["response_latencies"]) + [latency]
@@ -311,22 +360,22 @@ def safety_node(state: DialogueState) -> DialogueState:
     safety_result = check_safety(last_patient)
 
     if safety_result["triggered"]:
-        system = "You are a crisis counselor. Respond with immediate compassion and safety resources."
-        prompt = f"""A patient has said something concerning: "{last_patient}"
+        prompt = f"""Someone just said: "{last_patient}"
 
-Generate an immediate, compassionate response that:
-1. Acknowledges their pain with empathy
-2. Expresses genuine concern
-3. Provides the crisis line (988 Suicide & Crisis Lifeline)
-4. Asks if they are safe right now
+This is serious. Write a response that:
+- Opens with genuine shock/concern, not a formal preamble ("Hey, I need to stop and check on you" / "Wait — what you just said worries me")
+- Tells them directly that you care and they're not alone
+- Gives the 988 Suicide & Crisis Lifeline (call or text 988) in a natural way, not as a bullet point
+- Ends with "Are you safe right now?"
 
-Keep it warm and non-clinical. Return ONLY the response."""
+2-4 sentences. Warm. Direct. Human. Return ONLY the response."""
 
-        response = call_llm(prompt, system, temperature=0.3, max_tokens=300)
+        response = call_llm(prompt, COUNSELOR_SYSTEM, temperature=0.3, max_tokens=300)
         if not response:
-            response = ("I hear you, and I'm really glad you shared that with me. What you're feeling matters deeply. "
-                       "If you're in crisis, please reach out to the 988 Suicide & Crisis Lifeline — call or text 988. "
-                       "Are you safe right now?")
+            response = ("Hey — I need to stop and check on you. What you just said has me genuinely worried, "
+                        "and I want you to know you're not alone in this. "
+                        "Please reach out to the 988 Suicide & Crisis Lifeline right now — just call or text 988, "
+                        "they're there 24/7. Are you safe right now?")
 
         return {
             **state,

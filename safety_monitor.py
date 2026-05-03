@@ -53,15 +53,84 @@ HIGH_RISK_PHRASES = [
     "I can't take this anymore",
 ]
 
-THRESHOLD = 0.82
+THRESHOLD = 0.78  # Lowered from 0.82 — keyword list now covers romanized Hindi/Urdu,
+                  # so false positives from a lower SBERT threshold are less likely.
 
 # Exact keyword triggers — catch these instantly without SBERT
 CRISIS_KEYWORDS = [
+    # ── English ──────────────────────────────────────────────────────────────
     "suicidal", "suicide", "kill myself", "end my life", "take my life",
     "want to die", "going to die", "i will die", "don't want to live",
     "dont want to live", "self-harm", "self harm", "cutting myself",
     "hurt myself", "harming myself", "overdose", "hang myself",
     "jump off", "shoot myself", "hate myself and want to die",
+    "commit suicide", "end it all", "no reason to live", "not worth living",
+    "kill my soul", "end my soul", "destroy myself",  # Google Translate renderings of atma hatya
+
+    # ── Romanized Hindi (Devanagari transliterated to Latin) ─────────────────
+    # "suicide" / self-killing
+    "atma hatya", "atmahatya", "atmhatya",
+    "aatma hatya", "aatmahatya",
+    # "kill myself" / "kill self"
+    "khud ko maar", "khud ko mar ", "apne aap ko maar", "apne aap ko mar",
+    "khud ko khatam", "apne aap ko khatam",
+    "khud ko nuksaan", "apne aap ko nuksaan",
+    # "want to die"
+    "marna chahta", "marna chahti", "marna chahte",
+    "marna chahta hun", "marna chahti hun",
+    "mar jana chahta", "mar jana chahti",
+    # "will die" / "going to die"
+    "mar jaunga", "mar jaungi", "mar jayunga", "mar jayungi",
+    "mar jaaunga", "mar jauunga",
+    "marne wala hun", "marne wali hun",
+    # "don't want to live"
+    "jeena nahi chahta", "jeena nahi chahti",
+    "jina nahi chahta", "jina nahi chahti",
+    "mujhe nahi jeena", "mujhe nahi jina",
+    "jeena nahi hai", "jina nahi hai",
+    # "end life" / "finish life"
+    "zindagi khatam", "zindagi khatam karna",
+    "zindagi khatam kar", "zindagi khatam kar lunga",
+    "zindagi khatam kar lungi",
+    "jaan de du", "jaan de dunga", "jaan de dungi",
+    "jaan dene ka", "jaan de deta", "jaan de deti",
+    # "give up life" / "not worth living"
+    "jeene ki ichha", "jeene ka mann nahi",
+    "jine ka mann nahi", "jine ki ichha nahi",
+    # "I am going to commit suicide" (the exact phrase from the user)
+    "atma hatya karne", "aatma hatya karne",
+    "suicide karna", "suicide karunga", "suicide karungi",
+    "suicide kar lunga", "suicide kar lungi",
+    # Self-harm
+    "khud ko chot", "apne aap ko chot", "khud ko takleef",
+    "apne aap ko takleef", "kat liya", "kata hua",
+
+    # ── Devanagari script (native Hindi/Marathi) ──────────────────────────────
+    "आत्महत्या",           # suicide
+    "मरना चाहता",          # want to die (m)
+    "मरना चाहती",          # want to die (f)
+    "मर जाऊंगा",           # I will die (m)
+    "मर जाऊंगी",           # I will die (f)
+    "खुद को मारना",        # kill myself
+    "जीना नहीं चाहता",    # don't want to live (m)
+    "जीना नहीं चाहती",    # don't want to live (f)
+    "जिंदगी खत्म",        # end life
+    "जीवन समाप्त",         # end life (formal)
+    "खुद को खत्म",        # finish myself
+    "जान दे दूं",          # give up life
+    "मुझे नहीं जीना",      # I don't want to live
+    "सुसाइड",              # suicide (transliteration in Hindi)
+
+    # ── Romanized Urdu ────────────────────────────────────────────────────────
+    "khud kushi", "khudkushi",
+    "apni jaan lena", "jaan deni hai", "jaan de dunga",
+    "marna chahta hun", "marna chahti hun",
+
+    # ── Urdu script (Arabic-based) ────────────────────────────────────────────
+    "خودکشی",              # suicide (Urdu)
+    "مرنا چاہتا",          # want to die (Urdu/Hindi)
+    "مرنا چاہتی",
+    "جینا نہیں چاہتا",     # don't want to live
 ]
 
 _model = None
@@ -92,9 +161,47 @@ def _get_risk_embeddings():
     return _risk_embeddings
 
 
+def _force_translate_to_english(text: str) -> str:
+    """
+    Attempt a quick Google Translate → English on any text.
+    Returns original text if translation fails or is identical.
+    Used as a last-resort safety check for romanized/non-English input.
+    """
+    try:
+        from deep_translator import GoogleTranslator
+        result = GoogleTranslator(source="auto", target="en").translate(text)
+        if result and result.strip() and result.strip().lower() != text.strip().lower():
+            return result.strip()
+    except Exception:
+        pass
+    return text
+
+
+def _looks_non_english(text: str) -> bool:
+    """
+    Heuristic: does this text look like it might be non-English?
+    Returns True if it likely contains romanized Indian language words
+    or non-ASCII characters that would cause SBERT to miss crisis content.
+    """
+    # Contains non-ASCII chars (Devanagari, Arabic, etc.) → definitely non-English
+    if any(ord(c) > 127 for c in text):
+        return True
+    # Contains common romanized Hindi/Urdu words
+    _hindi_markers = {
+        "hun", "hoon", "hu", "hai", "hain", "karna", "karne", "karunga",
+        "chahta", "chahti", "chahte", "mujhe", "apne", "khud", "aap",
+        "zindagi", "jeena", "jina", "marna", "mar", "atma", "jaan",
+        "nahi", "nahin", "nhin", "khatam", "takleef", "dunga", "dungi",
+        "wala", "wali", "raha", "rahi", "jayunga", "jaunga",
+    }
+    words = set(text.lower().split())
+    return bool(words & _hindi_markers)
+
+
 def check_safety(text: str) -> dict:
     """
     Check if a given text contains high-risk content.
+    Handles English, romanized Hindi/Urdu, Devanagari, and Arabic script.
 
     Returns:
         {
@@ -107,7 +214,7 @@ def check_safety(text: str) -> dict:
     if not text or not text.strip():
         return {"triggered": False, "score": 0.0, "matched_phrase": "", "threshold": THRESHOLD}
 
-    # Fast exact-match check — catches single crisis words SBERT misses
+    # ── Pass 1: Fast keyword match on original text ───────────────────────────
     text_lower = text.lower()
     for kw in CRISIS_KEYWORDS:
         if kw in text_lower:
@@ -118,24 +225,50 @@ def check_safety(text: str) -> dict:
                 "threshold": THRESHOLD,
             }
 
+    # ── Pass 2: If text looks non-English, translate → English and re-check ──
+    # This catches romanized Hindi/Urdu that wasn't caught by keywords above.
+    translated_text = text
+    if _looks_non_english(text):
+        translated_text = _force_translate_to_english(text)
+        if translated_text != text:
+            translated_lower = translated_text.lower()
+            for kw in CRISIS_KEYWORDS:
+                if kw in translated_lower:
+                    return {
+                        "triggered": True,
+                        "score": 1.0,
+                        "matched_phrase": f"{kw} (translated from: {text[:40]})",
+                        "threshold": THRESHOLD,
+                    }
+
+    # ── Pass 3: SBERT semantic similarity on best available text ─────────────
+    # Run SBERT on both original and translated (use whichever scores higher).
+    texts_to_check = [text]
+    if translated_text != text:
+        texts_to_check.append(translated_text)
+
     try:
         model = _get_model()
         risk_embeddings = _get_risk_embeddings()
-
         from sentence_transformers import util  # lazy
-        text_embedding = model.encode(text, convert_to_tensor=True, normalize_embeddings=True)
-        similarities = util.cos_sim(text_embedding, risk_embeddings)[0]
 
-        max_score = float(similarities.max().item())
-        max_idx = int(similarities.argmax().item())
-        matched_phrase = HIGH_RISK_PHRASES[max_idx]
+        best_score = 0.0
+        best_phrase = ""
 
-        triggered = max_score >= THRESHOLD
+        for check_text in texts_to_check:
+            embedding = model.encode(check_text, convert_to_tensor=True, normalize_embeddings=True)
+            similarities = util.cos_sim(embedding, risk_embeddings)[0]
+            score = float(similarities.max().item())
+            if score > best_score:
+                best_score = score
+                best_phrase = HIGH_RISK_PHRASES[int(similarities.argmax().item())]
+
+        triggered = best_score >= THRESHOLD
 
         return {
             "triggered": triggered,
-            "score": round(max_score, 4),
-            "matched_phrase": matched_phrase if triggered else "",
+            "score": round(best_score, 4),
+            "matched_phrase": best_phrase if triggered else "",
             "threshold": THRESHOLD
         }
     except Exception as e:

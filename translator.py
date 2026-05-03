@@ -459,32 +459,74 @@ def load_whisper_model(model_size: str = "base"):
     return _whisper_model
 
 
+def _write_audio_file(audio_bytes: bytes) -> str:
+    """
+    Write audio bytes to a temp file Whisper can read.
+    Streamlit's st.audio_input returns WebM/Opus — we try to convert to WAV
+    using pydub (which uses ffmpeg) if available, otherwise write raw and let
+    Whisper's built-in ffmpeg call handle it.  Falls back to writing .webm
+    directly, which Whisper can decode if ffmpeg is on PATH.
+    """
+    # Detect format from magic bytes
+    is_webm = audio_bytes[:4] == b'\x1aE\xdf\xa3'
+    is_wav  = audio_bytes[:4] == b'RIFF'
+
+    if is_wav:
+        suffix = ".wav"
+    elif is_webm:
+        suffix = ".webm"
+    else:
+        suffix = ".webm"  # assume webm from browser
+
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as f:
+        f.write(audio_bytes)
+        raw_path = f.name
+
+    # If WebM, try converting to WAV via pydub for maximum compatibility
+    if suffix == ".webm":
+        try:
+            from pydub import AudioSegment
+            audio = AudioSegment.from_file(raw_path, format="webm")
+            wav_path = raw_path.replace(".webm", ".wav")
+            audio.export(wav_path, format="wav")
+            os.unlink(raw_path)
+            return wav_path
+        except Exception:
+            pass  # pydub/ffmpeg not available — Whisper will try to handle webm directly
+
+    return raw_path
+
+
 def transcribe_audio(audio_bytes: bytes, user_lang: str = "en") -> dict:
     """
     Transcribe audio using Whisper (runs locally).
     Returns original-language transcription + English translation.
+    Handles WebM/Opus from browser audio_input and WAV files.
     """
     try:
         import whisper
     except ImportError:
         return {"text": "", "language": user_lang, "english_text": "",
-                "success": False, "error": "openai-whisper not installed"}
+                "success": False, "error": "openai-whisper not installed. Run: pip install openai-whisper"}
 
     tmp_path = None
     try:
         model = load_whisper_model("base")
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
-            f.write(audio_bytes)
-            tmp_path = f.name
+        tmp_path = _write_audio_file(audio_bytes)
 
-        # Transcribe in detected language
-        result   = model.transcribe(tmp_path, task="transcribe")
+        # Transcribe in detected language.
+        # Pass a language hint when the user has selected a specific language
+        # (not English or auto-detect) so Whisper biases toward that language.
+        # This is especially important for Hindi vs. Urdu, which are nearly
+        # identical acoustically — without a hint Whisper often returns "ur".
+        lang_hint = user_lang if user_lang not in ("en", "auto") else None
+        result   = model.transcribe(tmp_path, task="transcribe", language=lang_hint)
         orig_txt = result["text"].strip()
         det_lang = result.get("language", user_lang)
 
         # English translation via Whisper's own translate task (very accurate)
         if det_lang != "en":
-            en_result = model.transcribe(tmp_path, task="translate")
+            en_result = model.transcribe(tmp_path, task="translate", language=lang_hint)
             eng_txt   = en_result["text"].strip()
         else:
             eng_txt = orig_txt
@@ -493,11 +535,21 @@ def transcribe_audio(audio_bytes: bytes, user_lang: str = "en") -> dict:
                 "english_text": eng_txt, "success": True, "error": ""}
 
     except Exception as e:
+        err = str(e)
+        # Give a more helpful error message for the ffmpeg case
+        if "ffmpeg" in err.lower() or "No such file" in err:
+            err = (
+                "ffmpeg not found — required for audio decoding. "
+                "Install it: brew install ffmpeg  (then restart the app)"
+            )
         return {"text": "", "language": user_lang, "english_text": "",
-                "success": False, "error": str(e)}
+                "success": False, "error": err}
     finally:
         if tmp_path and os.path.exists(tmp_path):
-            os.unlink(tmp_path)
+            try:
+                os.unlink(tmp_path)
+            except Exception:
+                pass
 
 
 # ── Utilities ─────────────────────────────────────────────────────────────────

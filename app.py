@@ -63,6 +63,7 @@ def init_session():
         "user_lang":       "en",          # ISO code of user's preferred language
         "whisper_model":   None,          # lazy Whisper load
         "voice_transcript": "",           # last Whisper output
+        "voice_input_key": 0,             # incremented after each voice send to reset audio widget
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -284,12 +285,55 @@ def process_user_turn(user_input_original: str, english_override: str = ""):
     else:
         user_input_en = user_input_original
 
-    # 3. Safety check on English text
+    # 2b. Force-translate romanized Indian languages that langdetect misclassified
+    #     as English. Catches "mai atma hatya karne ja raha hu" style inputs where
+    #     the user typed romanized Hindi but the session language is still "en".
+    #     We use Google Translate with source=auto and only adopt the result if it
+    #     differs meaningfully from the original (i.e., it wasn't actually English).
+    if user_lang == "en" and user_input_en == user_input_original:
+        try:
+            from deep_translator import GoogleTranslator as _GT
+            _auto_en = _GT(source="auto", target="en").translate(user_input_original)
+            if (
+                _auto_en
+                and _auto_en.strip()
+                # Reject Google Translate error pages
+                and "Error" not in _auto_en[:30]
+                and "500" not in _auto_en[:30]
+                # Only adopt if result is substantially different (i.e., it wasn't English)
+                and _auto_en.strip().lower() != user_input_original.strip().lower()
+                and len(set(_auto_en.lower().split()) - set(user_input_original.lower().split())) > 1
+                # Result must look like actual English (has common English words)
+                and any(w in _auto_en.lower().split()
+                        for w in {"i", "am", "is", "the", "a", "my", "me", "to",
+                                  "want", "feel", "have", "can", "not", "do"})
+            ):
+                user_input_en = _auto_en.strip()
+        except Exception:
+            pass  # translation failure is non-fatal; continue with original
+
+    # 3. Safety check — ALWAYS run on English text (original or translated).
+    #     check_safety() internally also translates non-English text and re-checks,
+    #     providing triple coverage: keyword → translated keyword → SBERT semantic.
     safety = check_safety(user_input_en)
-    # Also check original (catches script-specific keywords)
+    # Also check the original text — handles cases where safety keywords are in
+    # Devanagari/Arabic script or romanized Hindi that wasn't translated above.
     safety_orig = check_safety(user_input_original)
     if safety["triggered"] or safety_orig["triggered"]:
         st.session_state.safety_alert = True
+        _matched = safety["matched_phrase"] or safety_orig["matched_phrase"]
+        if _matched:
+            print(f"[Safety] TRIGGERED on: '{user_input_original[:60]}' → matched: '{_matched}'")
+    else:
+        # Log near-misses (score ≥ 0.70) to help tune the threshold
+        _max_score = max(safety["score"], safety_orig["score"])
+        if _max_score >= 0.70:
+            print(f"[Safety] Near-miss score={_max_score:.3f}: '{user_input_original[:60]}'")
+            print(f"         matched: '{safety['matched_phrase'] or safety_orig['matched_phrase']}'")
+
+    # Also update dialogue state so the safety_node in the LLM pipeline is aware
+    if safety["triggered"] or safety_orig["triggered"]:
+        st.session_state.dialogue_state["safety_triggered"] = True
 
     # 4. Show user message in original language
     st.session_state.chat_history.append({"role": "user", "content": user_input_original})
@@ -314,18 +358,14 @@ def process_user_turn(user_input_original: str, english_override: str = ""):
 
     # 7. Translate bot response → user's language
     if user_lang != "en":
-        lang_name = get_language_name(user_lang)
-        with st.spinner(f"Translating response to {lang_name}…"):
+        with st.spinner(""):
             bot_response = translate_from_english(bot_response_en, user_lang)
-        note = f"Responded in {lang_name} · original English available on request"
     else:
         bot_response = bot_response_en
-        note = ""
 
     st.session_state.chat_history.append({
         "role": "assistant",
         "content": bot_response,
-        "note": note,
     })
 
     if new_state.get("safety_triggered"):
@@ -424,17 +464,12 @@ def main():
             for msg in st.session_state.chat_history:
                 role    = msg["role"]
                 content = msg["content"]
-                note    = msg.get("note", "")
                 if role == "assistant":
                     with st.chat_message("assistant", avatar="🧠"):
                         st.write(content)
-                        if note:
-                            st.markdown(f"<span class='translation-note'>{note}</span>", unsafe_allow_html=True)
                 else:
                     with st.chat_message("user", avatar="👤"):
                         st.write(content)
-                        if note:
-                            st.markdown(f"<span class='translation-note'>{note}</span>", unsafe_allow_html=True)
 
         # ── Input area ──
         session_done = (
@@ -493,7 +528,7 @@ def main():
             if whisper_available:
                 with st.expander("🎙️ Voice Input", expanded=True):
                     st.caption("Record your message — Whisper detects your language automatically and the agent replies in the same language.")
-                    audio_input = st.audio_input("Record your voice message")
+                    audio_input = st.audio_input("Record your voice message", key=f"audio_{st.session_state.voice_input_key}")
 
                     if audio_input is not None:
                         audio_bytes = audio_input.read()
@@ -536,6 +571,7 @@ def main():
                                         transcript,
                                         english_override=eng_text if detected_lang != "en" else ""
                                     )
+                                    st.session_state.voice_input_key += 1
                                     st.rerun()
                             else:
                                 st.error(f"Transcription failed: {result.get('error', 'Unknown error')}")

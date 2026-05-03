@@ -42,6 +42,7 @@ def score_domain(domain: str, conversation_history: list, kb_entry: dict) -> dic
 
     system_prompt = """You are a clinical psychologist scoring PHQ-9 items from patient conversations.
 You extract evidence from the full conversation and score it accurately against DSM-5-TR severity criteria.
+The conversation may contain Hindi, Urdu, or romanized Indian languages mixed with English — treat all as equivalent.
 Always return valid JSON."""
 
     prompt = f"""Score the PHQ-9 domain "{domain.upper()}" ({kb_entry['item_name']}) from this patient conversation.

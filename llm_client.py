@@ -60,9 +60,10 @@ except ImportError:
 
 def _call_model(model: str, prompt: str, config) -> str:
     """Call a single model and return the text. Raises on any error."""
-    # Smaller / older models don't support thinking_config — strip it for those.
-    _no_thinking = ("flash-8b", "1.0", "gemini-pro")
-    if any(x in model for x in _no_thinking):
+    # Only gemini-2.5-x and gemini-3.x models support thinking_config.
+    # All others (2.0-flash, 1.5-flash, etc.) must have it stripped.
+    _supports_thinking = ("gemini-2.5", "gemini-3")
+    if not any(x in model for x in _supports_thinking):
         from google.genai import types as _gt
         safe_config = _gt.GenerateContentConfig(
             system_instruction=config.system_instruction,
