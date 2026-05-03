@@ -53,6 +53,27 @@ from translator import (
 # ─── Session State Init ────────────────────────────────────────────────────────
 
 def init_session():
+    # Read URL params passed from the React landing page
+    _params    = st.query_params
+    _url_lang  = _params.get("lang", "en")    # ISO code, e.g. "hi"
+    _url_mood  = _params.get("mood", "")      # mood index 0-4, or ""
+
+    # Validate lang is one we support
+    from translator import LANGUAGE_OPTIONS as _LO
+    _valid_codes = set(_LO.values())
+    if _url_lang not in _valid_codes:
+        _url_lang = "en"
+
+    # Mood index → opening context hint stored in session
+    _mood_messages = {
+        "0": "very low",        # 😔
+        "1": "struggling",      # 😟
+        "2": "neutral",         # 😐
+        "3": "okay",            # 🙂
+        "4": "good",            # 😊
+    }
+    _mood_context = _mood_messages.get(str(_url_mood), "")
+
     defaults = {
         "dialogue_state":  create_initial_state(),
         "chat_history":    [],
@@ -60,10 +81,11 @@ def init_session():
         "graph":           None,
         "safety_alert":    False,
         "session_started": False,
-        "user_lang":       "en",          # ISO code of user's preferred language
-        "whisper_model":   None,          # lazy Whisper load
-        "voice_transcript": "",           # last Whisper output
-        "voice_input_key": 0,             # incremented after each voice send to reset audio widget
+        "user_lang":       _url_lang,     # pre-set from landing page selection
+        "mood_context":    _mood_context, # hint for opening greeting
+        "whisper_model":   None,
+        "voice_transcript": "",
+        "voice_input_key": 0,
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -206,14 +228,19 @@ def render_sidebar():
 
         st.divider()
         st.subheader("ℹ️ About")
+        try:
+            from llm_client import OPENAI_MODEL as _dm, OPENAI_SCORING_MODEL as _sm
+            _gm = f"{_dm} / {_sm} (scoring)"
+        except Exception:
+            _gm = "gpt-4o-mini / gpt-4o"
         st.caption(
-            "Mental health screening powered by:\n"
-            "- **Gemini 2.5 Flash** (LLM)\n"
-            "- **LangGraph** (dialogue flow)\n"
-            "- **SBERT** (safety monitor)\n"
-            "- **IndicTrans2** (Indian language translation)\n"
-            "- **Google Translate** (other languages)\n"
-            "- **Whisper** (voice-to-text)"
+            f"Mental health screening powered by:\n"
+            f"- **{_gm}** (LLM — with CoT scoring)\n"
+            f"- **LangGraph** (dialogue flow)\n"
+            f"- **SBERT** (safety monitor)\n"
+            f"- **IndicTrans2** (Indian language translation)\n"
+            f"- **Google Translate** (romanized Hindi fallback)\n"
+            f"- **Whisper** (voice-to-text)"
         )
         # IndicTrans2 model status panel
         if is_indic(st.session_state.get("user_lang", "en")):
@@ -382,7 +409,7 @@ def main():
     lang_label = "" if user_lang == "en" else f"<span class='lang-badge'>🌐 {get_language_name(user_lang)}</span>"
 
     st.markdown(f"## 🧠 Mental Health Screening Agent {lang_label}", unsafe_allow_html=True)
-    st.caption("Adaptive conversational screening powered by Gemini + LangGraph")
+    st.caption("Adaptive conversational screening powered by GPT-4o + LangGraph")
 
     # Load resources
     kb = load_kb()
@@ -428,13 +455,9 @@ def main():
     # ── Quota error banner ──
     if st.session_state.get("quota_error"):
         st.error(
-            "⚠️ **Gemini API credits depleted.**\n\n"
-            "**Quick fix (free, no credit card):**\n"
-            "1. Go to https://aistudio.google.com/app/apikey\n"
-            "2. Click **Create API key** → copy the new key\n"
-            "3. Open `.env` in the project folder and replace `GEMINI_API_KEY=...` with the new key\n"
-            "4. Restart the app\n\n"
-            "The AI Studio free tier gives 1,500 requests/day on Gemini 2.0 Flash — plenty for a session.",
+            "⚠️ **OpenAI API error** — quota or rate limit hit.\n\n"
+            "**Fix:** Add credits at https://platform.openai.com/account/billing  \n"
+            "A full screening session costs less than $0.01 with gpt-4o-mini.",
             icon="🚫"
         )
 
@@ -487,25 +510,38 @@ def main():
         else:
             # ── Opening greeting (first load) ──
             if not st.session_state.session_started:
+                _mood_ctx = st.session_state.get("mood_context", "")
                 greetings = [
                     "Hi, I'm glad you're here. How have things been going for you lately?",
                     "Hello! Thanks for coming in. How have you been doing recently?",
                     "Welcome — I appreciate you taking the time. How have things been for you?",
                     "Hi there, good to see you. What's been on your mind lately?",
                 ]
+                _mood_greetings = {
+                    "very low":    "Hi, I'm really glad you reached out — it takes courage when things feel that low. What's been going on for you?",
+                    "struggling":  "Hey, I'm glad you're here. It sounds like things have been tough — want to tell me a bit about what's been happening?",
+                    "neutral":     "Hi there! Good to have you here. How have things been going for you lately?",
+                    "okay":        "Hey, glad you stopped by! Things seem okay — what's been on your mind recently?",
+                    "good":        "Hi! Great to see you here. You mentioned things are going well — tell me more about how you've been!",
+                }
                 from llm_client import call_llm
                 try:
+                    _mood_hint = (
+                        f"The person has indicated they are feeling '{_mood_ctx}' today. "
+                        if _mood_ctx else ""
+                    )
                     greeting_en = call_llm(
-                        "You are starting a warm mental health check-in. "
-                        "Write ONE short friendly opening sentence (max 18 words) asking how the person has been doing. "
-                        "Plain text only, no asterisks or markdown.",
+                        f"You are starting a warm mental health check-in. "
+                        f"{_mood_hint}"
+                        "Write ONE short friendly opening sentence (max 20 words) acknowledging their mood "
+                        "and gently inviting them to share more. Plain text only, no asterisks or markdown.",
                         temperature=0.7,
-                        max_tokens=50,
+                        max_tokens=60,
                     )
                     if not greeting_en or len(greeting_en) < 10 or greeting_en.count(" ") < 3:
-                        greeting_en = random.choice(greetings)
+                        greeting_en = _mood_greetings.get(_mood_ctx, random.choice(greetings))
                 except Exception:
-                    greeting_en = random.choice(greetings)
+                    greeting_en = _mood_greetings.get(_mood_ctx, random.choice(greetings))
 
                 # Translate greeting to user language
                 if user_lang != "en":

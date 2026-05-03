@@ -1,7 +1,7 @@
 # Mental Health Screening Agent — Milestone 2
 **CSE 635 | University at Buffalo**
 
-Conversational AI system that replaces rigid PHQ-9 questionnaires with empathetic adaptive dialogue. Infers PHQ-9 item scores (0–3) from natural patient conversation using Ollama llama3 locally.
+Conversational AI system that replaces rigid PHQ-9 questionnaires with empathetic adaptive dialogue. Infers PHQ-9 item scores (0–3) from natural patient conversation using OpenAI (gpt-4o) and local translation models.
 
 ---
 
@@ -14,9 +14,12 @@ mental_health_screening/
 ├── safety_monitor.py        # SBERT-based crisis detection
 ├── dialogue_manager.py      # LangGraph adaptive dialogue graph
 ├── inference_engine.py      # Chain-of-Thought PHQ-9 scoring
+├── translator.py            # IndicTrans2 + Whisper multilingual support
 ├── evaluate.py              # 6-metric evaluation pipeline
-├── app.py                   # Streamlit chat UI
-├── visualize_results.py     # Matplotlib result figures
+├── app.py                   # Streamlit chat UI (legacy/debug)
+├── server.py                # FastAPI backend API
+├── frontend/                # React landing page and chat UI
+├── start.sh                 # Launcher for React + FastAPI
 ├── sessions/                # Generated patient sessions (JSON)
 ├── figures/                 # Output PNG figures
 └── logs/                    # Session audit logs
@@ -26,11 +29,11 @@ mental_health_screening/
 
 | Component | Technology | Role |
 |-----------|-----------|------|
-| LLM | Ollama llama3 (local) | Dialogue generation, CoT scoring |
+| LLM | OpenAI (gpt-4o-mini, gpt-4o) | Dialogue generation, CoT scoring |
+| Translation | IndicTrans2, Whisper (local) | Real-time multilingual text/voice |
 | Safety Monitor | SBERT all-MiniLM-L6-v2 | Real-time crisis detection (threshold 0.82) |
 | Dialogue Graph | LangGraph StateGraph | Adaptive conversation flow |
-| CoT Engine | Ollama llama3 | 3-step DSM-5-TR grounded scoring |
-| UI | Streamlit | Live confidence bars, chat interface |
+| UI | React + FastAPI | Web application interface |
 
 ---
 
@@ -39,24 +42,18 @@ mental_health_screening/
 ### Prerequisites
 
 ```bash
-# 1. Install Ollama (https://ollama.ai)
-curl -fsSL https://ollama.ai/install.sh | sh   # Linux/Mac
-# Windows: download installer from ollama.ai
+# 1. Configure OpenAI API Key
+# Create a .env file in the project root:
+echo "OPENAI_API_KEY=sk-your-key-here" > .env
 
-# 2. Pull llama3 (~4GB one-time download)
-ollama pull llama3
-
-# 3. Verify
-ollama run llama3 "say hello"
-```
-
-### Install Python Dependencies
-
-```bash
+# 2. Install Python Dependencies
 pip install -r requirements.txt
+
+# 3. Download Translation Models (one-time ~800MB download)
+python download_indictrans2.py
 ```
 
-Python 3.10+ required.
+Python 3.10+ required. Requires `npm` for the frontend.
 
 ---
 
@@ -98,16 +95,16 @@ Saves 3 figures to `figures/`:
 - `confidence_progression.png` — Confidence over turns for 3 sessions
 - `metrics_radar.png` — All 6 metrics vs targets (radar chart)
 
-### Step 4: Launch Streamlit UI
+### Step 4: Launch Web UI
 
 ```bash
-streamlit run app.py
+bash start.sh
 ```
 
-Opens at http://localhost:8501 with:
-- Left panel: chat interface
-- Right panel: live confidence bars + final scores
-- Red safety banner if crisis content detected
+Opens the React landing page at http://localhost:3000 with:
+- Web-based landing page and chat interface
+- Voice recording and multilingual text input
+- Real-time translation and safety monitoring
 
 ---
 
@@ -118,7 +115,7 @@ Opens at http://localhost:8501 with:
 | `mood` | Item 1 | Depressed mood / anhedonia |
 | `sleep` | Item 3 | Sleep disturbance |
 | `energy` | Item 4 | Fatigue / loss of energy |
-| `self_worth` | Item 6 | Worthlessness / guilt |
+| `appetite` | Item 5 | Poor appetite or overeating |
 | `concentration` | Item 7 | Concentration difficulty |
 
 ---
@@ -141,7 +138,7 @@ Patient message
 ### Confidence Model
 - Starts at 0.0 for all domains
 - Boosted +0.15 per keyword hit during rapport
-- Estimated 0.0–0.4 increment per turn via Ollama
+- Estimated 0.0–0.4 increment per turn via OpenAI
 - Never decreases
 - Scoring triggered at ≥ 0.75 AND ≥ 2 probe turns
 
@@ -152,9 +149,9 @@ Patient message
 
 ---
 
-## Fully Offline
+## Multilingual Support
 
-After `ollama pull llama3` and `pip install -r requirements.txt`, the entire system runs offline. No API keys or internet connection required.
+Uses `IndicTrans2` (offline) for translating Indian languages to English, and `openai-whisper` (offline) for audio transcription. Ensures LLM processing is always done in English for highest accuracy, while the patient interacts in their native language.
 
 ---
 

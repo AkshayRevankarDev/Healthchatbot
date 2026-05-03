@@ -1,24 +1,23 @@
 """
-Centralized LLM client — Google Gemini.
+Centralized LLM client — OpenAI GPT.
 
 Usage:
     from llm_client import call_llm
-
     response = call_llm("Your prompt here", system="Optional system instruction")
 
-Set your API key:
-    export GEMINI_API_KEY="your-key-here"
-    # or create a .env file with GEMINI_API_KEY=your-key-here
+Set your API key in .env or environment:
+    OPENAI_API_KEY=sk-...
 
-Model can be overridden via:
-    export GEMINI_MODEL="gemini-2.0-flash"   # default
+Models (override via env vars):
+    OPENAI_MODEL         = gpt-4o-mini   (dialogue — fast, cheap)
+    OPENAI_SCORING_MODEL = gpt-4o        (CoT scoring — better reasoning)
 """
 
 import os
 import time
 from pathlib import Path
 
-# Load .env file if present (no extra deps needed)
+# Load .env file if present
 _env_path = Path(__file__).parent / ".env"
 if _env_path.exists():
     with open(_env_path) as _f:
@@ -28,56 +27,31 @@ if _env_path.exists():
                 _k, _v = _line.split("=", 1)
                 os.environ.setdefault(_k.strip(), _v.strip())
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-GEMINI_MODEL   = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+OPENAI_API_KEY     = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_MODEL         = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")   # dialogue
+OPENAI_SCORING_MODEL = os.environ.get("OPENAI_SCORING_MODEL", "gpt-4o") # CoT scoring
 
-# Fallback model cascade — tried in order when the primary model hits quota
-_FALLBACK_MODELS = [
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-flash-8b",
-]
+# Keep these for any code that still references GEMINI_MODEL
+GEMINI_MODEL = OPENAI_MODEL  # alias so old imports don't break
 
-if not GEMINI_API_KEY:
+if not OPENAI_API_KEY:
     raise EnvironmentError(
-        "\n\n[llm_client] GEMINI_API_KEY is not set.\n"
-        "Create a .env file in the project root with:\n"
-        "    GEMINI_API_KEY=your-key-here\n"
+        "\n\n[llm_client] OPENAI_API_KEY is not set.\n"
+        "Add it to your .env file:\n"
+        "    OPENAI_API_KEY=sk-...\n"
         "Or export it in your shell:\n"
-        "    export GEMINI_API_KEY=your-key-here\n"
+        "    export OPENAI_API_KEY=sk-...\n"
+        "Get a key: https://platform.openai.com/api-keys\n"
     )
 
 try:
-    from google import genai
-    from google.genai import types as _gtypes
-    _client = genai.Client(api_key=GEMINI_API_KEY)
+    from openai import OpenAI
+    _client = OpenAI(api_key=OPENAI_API_KEY)
 except ImportError:
     raise ImportError(
-        "[llm_client] google-genai is not installed.\n"
-        "Run:  pip install google-genai"
+        "[llm_client] openai is not installed.\n"
+        "Run:  pip install openai"
     )
-
-
-def _call_model(model: str, prompt: str, config) -> str:
-    """Call a single model and return the text. Raises on any error."""
-    # Only gemini-2.5-x and gemini-3.x models support thinking_config.
-    # All others (2.0-flash, 1.5-flash, etc.) must have it stripped.
-    _supports_thinking = ("gemini-2.5", "gemini-3")
-    if not any(x in model for x in _supports_thinking):
-        from google.genai import types as _gt
-        safe_config = _gt.GenerateContentConfig(
-            system_instruction=config.system_instruction,
-            temperature=config.temperature,
-            max_output_tokens=config.max_output_tokens,
-        )
-    else:
-        safe_config = config
-    response = _client.models.generate_content(
-        model=model,
-        contents=prompt,
-        config=safe_config,
-    )
-    return response.text.strip() if response.text else ""
 
 
 def call_llm(
@@ -89,68 +63,51 @@ def call_llm(
     thinking: bool = False,
 ) -> str:
     """
-    Call Google Gemini and return the text response.
-    Automatically falls back through model cascade on quota errors.
+    Call OpenAI and return the text response.
 
     Args:
         prompt:      The user message / instruction.
         system:      Optional system-level instruction.
         temperature: Sampling temperature (0.0 = deterministic).
         max_tokens:  Maximum output tokens.
-        retries:     Number of retry attempts per model on transient errors.
+        retries:     Number of retry attempts on transient errors.
+        thinking:    If True, uses the higher-quality scoring model (gpt-4o).
 
     Returns:
         Stripped text response, or "" on failure.
     """
-    # Disable thinking for simple dialogue turns (it eats the token budget).
-    # Only enable for deep CoT scoring where reasoning quality matters.
-    thinking_config = (
-        _gtypes.ThinkingConfig(thinking_budget=1024)
-        if thinking
-        else _gtypes.ThinkingConfig(thinking_budget=0)
-    )
+    model = OPENAI_SCORING_MODEL if thinking else OPENAI_MODEL
 
-    config = _gtypes.GenerateContentConfig(
-        system_instruction=system if system else None,
-        temperature=temperature,
-        max_output_tokens=max_tokens,
-        thinking_config=thinking_config,
-    )
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
 
-    # Build ordered model list: primary model first, then fallbacks (deduplicated)
-    models_to_try = [GEMINI_MODEL] + [m for m in _FALLBACK_MODELS if m != GEMINI_MODEL]
+    for attempt in range(1, retries + 1):
+        try:
+            response = _client.chat.completions.create(
+                model=model,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            return response.choices[0].message.content.strip()
 
-    for model in models_to_try:
-        for attempt in range(1, retries + 1):
-            try:
-                text = _call_model(model, prompt, config)
-                if model != GEMINI_MODEL:
-                    print(f"[LLM] Using fallback model: {model}")
-                return text
-            except Exception as e:
-                err = str(e)
-                is_quota = "429" in err or "RESOURCE_EXHAUSTED" in err
-                is_last_attempt = attempt == retries
+        except Exception as e:
+            err = str(e)
+            is_quota = any(k in err for k in ("429", "rate_limit", "quota", "insufficient_quota"))
+            is_last  = attempt == retries
 
-                if is_quota:
-                    print(f"[LLM WARN] {model} quota exceeded — trying next model…")
-                    break  # skip remaining retries for this model, try next
-                elif not is_last_attempt:
-                    wait = min(2 ** attempt, 30)
-                    print(f"[LLM WARN] {model} attempt {attempt} failed: {err[:80]}. Retrying in {wait}s…")
-                    time.sleep(wait)
-                else:
-                    print(f"[LLM ERROR] {model} all {retries} attempts failed: {err[:120]}")
+            if is_quota and is_last:
+                print(
+                    f"\n[LLM ERROR] OpenAI quota/rate limit hit on {model}.\n"
+                    f"  Add credits: https://platform.openai.com/account/billing\n"
+                )
+            elif not is_last:
+                wait = min(2 ** attempt, 30)
+                print(f"[LLM WARN] {model} attempt {attempt} failed: {err[:80]}. Retrying in {wait}s…")
+                time.sleep(wait)
+            else:
+                print(f"[LLM ERROR] {model} all {retries} attempts failed: {err[:120]}")
 
-    print(
-        f"\n[LLM ERROR] All Gemini models exhausted.\n"
-        f"  If you see 'prepayment credits are depleted':\n"
-        f"    → Your Google Cloud prepaid credits are EMPTY (not a rate limit).\n"
-        f"    → Get a FREE AI Studio key (no credit card): https://aistudio.google.com/app/apikey\n"
-        f"    → Replace GEMINI_API_KEY in .env with the new key and restart.\n"
-        f"\n"
-        f"  If you see '429 RESOURCE_EXHAUSTED' (rate limit):\n"
-        f"    → Wait for daily quota reset (midnight Pacific time)\n"
-        f"    → Or enable billing: https://console.cloud.google.com/billing\n"
-    )
     return ""

@@ -42,8 +42,34 @@ def score_domain(domain: str, conversation_history: list, kb_entry: dict) -> dic
 
     system_prompt = """You are a clinical psychologist scoring PHQ-9 items from patient conversations.
 You extract evidence from the full conversation and score it accurately against DSM-5-TR severity criteria.
-The conversation may contain Hindi, Urdu, or romanized Indian languages mixed with English — treat all as equivalent.
+
+MULTILINGUAL NOTE: The conversation may contain:
+- Romanized Hindi/Urdu (e.g. "neend nahi aati" = can't sleep, "udaas hun" = I'm sad,
+  "thakaan rehti hai" = always tired, "mann nahi lagta" = no motivation/interest,
+  "bhuk nahi lagti" = not feeling hungry, "ध्यान नहीं लगता" = can't concentrate)
+- Devanagari script (Hindi/Marathi) or Arabic script (Urdu)
+- English mixed with any of the above
+Treat ALL as semantically equivalent to their English meaning. Score based on MEANING, not language.
+
 Always return valid JSON."""
+
+    # Common Hindi/Urdu phrasings mapped to English — appended to help Gemini
+    _hindi_glossary = """
+KEY HINDI/URDU → ENGLISH MAPPINGS (for scoring purposes):
+  "neend nahi aati / نیند نہیں آتی" = can't sleep / insomnia
+  "bahut thakan / بہت تھکان" = very tired / fatigue
+  "udaas hun / اداس ہوں / उदास हूं" = I am sad / depressed
+  "kuch karne ka mann nahi / کچھ کرنے کا دل نہیں" = no motivation / no interest
+  "bhuk nahi lagti / بھوک نہیں لگتی" = no appetite
+  "mann nahi lagta" = can't focus / no interest
+  "bohut pareshan / بہت پریشان" = very distressed / anxious
+  "kisi se baat nahi karna" = don't want to talk to anyone / social withdrawal
+  "10 mahine se / مہینوں سے" = for 10 months (duration = chronic)
+  "roz / روز / har roz" = every day (= Score 3 frequency)
+  "akela / اکیلا محسوس" = feeling alone / isolated
+  "icha nahi / کوئی خواہش نہیں" = no desire / anhedonia
+  "zindagi mein maza nahi" = no pleasure in life / anhedonia (Score 2-3)
+"""
 
     prompt = f"""Score the PHQ-9 domain "{domain.upper()}" ({kb_entry['item_name']}) from this patient conversation.
 
@@ -52,46 +78,39 @@ DSM-5-TR Definition: {kb_entry['description']}
 Severity Indicators:
 {severity_ref}
 
+{_hindi_glossary}
+
 SCORING GUIDE:
-  Score 0 — Patient says there is NO problem, or gives zero relevant information about this domain.
-             e.g. "I sleep fine", "appetite is normal", "I feel okay", or topic never mentioned.
-  Score 1 — Problem exists but is mild/occasional (several days in the past 2 weeks).
-             e.g. "sometimes", "a few times", "a bit", "here and there", "occasionally"
-  Score 2 — Problem is frequent (more than half the days).
-             e.g. "most days", "usually", "often", "hard most of the time", "frequently"
-  Score 3 — Problem is constant or nearly every day.
-             e.g. "every day", "all the time", "I can't at all", "never", "0", "completely gone",
-             "all the ime", "absolutely 0", "not anymore at all", "existing is hard"
+  Score 0 — Patient clearly reports NO problem, or gives zero relevant information.
+  Score 1 — Mild/occasional (several days): "sometimes", "a few times", "a bit"
+  Score 2 — Frequent (more than half the days): "most days", "usually", "often"
+  Score 3 — Constant / nearly every day: "every day", "roz", "always", "can't at all",
+             chronic duration (months), complete absence ("no sleep at all", "no appetite")
 
-INFORMAL LANGUAGE RULES (patients rarely use clinical wording):
-- "0 sleep / 0 energy / 0 appetite" → Score 3 (means none at all)
-- "all the time" / "every time" → Score 3
-- "not anymore" with strong finality → Score 2-3
-- "existing is hard" / "can't imagine looking forward to anything" → Score 3 for mood/anhedonia
-- "can't concentrate at all" / "simply not able to" → Score 3 for concentration
-- Answering "yeah" / "yes" to a direct probe about severity confirms that severity
-- "sometimes" alone without severity context → Score 1
-
-IMPORTANT: Score 0 only if the patient clearly reports NO problem. Do NOT score 0 just because
-the answer is short. If the patient confirms a problem exists, score at least 1.
+CRITICAL RULES:
+- "10 mahine se" (for 10 months) = CHRONIC → strongly indicates Score 2-3
+- Short answers like "nahi" (no) or "haan" (yes) to a direct probe CONFIRM that severity
+- "kisi se baat nahi karna ka mann" = social withdrawal → mood/anhedonia evidence
+- "mann bohut bataktha hai" = mind wanders a lot → concentration Score 2-3
+- Score 0 ONLY if patient clearly says there is no problem. Never score 0 for a short answer.
+- If patient confirms a problem exists, score at LEAST 1.
 
 Conversation:
 {conv_text}
 
 Follow these EXACT 3 steps and return ONLY valid JSON:
 
-Step 1 EXTRACT: Quote ALL patient utterances across the full conversation relevant to {domain}.
-                Include indirect evidence (e.g. "I just stare at a blank screen" → concentration).
-Step 2 REASON: For each quote, map it to a severity level using the guide above.
-               Consider the pattern across all quotes, not just the last one.
+Step 1 EXTRACT: Quote ALL patient utterances relevant to {domain}, including romanized Hindi/Urdu.
+                Translate each quote to English in brackets if non-English.
+Step 2 REASON: For each quote, map it to a severity level. Note the chronic duration if mentioned.
 Step 3 SCORE: Assign the single score (0-3) that best fits the overall pattern.
 
 Return this exact JSON structure:
 {{
-  "evidence": ["verbatim patient quote 1", "verbatim patient quote 2"],
+  "evidence": ["verbatim patient quote 1 [English: translation]", "verbatim patient quote 2"],
   "reasoning": "Step-by-step mapping of each quote to severity level, then overall pattern",
   "score": 0,
-  "justification": "One sentence citing specific frequency evidence for the chosen score"
+  "justification": "One sentence citing specific frequency/duration evidence for the chosen score"
 }}
 
 Return ONLY the JSON object, no other text."""
