@@ -1,0 +1,6 @@
+[server]
+# Exclude torch internals from the file-watcher (stops the torch.classes traceback spam)
+folderWatchBlacklist = ["torch", "torch.*"]
+
+[browser]
+gatherUsageStats = false

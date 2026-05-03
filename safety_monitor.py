@@ -3,8 +3,8 @@ SBERT-based Safety Monitor
 Uses sentence-transformers all-MiniLM-L6-v2 to detect high-risk utterances.
 """
 
-from sentence_transformers import SentenceTransformer, util
-import torch
+# sentence_transformers (and torch) are imported lazily inside functions
+# to avoid the macOS MPS mutex deadlock at Streamlit startup.
 
 HIGH_RISK_PHRASES = [
     # Suicidal ideation - direct
@@ -67,10 +67,11 @@ CRISIS_KEYWORDS = [
 _model = None
 
 
-def _get_model() -> SentenceTransformer:
+def _get_model():
     """Lazy-load the SBERT model."""
     global _model
     if _model is None:
+        from sentence_transformers import SentenceTransformer  # lazy
         print("[SafetyMonitor] Loading SBERT model (all-MiniLM-L6-v2)...")
         _model = SentenceTransformer("all-MiniLM-L6-v2")
         print("[SafetyMonitor] Model loaded.")
@@ -85,7 +86,9 @@ def _get_risk_embeddings():
     global _risk_embeddings
     if _risk_embeddings is None:
         model = _get_model()
-        _risk_embeddings = model.encode(HIGH_RISK_PHRASES, convert_to_tensor=True, normalize_embeddings=True)
+        _risk_embeddings = model.encode(
+            HIGH_RISK_PHRASES, convert_to_tensor=True, normalize_embeddings=True
+        )
     return _risk_embeddings
 
 
@@ -119,6 +122,7 @@ def check_safety(text: str) -> dict:
         model = _get_model()
         risk_embeddings = _get_risk_embeddings()
 
+        from sentence_transformers import util  # lazy
         text_embedding = model.encode(text, convert_to_tensor=True, normalize_embeddings=True)
         similarities = util.cos_sim(text_embedding, risk_embeddings)[0]
 
