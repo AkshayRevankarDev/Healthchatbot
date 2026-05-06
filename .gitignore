@@ -17,3 +17,5 @@ frontend/dist/
 # Session / log data (large generated files)
 sessions/
 logs/
+figures/
+report_m2.pdf
