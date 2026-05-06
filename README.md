@@ -1,3 +1,13 @@
+---
+title: AarogyaVaani
+emoji: 🏥
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Mental Health Screening Agent — Milestone 2
 **CSE 635 | University at Buffalo**
 

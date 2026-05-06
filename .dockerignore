@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Secrets — never bake into image
+.env
+
+# Node / frontend build artifacts (Docker rebuilds these)
+node_modules
+frontend/node_modules
+frontend/dist
+
+# LaTeX report files
+*.tex
+*.bib
+*.aux
+*.bbl
+*.blg
+*.log
+*.pdf
+*.sty
+*.zip
+acl_template.zip
+test.zip
+acl.sty
+acl2.sty
+
+# Session / log data
+sessions/
+logs/
+figures/
+
+# Claude internal
+.claude/
+
+# macOS
+.DS_Store
+
+# Pipeline diagram (only needed for LaTeX report)
+pipeline_diagram.png

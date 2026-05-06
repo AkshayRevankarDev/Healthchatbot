@@ -5,3 +5,15 @@ __pycache__/
 *.log
 .DS_Store
 .env
+
+# Node / frontend build artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Claude internal
+.claude/
+
+# Session / log data (large generated files)
+sessions/
+logs/
