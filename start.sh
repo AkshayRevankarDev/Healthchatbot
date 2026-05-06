@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# start.sh  –  Launch both the React landing page and Streamlit backend
+# start.sh  –  Build the React app then serve everything from FastAPI (port 8502)
 # Usage: bash start.sh
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -17,7 +17,7 @@ CYAN='\033[0;36m'
 RESET='\033[0m'
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "${GREEN}  Indic Mental Health Screening – Starting services${RESET}"
+echo -e "${GREEN}  AarogyaVaani – Building & Starting${RESET}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 # ── Check for .env ────────────────────────────────────────────────────────────
@@ -32,37 +32,44 @@ if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
     cd "$FRONTEND_DIR" && npm install
 fi
 
-# ── Trap to kill both servers on Ctrl+C ──────────────────────────────────────
+# ── Build the React frontend ──────────────────────────────────────────────────
+echo -e "\n${GREEN}▶ Building React frontend…${RESET}"
+cd "$FRONTEND_DIR"
+npm run build
+echo -e "${GREEN}  ✓ Build complete → frontend/dist/${RESET}"
+
+# ── Detect local network IP ───────────────────────────────────────────────────
+NETWORK_IP=$(ipconfig getifaddr en0 2>/dev/null || \
+             ipconfig getifaddr en1 2>/dev/null || \
+             hostname -I 2>/dev/null | awk '{print $1}' || \
+             echo "your-machine-ip")
+
+# ── Trap to kill server on Ctrl+C ────────────────────────────────────────────
 cleanup() {
-    echo -e "\n${YELLOW}Shutting down...${RESET}"
-    kill "$API_PID" "$FRONTEND_PID" 2>/dev/null || true
-    wait "$API_PID" "$FRONTEND_PID" 2>/dev/null || true
+    echo -e "\n${YELLOW}Shutting down…${RESET}"
+    kill "$API_PID" 2>/dev/null || true
+    wait "$API_PID" 2>/dev/null || true
     echo -e "${GREEN}Done.${RESET}"
 }
 trap cleanup INT TERM
 
-# ── Start FastAPI (chat API) ───────────────────────────────────────────────────
-echo -e "\n${GREEN}▶ Starting FastAPI chat API on http://localhost:8502${RESET}"
+# ── Start FastAPI (serves both API + built frontend) ─────────────────────────
+echo -e "\n${GREEN}▶ Starting server on port 8502 (API + frontend)${RESET}"
 cd "$BACKEND_DIR"
-# Export env vars from .env
 set -a; source .env 2>/dev/null; set +a
 /opt/anaconda3/bin/uvicorn server:app \
     --host 0.0.0.0 \
-    --port 8502 \
-    > /tmp/api.log 2>&1 &
+    --port 8502 &
 API_PID=$!
 
-# ── Start React (frontend) ────────────────────────────────────────────────────
-echo -e "${GREEN}▶ Starting React frontend on http://localhost:3000${RESET}"
-cd "$FRONTEND_DIR"
-npm run dev -- --port 3000 &
-FRONTEND_PID=$!
+sleep 2   # give uvicorn a moment to bind
 
 echo -e "\n${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "  Landing page : ${GREEN}http://localhost:3000${RESET}"
-echo -e "  Chat API     : ${GREEN}http://localhost:8502/docs${RESET}"
+echo -e "  Local  : ${GREEN}http://localhost:8502/${RESET}"
+echo -e "  Network: ${GREEN}http://${NETWORK_IP}:8502/${RESET}  ← share this"
+echo -e "  API docs: http://localhost:8502/docs"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "  Press ${YELLOW}Ctrl+C${RESET} to stop all servers.\n"
+echo -e "  Press ${YELLOW}Ctrl+C${RESET} to stop.\n"
 
 # ── Wait ──────────────────────────────────────────────────────────────────────
-wait "$API_PID" "$FRONTEND_PID"
+wait "$API_PID"

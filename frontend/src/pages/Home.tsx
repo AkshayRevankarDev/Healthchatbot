@@ -82,9 +82,9 @@ export default function Home() {
   const [scriptCarouselIndex, setScriptCarouselIndex] = useState(0);
 
   function goToChat(floresCode: string, moodIndex: number | null) {
-    const iso = FLORES_TO_ISO[floresCode] ?? "en";
+    // Pass the Flores code directly — Chat.tsx and the API both understand it
     const mood = moodIndex !== null ? String(moodIndex) : "";
-    navigate(`/chat?lang=${iso}&mood=${mood}`);
+    navigate(`/chat?lang=${floresCode}&mood=${mood}`);
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);

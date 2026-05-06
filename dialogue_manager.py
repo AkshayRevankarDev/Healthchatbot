@@ -27,23 +27,32 @@ RAPPORT_TURNS = 4     # 4 open-ended turns as per M1 presentation
 
 # ── Master system prompt used across all nodes ────────────────────────────────
 # One unified persona so every response sounds like the same person.
-COUNSELOR_SYSTEM = """You are a warm, empathetic mental health counselor conducting a gentle check-in conversation.
+COUNSELOR_SYSTEM = """You are Dr. UB — a warm, caring mental health counselor having a real one-on-one conversation.
 
 Your personality:
-- Calm, caring, and non-judgmental — like a trusted friend who happens to know a lot about mental health
+- Calm, caring, and non-judgmental — like a trusted friend who genuinely cares
 - You NEVER sound like a questionnaire or a robot
 - You ALWAYS acknowledge what the person just said before asking anything new
 - You ask ONE question at a time — never two
-- Short responses: 1-3 sentences max
+- Short responses: 1-3 sentences max (never lecture or give a list)
 - You mirror the person's energy: if they're brief, be brief; if they open up, gently follow
+- When someone is clearly struggling or in pain, you pause the questions and just BE there with them first
+
+Supportive responses when someone is hurting:
+- Lead with pure empathy before anything else ("That sounds incredibly hard", "Wow, that's a lot to carry", "I'm really sorry you're going through this")
+- Validate their feelings specifically — don't just say "I hear you", say WHY it makes sense to feel that way
+- Never rush past pain to get to the next question — sit with them for a moment
+- Remind them gently that what they're feeling is real and it's okay to talk about it
+- Phrases that feel real: "That makes complete sense", "Of course you feel that way", "That's genuinely exhausting", "You don't have to have it all figured out"
 
 Hard rules:
 - NEVER say "Thank you for sharing" or "I appreciate you opening up" — these are robotic
 - NEVER repeat a question you already asked
 - NEVER use clinical terms like "PHQ-9", "screening", "domain", "diagnose"
 - NEVER say "I understand" as your first word — it feels hollow
-- DO use natural acknowledgments: "That's really tough", "Yeah, that makes sense", "Oh wow", "That sounds exhausting"
-- If someone is being casual or even a bit rude, stay warm — don't get formal"""
+- DO use natural acknowledgments: "That's really tough", "Yeah, that makes sense", "Oh wow", "That sounds exhausting", "Ugh, that's a lot"
+- If someone is being casual or even a bit rude, stay warm — don't get formal
+- If someone shares something painful, ALWAYS acknowledge the pain before moving forward"""
 
 # Varied fallbacks that sound human (used only if LLM fails)
 _RAPPORT_FALLBACKS = [
@@ -59,6 +68,38 @@ _TRANSITION_FALLBACKS = [
     "That helps me understand. Let me ask you about something different.",
     "Okay, I hear you. I want to check in on a few other things too.",
 ]
+
+# ── Distress signal detector ───────────────────────────────────────────────────
+
+_DISTRESS_KEYWORDS = {
+    "high": {
+        "hopeless", "worthless", "give up", "can't go on", "no point", "no reason",
+        "hate myself", "hate my life", "end it", "don't want to be here",
+        "nobody cares", "no one cares", "alone", "completely alone",
+        "crying", "cry all the time", "can't stop crying", "breaking down",
+        "falling apart", "lost everything", "can't take it anymore",
+    },
+    "medium": {
+        "struggling", "overwhelmed", "exhausted", "drained", "burnt out", "burned out",
+        "depressed", "anxious", "anxious all the time", "scared", "terrified",
+        "stuck", "numb", "empty", "hollow", "pointless", "nothing matters",
+        "can't cope", "can't function", "barely managing", "falling behind",
+        "so tired", "too much", "heavy", "suffocating", "drowning",
+        "not okay", "not doing well", "really bad", "really rough", "rock bottom",
+    },
+}
+
+
+def _detect_distress(text: str) -> str:
+    """Return 'high', 'medium', or 'none' based on distress signals in the text."""
+    lower = text.lower()
+    for kw in _DISTRESS_KEYWORDS["high"]:
+        if kw in lower:
+            return "high"
+    for kw in _DISTRESS_KEYWORDS["medium"]:
+        if kw in lower:
+            return "medium"
+    return "none"
 
 
 # ─── State Schema ──────────────────────────────────────────────────────────────
@@ -105,13 +146,36 @@ def rapport_node(state: DialogueState) -> DialogueState:
     messages = state["messages"]
     turn_count = state["turn_count"]
 
+    # Detect distress level in the most recent patient message
+    patient_msgs = [m for m in messages if m["role"] == "patient"]
+    last_patient_text = patient_msgs[-1]["content"] if patient_msgs else ""
+    distress = _detect_distress(last_patient_text)
+
     # Generate rapport response — genuinely conversational, not scripted
     conv_text = "\n".join(f"{m['role'].upper()}: {m['content']}" for m in messages[-8:])
+
+    if distress == "high":
+        distress_instruction = """
+IMPORTANT: This person is clearly in a lot of pain right now. Do NOT ask a question yet.
+Write 1-2 sentences that:
+- Lead with deep, specific empathy (reference what they actually said)
+- Make them feel truly heard and not alone
+- End with a gentle, open invitation to keep talking (not a direct question)
+Example tone: "That sounds absolutely exhausting, and honestly, it makes complete sense that you feel this way. You don't have to carry all of this alone — I'm here."
+"""
+    elif distress == "medium":
+        distress_instruction = """
+IMPORTANT: This person is struggling. Lead with warmth and validation before asking anything.
+Make sure your acknowledgment is specific to what they said — not generic.
+"""
+    else:
+        distress_instruction = ""
+
     prompt = f"""The conversation so far:
 {conv_text}
 
 It's turn {turn_count + 1}. Write a single natural response (1-2 sentences).
-
+{distress_instruction}
 Step 1 — ACKNOWLEDGE: Respond directly to what they just said. Reference specific words they used.
 Step 2 — INVITE: Ask ONE open, gentle follow-up about how they're doing or what's been going on.
 
@@ -119,6 +183,7 @@ Examples of what good looks like:
 - "Yeah, not sleeping well sounds exhausting. What else has been going on for you lately?"
 - "That's a lot on your plate. How long has it been feeling this heavy?"
 - "Ugh, that sounds really rough. What does a normal day look like for you right now?"
+- "That makes complete sense — of course you'd feel that way. How long has it been building up like this?"
 
 Return ONLY the response text."""
 
@@ -265,6 +330,22 @@ Return ONLY the response text."""
             patient_msgs_list = [m["content"] for m in messages if m["role"] == "patient"]
             patient_context = "\n".join(f"- {p[:120]}" for p in patient_msgs_list[-3:]) if patient_msgs_list else ""
 
+            # Distress-aware probing
+            distress = _detect_distress(last_patient if last_patient else "")
+            if distress == "high":
+                distress_note = (
+                    "\nIMPORTANT: This person is clearly hurting. Lead with genuine empathy — "
+                    "acknowledge the pain first, then very softly ask your follow-up. "
+                    "Make it feel like support, not an interrogation."
+                )
+            elif distress == "medium":
+                distress_note = (
+                    "\nNote: This person is struggling. Make your acknowledgment warm and specific "
+                    "before asking your follow-up."
+                )
+            else:
+                distress_note = ""
+
             prompt = f"""Full conversation:
 {conv_text}
 
@@ -273,12 +354,12 @@ The person has told you: {patient_context}
 
 What YOU already said (do NOT repeat these):
 {already_said_text}
-
+{distress_note}
 Write ONE sentence:
-1. Short natural reaction to their last message ("Got it", "That makes sense", "Oh wow", "Yeah, that sounds rough", "Ugh")
+1. Short natural reaction to their last message ("Got it", "That makes sense", "Oh wow", "Yeah, that sounds rough", "Ugh", "That's really hard")
 2. ONE new follow-up question about {domain} not yet asked
 
-Under 25 words. Human, not clinical. Return ONLY the sentence."""
+Under 30 words. Human, warm, not clinical. Return ONLY the sentence."""
 
             response = call_llm(prompt, COUNSELOR_SYSTEM, max_tokens=120)
             llm_failed = not response

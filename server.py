@@ -29,6 +29,8 @@ if _env.exists():
 # ── FastAPI ───────────────────────────────────────────────────────────────────
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 app = FastAPI(title="Indic Mental Health Chat API", version="1.0")
@@ -62,6 +64,15 @@ FLORES_TO_ISO: dict[str, str] = {
     "doi_Deva": "hi", "brx_Deva": "hi", "gom_Deva": "mr", "san_Deva": "hi",
     "snd_Arab": "ur", "snd_Deva": "hi",
 }
+
+def _to_iso(lang_code: str) -> str:
+    """Accept a Flores-200 code OR a bare ISO 639-1 code (e.g. 'hi', 'bn')."""
+    if lang_code in FLORES_TO_ISO:
+        return FLORES_TO_ISO[lang_code]
+    # Already an ISO code — accept if it looks like one (2-3 chars)
+    if len(lang_code) <= 3 and lang_code.isalpha():
+        return lang_code
+    return "en"
 
 # ── In-memory sessions ────────────────────────────────────────────────────────
 # { session_id: { "state": DialogueState, "lang": ISO code, "history": [...] } }
@@ -153,7 +164,7 @@ def health():
 @app.post("/api/greeting")
 def greeting(req: GreetingRequest):
     """Generate the opening greeting for a new session."""
-    lang_iso = FLORES_TO_ISO.get(req.lang_code, "en")
+    lang_iso = _to_iso(req.lang_code)
     sess = _get_or_create(req.session_id, lang_iso)
     sess["lang"] = lang_iso
 
@@ -196,7 +207,7 @@ def greeting(req: GreetingRequest):
 @app.post("/api/chat")
 def chat(req: ChatRequest):
     """Process one user message and return the agent reply."""
-    lang_iso = FLORES_TO_ISO.get(req.lang_code, "en")
+    lang_iso = _to_iso(req.lang_code)
     sess = _get_or_create(req.session_id, lang_iso)
     sess["lang"] = lang_iso   # may change mid-session
 
@@ -290,7 +301,7 @@ async def transcribe(
     lang_code: str    = Form("eng_Latn"),
 ):
     """Transcribe uploaded audio with Whisper."""
-    lang_iso = FLORES_TO_ISO.get(lang_code, "en")
+    lang_iso = _to_iso(lang_code)
     data = await audio.read()
 
     suffix = Path(audio.filename or "audio.webm").suffix or ".webm"
@@ -300,7 +311,14 @@ async def transcribe(
 
     try:
         from translator import transcribe_audio
-        text = transcribe_audio(tmp_path, user_lang=lang_iso)
+        # transcribe_audio expects raw bytes and handles its own temp file internally
+        result = transcribe_audio(data, user_lang=lang_iso)
+        # returns a dict: {text, english_text, language, success, error}
+        transcript_text = result.get("text", "") if isinstance(result, dict) else str(result)
+        if isinstance(result, dict) and not result.get("success") and result.get("error"):
+            raise HTTPException(500, f"Transcription failed: {result['error']}")
+    except HTTPException:
+        raise
     except Exception as exc:
         raise HTTPException(500, f"Transcription failed: {exc}")
     finally:
@@ -309,13 +327,13 @@ async def transcribe(
         except Exception:
             pass
 
-    return {"text": text, "lang": lang_iso}
+    return {"text": transcript_text, "lang": lang_iso}
 
 
 @app.post("/api/reset")
 def reset(req: ResetRequest):
     """Clear session and start fresh."""
-    lang_iso = FLORES_TO_ISO.get(req.lang_code, "en")
+    lang_iso = _to_iso(req.lang_code)
     _sessions[req.session_id] = _new_session(lang_iso)
     return {"ok": True}
 
@@ -331,3 +349,23 @@ def get_session(session_id: str):
         "history": sess["history"],
         **_state_to_frontend(sess),
     }
+
+
+# ── Serve the built React frontend (must come AFTER all /api routes) ──────────
+_DIST = Path(__file__).parent / "frontend" / "dist"
+if _DIST.exists():
+    # Serve static assets (JS, CSS, images)
+    app.mount("/assets", StaticFiles(directory=_DIST / "assets"), name="assets")
+
+    @app.get("/favicon.svg")
+    def favicon():
+        return FileResponse(_DIST / "favicon.svg")
+
+    @app.get("/therapist-avatar.png")
+    def avatar():
+        return FileResponse(_DIST / "therapist-avatar.png")
+
+    # SPA catch-all: every non-API path returns index.html so React Router works
+    @app.get("/{full_path:path}")
+    def spa_fallback(full_path: str):
+        return FileResponse(_DIST / "index.html")

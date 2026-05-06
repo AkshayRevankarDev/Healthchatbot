@@ -497,11 +497,61 @@ def _write_audio_file(audio_bytes: bytes) -> str:
     return raw_path
 
 
+def _is_gibberish(text: str) -> bool:
+    """
+    Detect Whisper hallucination / gibberish output.
+
+    Whisper commonly hallucinates when audio is silent, too short, or noisy:
+      - Repeats a short phrase many times  (e.g. "Thank you. Thank you. Thank you.")
+      - Returns known filler strings       (e.g. "you", "Thanks for watching!")
+      - Very high word-repetition ratio
+
+    Returns True if the text should be discarded.
+    """
+    if not text:
+        return True
+
+    # Known Whisper hallucination strings (case-insensitive prefix match)
+    _KNOWN_HALLUCINATIONS = {
+        "thank you", "thanks for watching", "thanks for listening",
+        "please subscribe", "like and subscribe", "bye", "you",
+        "。", "ご視聴ありがとうございました",  # Japanese filler
+    }
+    lower = text.lower().strip()
+    for h in _KNOWN_HALLUCINATIONS:
+        if lower == h or lower.startswith(h + ".") or lower.startswith(h + "!"):
+            return True
+
+    # Repetition check: if any single word makes up >60% of the tokens → gibberish
+    words = lower.split()
+    if len(words) >= 4:
+        from collections import Counter
+        most_common_count = Counter(words).most_common(1)[0][1]
+        if most_common_count / len(words) > 0.60:
+            return True
+
+    # Phrase repetition: split on punctuation and check for repeated chunks
+    import re
+    chunks = [c.strip() for c in re.split(r'[.!?,;]', text) if c.strip()]
+    if len(chunks) >= 3:
+        unique = len(set(c.lower() for c in chunks))
+        if unique / len(chunks) < 0.5:   # more than half are duplicates
+            return True
+
+    return False
+
+
 def transcribe_audio(audio_bytes: bytes, user_lang: str = "en") -> dict:
     """
     Transcribe audio using Whisper (runs locally).
     Returns original-language transcription + English translation.
     Handles WebM/Opus from browser audio_input and WAV files.
+
+    Anti-hallucination measures applied:
+      - condition_on_previous_text=False  (prevents context-loop hallucinations)
+      - no_speech_threshold=0.6           (filters silence / non-speech segments)
+      - compression_ratio_threshold=2.0   (rejects repetitive / looping output)
+      - Post-processing gibberish detector (_is_gibberish)
     """
     try:
         import whisper
@@ -514,29 +564,48 @@ def transcribe_audio(audio_bytes: bytes, user_lang: str = "en") -> dict:
         model = load_whisper_model("base")
         tmp_path = _write_audio_file(audio_bytes)
 
-        # Transcribe in detected language.
         # Pass a language hint when the user has selected a specific language
         # (not English or auto-detect) so Whisper biases toward that language.
-        # This is especially important for Hindi vs. Urdu, which are nearly
-        # identical acoustically — without a hint Whisper often returns "ur".
+        # Critical for Hindi vs. Urdu which are acoustically nearly identical.
         lang_hint = user_lang if user_lang not in ("en", "auto") else None
-        result   = model.transcribe(tmp_path, task="transcribe", language=lang_hint)
+
+        result = model.transcribe(
+            tmp_path,
+            task="transcribe",
+            language=lang_hint,
+            # ── Anti-hallucination settings ──────────────────────────────────
+            condition_on_previous_text=False,   # don't let prior output seed hallucinations
+            no_speech_threshold=0.6,            # discard segments that are likely silence/noise
+            compression_ratio_threshold=2.0,    # reject repetitive / looping transcriptions
+        )
+
         orig_txt = result["text"].strip()
-        det_lang = result.get("language", user_lang)
+        det_lang = result.get("language", user_lang or "en")
+
+        # Post-process: discard known hallucination patterns
+        if _is_gibberish(orig_txt):
+            return {"text": "", "language": det_lang, "english_text": "",
+                    "success": True, "error": ""}
 
         # English translation via Whisper's own translate task (very accurate)
-        if det_lang != "en":
-            en_result = model.transcribe(tmp_path, task="translate", language=lang_hint)
-            eng_txt   = en_result["text"].strip()
-        else:
-            eng_txt = orig_txt
+        eng_txt = orig_txt
+        if det_lang != "en" and orig_txt:
+            en_result = model.transcribe(
+                tmp_path,
+                task="translate",
+                language=lang_hint,
+                condition_on_previous_text=False,
+                no_speech_threshold=0.6,
+                compression_ratio_threshold=2.0,
+            )
+            candidate = en_result["text"].strip()
+            eng_txt = candidate if not _is_gibberish(candidate) else orig_txt
 
         return {"text": orig_txt, "language": det_lang,
                 "english_text": eng_txt, "success": True, "error": ""}
 
     except Exception as e:
         err = str(e)
-        # Give a more helpful error message for the ffmpeg case
         if "ffmpeg" in err.lower() or "No such file" in err:
             err = (
                 "ffmpeg not found — required for audio decoding. "

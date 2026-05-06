@@ -3,7 +3,11 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 
 // ── Config ─────────────────────────────────────────────────────────────────
-const API_URL = "http://localhost:8502";
+// All API calls go through the Vite proxy (/api → localhost:8502) so the
+// browser only ever talks to the same host:port it loaded the page from.
+// This means the network URL (e.g. 192.168.1.x:3000) works out-of-the-box
+// on any device without CORS or firewall issues on port 8502.
+const API_URL = "";
 
 // ── Language list (Flores-200 codes) ──────────────────────────────────────
 const LANGUAGES = [
@@ -57,11 +61,24 @@ type Message = { id: number; role: "agent" | "user"; text: string; ts: Date };
 
 type Confidence = Record<string, number>;   // domain → 0-100
 
+// ── UUID that works in both secure (HTTPS/localhost) and plain HTTP contexts ──
+function makeUUID(): string {
+  // crypto.randomUUID() requires a secure context; fall back when unavailable
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  // RFC-4122 v4 fallback using Math.random
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 // ── Generate a stable session id per browser tab ───────────────────────────
 function getSessionId(): string {
   const key = "mh_session_id";
   let id = sessionStorage.getItem(key);
-  if (!id) { id = crypto.randomUUID(); sessionStorage.setItem(key, id); }
+  if (!id) { id = makeUUID(); sessionStorage.setItem(key, id); }
   return id;
 }
 
@@ -73,23 +90,32 @@ export default function Chat() {
   const initLangCode = urlParams.get("lang") ?? "eng_Latn";
   const initMood     = urlParams.get("mood") ?? "";
 
-  const [sessionId]       = useState(getSessionId);
-  const [resetKey,        setResetKey]        = useState(0);   // bumped on reset → re-runs greeting
-  const [activeLangCode,  setActiveLangCode]  = useState(initLangCode);
-  const [messages,        setMessages]        = useState<Message[]>([]);
-  const [input,           setInput]           = useState("");
-  const [isTyping,        setIsTyping]        = useState(false);
-  const [isRecording,     setIsRecording]     = useState(false);
-  const [recordingTime,   setRecordingTime]   = useState(0);
-  const [phaseIndex,      setPhaseIndex]      = useState(0);
-  const [turn,            setTurn]            = useState(0);
-  const [confidence,      setConfidence]      = useState<Confidence>(
+  const [sessionId]        = useState(getSessionId);
+  const [resetKey,         setResetKey]         = useState(0);   // bumped on reset
+  const [activeLangCode,   setActiveLangCode]   = useState(initLangCode);
+  const [messages,         setMessages]         = useState<Message[]>([]);
+  const [input,            setInput]            = useState("");
+  const [isTyping,         setIsTyping]         = useState(false);
+  const [isRecording,      setIsRecording]      = useState(false);
+  const [recordingTime,    setRecordingTime]    = useState(0);
+  const [phaseIndex,       setPhaseIndex]       = useState(0);
+  const [turn,             setTurn]             = useState(0);
+  const [confidence,       setConfidence]       = useState<Confidence>(
     Object.fromEntries(DOMAINS.map(d => [d.key, 0]))
   );
-  const [domainsAssessed, setDomainsAssessed] = useState<string[]>([]);
-  const [safetyAlert,     setSafetyAlert]     = useState(false);
-  const [sessionDone,     setSessionDone]     = useState(false);
-  const [apiError,        setApiError]        = useState("");
+  const [domainsAssessed,  setDomainsAssessed]  = useState<string[]>([]);
+  const [safetyAlert,      setSafetyAlert]      = useState(false);
+  const [sessionDone,      setSessionDone]      = useState(false);
+  const [apiError,         setApiError]         = useState("");
+
+  // ── Sidebar toggle (hidden on mobile by default) ─────────────────────
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // ── Intro overlay + typewriter ──────────────────────────────────────────
+  const [showIntro,      setShowIntro]      = useState(true);
+  const [introVisible,   setIntroVisible]   = useState(false); // animates in
+  const [typewriterText, setTypewriterText] = useState("");
+  const [isTypewriting,  setIsTypewriting]  = useState(false);
 
   const chatEndRef  = useRef<HTMLDivElement>(null);
   const inputRef    = useRef<HTMLInputElement>(null);
@@ -104,12 +130,27 @@ export default function Chat() {
   // Auto-scroll to latest message
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, typewriterText]);
 
-  // ── Load opening greeting from API on mount (and after reset) ────────────
-  useEffect(() => {
-    setIsTyping(true);
+  // ── Typewriter helper ─────────────────────────────────────────────────
+  const runTypewriter = useCallback((text: string, onDone: () => void) => {
+    setTypewriterText("");
+    setIsTypewriting(true);
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setTypewriterText(text.slice(0, i));
+      if (i >= text.length) {
+        clearInterval(interval);
+        setIsTypewriting(false);
+        onDone();
+      }
+    }, 28);
+  }, []);
 
+  // ── Fetch opening greeting from API ───────────────────────────────────
+  const fetchGreeting = useCallback(() => {
+    setIsTyping(false); // use typewriter instead of typing dots for greeting
     const moodLabels: Record<string, string> = {
       "0": "very low", "1": "struggling", "2": "neutral", "3": "okay", "4": "good",
     };
@@ -122,23 +163,43 @@ export default function Chat() {
     })
       .then(r => r.json())
       .then(data => {
-        setIsTyping(false);
-        if (data.reply) {
-          setMessages([{ id: Date.now(), role: "agent", text: data.reply, ts: new Date() }]);
-          _syncState(data);
-        }
+        const reply = data.reply || "Hi, I'm glad you're here. How have things been going for you lately?";
+        runTypewriter(reply, () => {
+          setMessages([{ id: Date.now(), role: "agent", text: reply, ts: new Date() }]);
+          setTypewriterText("");
+        });
+        _syncState(data);
       })
       .catch(() => {
-        setIsTyping(false);
-        setMessages([{
-          id: Date.now(), role: "agent",
-          text: "Hi, I'm glad you're here. How have things been going for you lately?",
-          ts: new Date(),
-        }]);
+        const fallback = "Hi, I'm glad you're here. How have things been going for you lately?";
+        runTypewriter(fallback, () => {
+          setMessages([{ id: Date.now(), role: "agent", text: fallback, ts: new Date() }]);
+          setTypewriterText("");
+        });
         setApiError("Could not reach the chat server. Make sure the backend is running.");
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, activeLangCode, initMood, runTypewriter]);
+
+  // ── Show intro overlay on mount and after every reset ─────────────────
+  useEffect(() => {
+    setShowIntro(true);
+    setIntroVisible(false);
+    setMessages([]);
+    setTypewriterText("");
+    setIsTypewriting(false);
+    const t = setTimeout(() => setIntroVisible(true), 50);
+    return () => clearTimeout(t);
   }, [resetKey]);
+
+  // ── Dismiss intro, then start the greeting typewriter ─────────────────
+  const dismissIntro = useCallback(() => {
+    setIntroVisible(false);
+    setTimeout(() => {
+      setShowIntro(false);
+      fetchGreeting();
+    }, 500);
+  }, [fetchGreeting]);
 
   // ── Sync phase / scores from API response ─────────────────────────────────
   function _syncState(data: {
@@ -199,7 +260,6 @@ export default function Chat() {
       body: JSON.stringify({ session_id: sessionId, lang_code: activeLangCode }),
     }).catch(() => {});
 
-    setMessages([]);
     setInput("");
     setTurn(0);
     setPhaseIndex(0);
@@ -211,7 +271,7 @@ export default function Chat() {
     setSafetyAlert(false);
     setSessionDone(false);
     setApiError("");
-    setResetKey(k => k + 1);  // triggers re-fetch of greeting
+    setResetKey(k => k + 1);  // triggers re-show of intro overlay
   };
 
   // ── Voice recording with Web MediaRecorder API ─────────────────────────────
@@ -283,29 +343,34 @@ export default function Chat() {
             fd.append("lang_code", activeLangCode);
             const res  = await fetch(`${API_URL}/api/transcribe`, { method: "POST", body: fd });
             const data = await res.json();
-            const transcript: string = data.text || "";
+            const transcript: string = (data.text || "").trim();
 
-            // Replace placeholder with actual transcript
-            setMessages(prev => prev.map(m => m.id === placeholderId
-              ? { ...m, text: transcript ? `🎤 ${transcript}` : "🎤 (could not transcribe)" }
-              : m
+            if (!transcript) {
+              // Nothing usable — remove placeholder silently and show a soft hint
+              setMessages(prev => prev.filter(m => m.id !== placeholderId));
+              setIsTyping(false);
+              setApiError("Couldn't catch that — try speaking a bit closer to the mic and try again.");
+              // Clear the hint after 4 seconds so it doesn't linger
+              setTimeout(() => setApiError(""), 4000);
+              return;
+            }
+
+            // Replace placeholder with the real transcript
+            setMessages(prev => prev.map(m =>
+              m.id === placeholderId ? { ...m, text: `🎤 ${transcript}` } : m
             ));
 
-            if (transcript) {
-              // Send to backend as a regular chat message
-              const chatRes  = await fetch(`${API_URL}/api/chat`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: transcript, session_id: sessionId, lang_code: activeLangCode }),
-              });
-              const chatData = await chatRes.json();
-              setIsTyping(false);
-              if (chatData.reply) {
-                setMessages(prev => [...prev, { id: Date.now(), role: "agent", text: chatData.reply, ts: new Date() }]);
-                _syncState(chatData);
-              }
-            } else {
-              setIsTyping(false);
+            // Send transcript to backend as a regular chat message
+            const chatRes  = await fetch(`${API_URL}/api/chat`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ message: transcript, session_id: sessionId, lang_code: activeLangCode }),
+            });
+            const chatData = await chatRes.json();
+            setIsTyping(false);
+            if (chatData.reply) {
+              setMessages(prev => [...prev, { id: Date.now(), role: "agent", text: chatData.reply, ts: new Date() }]);
+              _syncState(chatData);
             }
           } catch {
             setIsTyping(false);
@@ -329,17 +394,31 @@ export default function Chat() {
     <div className="h-screen flex flex-col bg-background text-foreground font-sans overflow-hidden">
 
       {/* ── Top bar ── */}
-      <header className="flex items-center gap-4 px-4 py-3 border-b border-border/60 bg-card/60 backdrop-blur-md shrink-0 z-20">
+      <header className="flex items-center gap-3 px-4 py-3 border-b border-border/60 bg-card/60 backdrop-blur-md shrink-0 z-20">
+        {/* Hamburger — mobile only */}
+        <button
+          onClick={() => setSidebarOpen(o => !o)}
+          className="md:hidden text-muted-foreground hover:text-foreground transition-colors p-1"
+          aria-label="Toggle settings"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
         <button
           onClick={() => setLocation("/")}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-          Back
+          <span className="hidden sm:inline">Back</span>
         </button>
         <div className="flex items-center gap-2">
-          <span className="text-lg">🧠</span>
-          <span className="font-semibold text-foreground">Mental Health Chat</span>
+          <img
+            src="/therapist-avatar.png"
+            alt="Dr. UB"
+            className="w-7 h-7 rounded-full object-cover border border-secondary/40"
+          />
+          <span className="font-semibold text-foreground">Dr. UB</span>
         </div>
         <div className="ml-auto flex items-center gap-2 text-xs text-muted-foreground border border-border/50 px-3 py-1 rounded-full bg-card/40">
           {activeLang.native}
@@ -347,12 +426,33 @@ export default function Chat() {
       </header>
 
       {/* ── 3-column body ── */}
-      <div className="flex flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden relative">
+
+        {/* Mobile sidebar backdrop */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/40 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
         {/* ── LEFT SIDEBAR ── */}
-        <aside className="w-64 shrink-0 flex flex-col gap-4 p-4 border-r border-border/50 bg-sidebar/60 backdrop-blur-md overflow-y-auto">
+        <aside className={`
+          flex flex-col gap-4 p-4 border-r border-border/50 bg-sidebar/90 backdrop-blur-md overflow-y-auto
+          md:relative md:w-64 md:shrink-0 md:translate-x-0 md:flex
+          fixed inset-y-0 left-0 z-50 w-72 transition-transform duration-300
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        `}>
 
-          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-widest pt-1">
+          {/* Close button — mobile only */}
+          <div className="flex items-center justify-between md:hidden mb-1">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Settings</span>
+            <button onClick={() => setSidebarOpen(false)} className="text-muted-foreground hover:text-foreground p-1">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div className="hidden md:flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-widest pt-1">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
             Settings
           </div>
@@ -428,16 +528,60 @@ export default function Chat() {
         </aside>
 
         {/* ── CENTER CHAT ── */}
-        <main className="flex flex-col flex-1 min-w-0">
+        <main className="flex flex-col flex-1 min-w-0 relative">
+
+          {/* ── Intro overlay ── */}
+          {showIntro && (
+            <div
+              className={`absolute inset-0 z-30 flex items-center justify-center bg-background/80 backdrop-blur-sm transition-all duration-500 ${
+                introVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <div
+                className={`glass-card rounded-2xl p-8 max-w-sm w-full mx-6 flex flex-col items-center text-center gap-5 shadow-2xl border border-primary/20 transition-all duration-500 ${
+                  introVisible ? "translate-y-0 scale-100" : "translate-y-8 scale-95"
+                }`}
+              >
+                <img
+                  src="/therapist-avatar.png"
+                  alt="Dr. UB"
+                  className="w-24 h-24 rounded-full object-cover border-2 border-secondary/50 shadow-lg"
+                />
+                <h2 className="text-2xl font-serif text-foreground">Dr. UB</h2>
+                <p className="text-xs text-secondary font-medium tracking-wide uppercase">
+                  Mental Health Screening Agent
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Hello, I'm Dr. UB. This is a safe, confidential space. I'll ask you a few gentle
+                  questions about how you've been feeling lately — there are no right or wrong answers.
+                </p>
+                <button
+                  onClick={dismissIntro}
+                  className="w-full py-3 rounded-xl font-medium text-sm text-primary-foreground transition-opacity hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, hsl(33 95% 55%), hsl(33 95% 45%))" }}
+                >
+                  Begin Session
+                </button>
+                <p className="text-[10px] text-muted-foreground/50">No sign-up needed · Free · Private</p>
+              </div>
+            </div>
+          )}
 
           {/* Chat sub-header */}
           <div className="px-6 py-4 border-b border-border/40 bg-background/60 backdrop-blur-sm shrink-0">
-            <h1 className="text-xl font-serif text-foreground flex items-center gap-2">
-              <span>🧠</span> Mental Health Screening Agent
-            </h1>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Adaptive conversational screening powered by GPT-4o + LangGraph
-            </p>
+            <div className="flex items-center gap-3">
+              <img
+                src="/therapist-avatar.png"
+                alt="Therapist avatar"
+                className="w-10 h-10 rounded-full object-cover border-2 border-secondary/40 shadow-md shadow-secondary/20"
+              />
+              <div>
+                <h1 className="text-xl font-serif text-foreground">Dr. UB</h1>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Mental Health Screening Agent · Powered by GPT-4o + LangGraph
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Safety alert banner */}
@@ -469,9 +613,11 @@ export default function Chat() {
                 dir={activeLang.rtl ? "rtl" : "ltr"}
               >
                 {msg.role === "agent" && (
-                  <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-lg bg-secondary/20 border border-secondary/30 shadow-sm">
-                    🪷
-                  </div>
+                  <img
+                    src="/therapist-avatar.png"
+                    alt="Dr. UB"
+                    className="shrink-0 w-9 h-9 rounded-full object-cover border border-secondary/30 shadow-sm"
+                  />
                 )}
                 <div className={`max-w-[72%] ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col gap-1`}>
                   <div
@@ -493,11 +639,30 @@ export default function Chat() {
               </div>
             ))}
 
+            {/* Typewriter bubble for greeting */}
+            {(isTypewriting || typewriterText) && (
+              <div className="flex gap-3">
+                <img
+                  src="/therapist-avatar.png"
+                  alt="Dr. UB"
+                  className="shrink-0 w-9 h-9 rounded-full object-cover border border-secondary/30 shadow-sm"
+                />
+                <div className="px-4 py-3 rounded-2xl rounded-tl-sm text-sm leading-relaxed shadow-sm glass-card text-foreground">
+                  {typewriterText}
+                  {isTypewriting && (
+                    <span className="inline-block w-0.5 h-4 bg-secondary align-middle ml-0.5 animate-pulse" />
+                  )}
+                </div>
+              </div>
+            )}
+
             {isTyping && (
               <div className="flex gap-3">
-                <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-lg bg-secondary/20 border border-secondary/30">
-                  🪷
-                </div>
+                <img
+                  src="/therapist-avatar.png"
+                  alt="Dr. UB"
+                  className="shrink-0 w-9 h-9 rounded-full object-cover border border-secondary/30 shadow-sm"
+                />
                 <div className="glass-card rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5">
                   {[0, 1, 2].map(i => (
                     <span key={i} className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
