@@ -28,7 +28,7 @@ def load_graph():
 
 @st.cache_resource
 def load_kb():
-    with open("dsm_kb.json") as f:
+    with open("data/dsm_kb.json") as f:
         return json.load(f)
 
 @st.cache_resource

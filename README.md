@@ -19,7 +19,12 @@ Conversational AI system that replaces rigid PHQ-9 questionnaires with empatheti
 
 ```
 mental_health_screening/
-├── dsm_kb.json              # DSM-5-TR knowledge base (5 PHQ-9 domains)
+├── data/
+│   └── dsm_kb.json          # DSM-5-TR knowledge base (5 PHQ-9 domains)
+├── docs/
+│   └── pipeline_diagram.png # System architecture diagram
+├── reports/                 # Academic reports and LaTeX source files
+├── frontend/                # React landing page and chat UI
 ├── generate_sessions.py     # Synthetic patient session generator
 ├── safety_monitor.py        # SBERT-based crisis detection
 ├── dialogue_manager.py      # LangGraph adaptive dialogue graph
@@ -28,7 +33,6 @@ mental_health_screening/
 ├── evaluate.py              # 6-metric evaluation pipeline
 ├── app.py                   # Streamlit chat UI (legacy/debug)
 ├── server.py                # FastAPI backend API
-├── frontend/                # React landing page and chat UI
 ├── start.sh                 # Launcher for React + FastAPI
 ├── sessions/                # Generated patient sessions (JSON)
 ├── figures/                 # Output PNG figures

@@ -16,7 +16,7 @@ from inference_engine import score_domain, estimate_confidence_increment
 from safety_monitor import check_safety
 
 # Load DSM-5 KB
-with open("dsm_kb.json") as f:
+with open("data/dsm_kb.json") as f:
     DSM_KB = json.load(f)
 
 DOMAINS = ["sleep", "mood", "energy", "appetite", "concentration"]

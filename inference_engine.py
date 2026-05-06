@@ -237,7 +237,7 @@ def compute_ragas_faithfulness(cot_result: dict) -> float:
 if __name__ == "__main__":
     # Quick test
     import json
-    with open("dsm_kb.json") as f:
+    with open("data/dsm_kb.json") as f:
         kb = json.load(f)
 
     test_conv = [
